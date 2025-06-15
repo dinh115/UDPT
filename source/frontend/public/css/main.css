@@ -1,0 +1,61 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    background: #333;
+    color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+
+.section {
+    margin-bottom: 30px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.error {
+    background: #ffe6e6;
+    color: #d00;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.btn {
+    background: #007cba;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: #005a8b;
+}
+
+.user-details {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.detail-row {
+    margin-bottom: 15px;
+}
+
+.detail-row strong {
+    display: inline-block;
+    width: 120px;
+}
