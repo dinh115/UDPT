@@ -9,17 +9,24 @@ services:
     networks:
       - internal
 
-  product-service:
-    build: ./services/Product_Service
+  patient-service:
+    build: ./services/patient_service
     expose:
       - "3001"
     networks:
       - internal
 
-  user-service:
-    build: ./services/User_Service
+  employee-service:
+    build: ./services/employee_Service
     expose:
       - "3002"
+    networks:
+      - internal
+  
+  doctor-service:
+    build: ./services/doctor_service
+    expose:
+      - "3003"
     networks:
       - internal
 
