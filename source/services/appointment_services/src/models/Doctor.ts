@@ -52,23 +52,7 @@ const doctorSchema = new Schema<IDoctor>({
             message: 'At least one qualification is required'
         }
     },
-    consultationFee: {
-        type: Number,
-        required: [true, 'Consultation fee is required'],
-        min: [0, 'Consultation fee cannot be negative']
-    },
-    availability: [availabilitySchema],
-    rating: {
-        type: Number,
-        default: 0,
-        min: [0, 'Rating cannot be less than 0'],
-        max: [5, 'Rating cannot be more than 5']
-    },
-    // totalReviews: {
-    //     type: Number,
-    //     default: 0,
-    //     min: [0, 'Total reviews cannot be negative']
-    // }
+    availability: [availabilitySchema]
 }, {
     timestamps: true
 });

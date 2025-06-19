@@ -57,8 +57,8 @@ export const authorize = (...roles: string[]) => {
             return;
         }
 
-        console.log('User role:', req.user.role);
-        console.log('Required roles:', roles);
+        // console.log('User role:', req.user.role);
+        // console.log('Required roles:', roles);
         if (!roles.includes(req.user.role)) {
             const response: ApiResponse = {
                 success: false,

@@ -30,9 +30,13 @@ const appointmentSchema = new Schema<IAppointment>({
         required: true,
         validate: {
             validator: function (date: Date) {
-                return date >= new Date();
+                // Allow past dates for completed appointments, but new appointments must be in future
+                if (this.isNew) {
+                    return date >= new Date();
+                }
+                return true;
             },
-            message: 'Appointment date cannot be in the past'
+            message: 'New appointment date cannot be in the past'
         }
     },
     timeSlot: {
@@ -42,34 +46,17 @@ const appointmentSchema = new Schema<IAppointment>({
     status: {
         type: String,
         enum: Object.values(AppointmentStatus),
-        default: AppointmentStatus.SCHEDULED
-    },
-    symptoms: {
-        type: String,
-        maxlength: [500, 'Symptoms cannot be more than 500 characters']
-    },
-    diagnosis: {
-        type: String,
-        maxlength: [1000, 'Diagnosis cannot be more than 1000 characters']
-    },
-    prescription: {
-        type: String,
-        maxlength: [1000, 'Prescription cannot be more than 1000 characters']
+        default: AppointmentStatus.PENDING
     },
     notes: {
         type: String,
         maxlength: [500, 'Notes cannot be more than 500 characters']
-    },
-    consultationFee: {
-        type: Number,
-        required: true,
-        min: [0, 'Consultation fee cannot be negative']
     }
 }, {
     timestamps: true
 });
 
-// Compound index to prevent double booking
+// Compound index to prevent double booking for confirmed appointments
 appointmentSchema.index({
     doctor: 1,
     appointmentDate: 1,
@@ -77,12 +64,13 @@ appointmentSchema.index({
 }, {
     unique: true,
     partialFilterExpression: {
-        status: { $ne: AppointmentStatus.CANCELLED }
+        status: { $in: [AppointmentStatus.CONFIRMED, AppointmentStatus.COMPLETED] }
     }
 });
 
 // Index for better query performance
 appointmentSchema.index({ patient: 1, appointmentDate: -1 });
 appointmentSchema.index({ doctor: 1, appointmentDate: 1 });
+appointmentSchema.index({ status: 1 });
 
 export default mongoose.model<IAppointment>('Appointment', appointmentSchema);

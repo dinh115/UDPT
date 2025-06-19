@@ -16,6 +16,7 @@ export interface ITimeSlot {
     isBooked: boolean;
 }
 
+
 export interface IAvailability {
     day: DayOfWeek;
     slots: ITimeSlot[];
@@ -26,10 +27,7 @@ export interface IDoctor extends Document {
     specialization: string;
     experience: number;
     qualifications: string[];
-    consultationFee: number;
     availability: IAvailability[];
-    rating: number;
-    //totalReviews: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -39,6 +37,5 @@ export interface IDoctorInput {
     specialization: string;
     experience: number;
     qualifications: string[];
-    consultationFee: number;
     availability: IAvailability[];
 }
