@@ -1,0 +1,45 @@
+services:
+  gateway:
+    build: ./services/gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - product-service
+      - user-service
+    networks:
+      - internal
+
+  patient-service:
+    build: ./services/patient_service
+    expose:
+      - "3001"
+    networks:
+      - internal
+
+  employee-service:
+    build: ./services/employee_Service
+    expose:
+      - "3002"
+    networks:
+      - internal
+  
+  doctor-service:
+    build: ./services/doctor_service
+    expose:
+      - "3003"
+    networks:
+      - internal
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - gateway
+    networks:
+      - internal
+
+
+networks:
+  internal:
+    driver: bridge

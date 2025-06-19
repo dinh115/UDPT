@@ -1,3 +1,6 @@
-**node_modules/
-**.env/
-.vscode/
+# Ignore all node_modules folders recursively
+**/node_modules/
+
+# Ignore environment files and build outputs
+**/.env
+**/dist/
