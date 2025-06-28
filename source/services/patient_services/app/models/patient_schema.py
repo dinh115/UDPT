@@ -1,27 +1,62 @@
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
-from bson import ObjectId
+from pydantic import BaseModel, Field
+from typing import List, Optional
+from enum import Enum
+from uuid import UUID
+from datetime import datetime
 
-class PyObjectId(ObjectId):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
+class VisitStatus(str, Enum):
+    PENDING = "pending"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
 
-    @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid ObjectId")
-        return ObjectId(v)
+class Diagnosis(BaseModel):
+    code: str
+    description: str
 
-class Patient(BaseModel):
+class VitalSigns(BaseModel):
+    temperature: float
+    blood_pressure: str
+    pulse: int
+    respiratory_rate: int
+    weight: float
+    height: float
+
+class TestResult(BaseModel):
     name: str
-    age: int
-    gender: str
-    email: Optional[EmailStr] = None
+    result: str
+    date: datetime
+    file_url: Optional[str] = None
 
-class PatientInDB(Patient):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+class PatientVisitBase(BaseModel):
+    patient: UUID
+    doctor: UUID
+    visit_date: datetime
+    department: str
+    reason_for_visit: str
+    diagnosis: Optional[List[Diagnosis]] = None
+    vital_signs: Optional[VitalSigns] = None
+    tests: Optional[List[TestResult]] = None
+    notes: Optional[str] = None
+    status: VisitStatus = VisitStatus.PENDING
+
+class PatientVisitCreate(PatientVisitBase):
+    pass
+
+class PatientVisitUpdate(BaseModel):
+    visit_date: Optional[datetime] = None
+    department: Optional[str] = None
+    reason_for_visit: Optional[str] = None
+    diagnosis: Optional[List[Diagnosis]] = None
+    vital_signs: Optional[VitalSigns] = None
+    tests: Optional[List[TestResult]] = None
+    notes: Optional[str] = None
+    status: Optional[VisitStatus] = None
+
+class PatientVisitOut(PatientVisitBase):
+    id: UUID = Field(..., alias="_id")
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
-        validate_by_name = True
-        json_encoders = {ObjectId: str}
+        from_attributes = True
+        populate_by_name = True
