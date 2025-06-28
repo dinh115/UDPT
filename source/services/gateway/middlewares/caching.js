@@ -27,6 +27,7 @@ export const caching = (req, res, next) => {
     console.log(`Cache miss for ${req.url}`);
 
     // Store the response in cache after the request is processed
+
     const originalJson = res.json.bind(res);
     res.send = (body) => {
         cacheService.setCache(req.url, req.method, JSON.parse(body));
