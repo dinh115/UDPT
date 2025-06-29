@@ -5,16 +5,16 @@ import { handleGrpcError } from './errorHandler';
 import { userQuerySchema } from '../config/joiSchema';
 import chalk from 'chalk';
 import {
-    //AuthenticatedCall, 
     convertToUserProto,
     authenticateGrpcCall,
 } from '.'
 import {
     createUserSchema,
     updateUserSchema,
+    batchUsersSchema,
+    validateUserIdSchema
 } from '../config/joiSchema';
 import {
-    ApiResponse,
     GetUserRequest,
     GetUserResponse,
     GetUsersRequest,
@@ -23,13 +23,14 @@ import {
     CreateUserResponse,
     UpdateUserRequest,
     UpdateUserResponse,
-    DeleteUserRequest
+    BatchDeleteUsersRequest,
+    BatchDeleteUsersResponse
 } from '../proto/generated/user';
 
 // =================== USER SERVICE HANDLERS ===================
 export class UserServiceHandlers {
     async getUser(
-        call: grpc.ServerUnaryCall<GetUserRequest, ApiResponse>,
+        call: grpc.ServerUnaryCall<GetUserRequest, GetUserResponse>,
         callback: grpc.sendUnaryData<GetUserResponse>
     ): Promise<void> {
         try {
@@ -37,14 +38,22 @@ export class UserServiceHandlers {
             const authResult = await authenticateGrpcCall(call.metadata);
             const user = authResult.user;
             if (!authResult.success || !user) {
-                const response = UpdateUserResponse.create({
+                const response = GetUserResponse.create({
                     success: false,
                     error: authResult.error
                 });
                 return callback(null, response);
             }
             //console.log(chalk.green(JSON.stringify(user)));
-            const { id } = call.request;
+            const { error, value } = validateUserIdSchema.validate(call.request);
+            if (error) {
+                const response = GetUserResponse.create({
+                    success: false,
+                    error: error.details[0].message,
+                });
+                return callback(null, response);
+            }
+            const { id } = value;
             //console.log(chalk.blue(id));
 
             // Authorization: Users can only view their own profile unless admin or employee
@@ -78,7 +87,7 @@ export class UserServiceHandlers {
     }
 
     async getUsers(
-        call: grpc.ServerUnaryCall<GetUsersRequest, ApiResponse>,
+        call: grpc.ServerUnaryCall<GetUsersRequest, GetUsersResponse>,
         callback: grpc.sendUnaryData<GetUsersResponse>
     ): Promise<void> {
         try {
@@ -149,7 +158,7 @@ export class UserServiceHandlers {
     }
 
     async createUser(
-        call: grpc.ServerUnaryCall<CreateUserRequest, ApiResponse>,
+        call: grpc.ServerUnaryCall<CreateUserRequest, CreateUserResponse>,
         callback: grpc.sendUnaryData<CreateUserResponse>
     ): Promise<void> {
         try {
@@ -202,7 +211,7 @@ export class UserServiceHandlers {
     }
 
     async updateUser(
-        call: grpc.ServerUnaryCall<UpdateUserRequest, ApiResponse>,
+        call: grpc.ServerUnaryCall<UpdateUserRequest, UpdateUserResponse>,
         callback: grpc.sendUnaryData<UpdateUserResponse>
     ): Promise<void> {
         try {
@@ -282,16 +291,16 @@ export class UserServiceHandlers {
         }
     }
 
-    async deleteUser(
-        call: grpc.ServerUnaryCall<DeleteUserRequest, ApiResponse>,
-        callback: grpc.sendUnaryData<ApiResponse>
+    async deleteUsers(
+        call: grpc.ServerUnaryCall<BatchDeleteUsersRequest, BatchDeleteUsersResponse>,
+        callback: grpc.sendUnaryData<BatchDeleteUsersResponse>
     ): Promise<void> {
         try {
             // Authentication check
             const authResult = await authenticateGrpcCall(call.metadata);
             const user = authResult.user;
             if (!authResult.success || !user) {
-                const response = ApiResponse.create({
+                const response = BatchDeleteUsersResponse.create({
                     success: false,
                     error: authResult.error
                 });
@@ -300,25 +309,32 @@ export class UserServiceHandlers {
 
             // Only admins can delete users
             if (user.role !== 'admin') {
-                const response = ApiResponse.create({
+                const response = BatchDeleteUsersResponse.create({
                     success: false,
                     error: 'Admin access required',
                 });
                 return callback(null, response);
             }
 
-            const { id } = call.request;
-            const success = await userService.deleteUser(id);
+            const { error, value } = batchUsersSchema.validate(call.request);
+            if (error) {
+                const response = BatchDeleteUsersResponse.create({
+                    success: false,
+                    error: error.details[0].message,
+                });
+                return callback(null, response);
+            }
+
+            const success = await userService.deleteUsers(value.userIds);
             if (!success) {
-                const response = ApiResponse.create({
-                    success: success,
+                const response = BatchDeleteUsersResponse.create({
+                    success: false,
                     error: 'User not found',
                 });
                 return callback(null, response);
-
             }
 
-            const response = ApiResponse.create({
+            const response = BatchDeleteUsersResponse.create({
                 success: true,
                 message: 'User deleted successfully',
             });

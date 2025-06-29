@@ -160,8 +160,14 @@ export interface UpdateUserResponse {
   error: string;
 }
 
-export interface DeleteUserRequest {
-  id: string;
+export interface BatchDeleteUsersRequest {
+  userIds: string[];
+}
+
+export interface BatchDeleteUsersResponse {
+  success: boolean;
+  message: string;
+  error: string;
 }
 
 export interface BatchGetUsersRequest {
@@ -2464,22 +2470,22 @@ export const UpdateUserResponse: MessageFns<UpdateUserResponse> = {
   },
 };
 
-function createBaseDeleteUserRequest(): DeleteUserRequest {
-  return { id: "" };
+function createBaseBatchDeleteUsersRequest(): BatchDeleteUsersRequest {
+  return { userIds: [] };
 }
 
-export const DeleteUserRequest: MessageFns<DeleteUserRequest> = {
-  encode(message: DeleteUserRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+export const BatchDeleteUsersRequest: MessageFns<BatchDeleteUsersRequest> = {
+  encode(message: BatchDeleteUsersRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    for (const v of message.userIds) {
+      writer.uint32(10).string(v!);
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): DeleteUserRequest {
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchDeleteUsersRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeleteUserRequest();
+    const message = createBaseBatchDeleteUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2488,7 +2494,7 @@ export const DeleteUserRequest: MessageFns<DeleteUserRequest> = {
             break;
           }
 
-          message.id = reader.string();
+          message.userIds.push(reader.string());
           continue;
         }
       }
@@ -2500,24 +2506,118 @@ export const DeleteUserRequest: MessageFns<DeleteUserRequest> = {
     return message;
   },
 
-  fromJSON(object: any): DeleteUserRequest {
-    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+  fromJSON(object: any): BatchDeleteUsersRequest {
+    return {
+      userIds: globalThis.Array.isArray(object?.userIds) ? object.userIds.map((e: any) => globalThis.String(e)) : [],
+    };
   },
 
-  toJSON(message: DeleteUserRequest): unknown {
+  toJSON(message: BatchDeleteUsersRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.userIds?.length) {
+      obj.userIds = message.userIds;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DeleteUserRequest>, I>>(base?: I): DeleteUserRequest {
-    return DeleteUserRequest.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<BatchDeleteUsersRequest>, I>>(base?: I): BatchDeleteUsersRequest {
+    return BatchDeleteUsersRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<DeleteUserRequest>, I>>(object: I): DeleteUserRequest {
-    const message = createBaseDeleteUserRequest();
-    message.id = object.id ?? "";
+  fromPartial<I extends Exact<DeepPartial<BatchDeleteUsersRequest>, I>>(object: I): BatchDeleteUsersRequest {
+    const message = createBaseBatchDeleteUsersRequest();
+    message.userIds = object.userIds?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseBatchDeleteUsersResponse(): BatchDeleteUsersResponse {
+  return { success: false, message: "", error: "" };
+}
+
+export const BatchDeleteUsersResponse: MessageFns<BatchDeleteUsersResponse> = {
+  encode(message: BatchDeleteUsersResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.success !== false) {
+      writer.uint32(8).bool(message.success);
+    }
+    if (message.message !== "") {
+      writer.uint32(18).string(message.message);
+    }
+    if (message.error !== "") {
+      writer.uint32(26).string(message.error);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchDeleteUsersResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBatchDeleteUsersResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.success = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.error = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BatchDeleteUsersResponse {
+    return {
+      success: isSet(object.success) ? globalThis.Boolean(object.success) : false,
+      message: isSet(object.message) ? globalThis.String(object.message) : "",
+      error: isSet(object.error) ? globalThis.String(object.error) : "",
+    };
+  },
+
+  toJSON(message: BatchDeleteUsersResponse): unknown {
+    const obj: any = {};
+    if (message.success !== false) {
+      obj.success = message.success;
+    }
+    if (message.message !== "") {
+      obj.message = message.message;
+    }
+    if (message.error !== "") {
+      obj.error = message.error;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BatchDeleteUsersResponse>, I>>(base?: I): BatchDeleteUsersResponse {
+    return BatchDeleteUsersResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BatchDeleteUsersResponse>, I>>(object: I): BatchDeleteUsersResponse {
+    const message = createBaseBatchDeleteUsersResponse();
+    message.success = object.success ?? false;
+    message.message = object.message ?? "";
+    message.error = object.error ?? "";
     return message;
   },
 };
@@ -3399,7 +3499,7 @@ export interface UserService {
   GetUsers(request: GetUsersRequest): Promise<GetUsersResponse>;
   CreateUser(request: CreateUserRequest): Promise<CreateUserResponse>;
   UpdateUser(request: UpdateUserRequest): Promise<UpdateUserResponse>;
-  DeleteUser(request: DeleteUserRequest): Promise<ApiResponse>;
+  DeleteUsers(request: BatchDeleteUsersRequest): Promise<BatchDeleteUsersResponse>;
 }
 
 export const UserServiceServiceName = "user.UserService";
@@ -3413,7 +3513,7 @@ export class UserServiceClientImpl implements UserService {
     this.GetUsers = this.GetUsers.bind(this);
     this.CreateUser = this.CreateUser.bind(this);
     this.UpdateUser = this.UpdateUser.bind(this);
-    this.DeleteUser = this.DeleteUser.bind(this);
+    this.DeleteUsers = this.DeleteUsers.bind(this);
   }
   GetUser(request: GetUserRequest): Promise<GetUserResponse> {
     const data = GetUserRequest.encode(request).finish();
@@ -3439,10 +3539,10 @@ export class UserServiceClientImpl implements UserService {
     return promise.then((data) => UpdateUserResponse.decode(new BinaryReader(data)));
   }
 
-  DeleteUser(request: DeleteUserRequest): Promise<ApiResponse> {
-    const data = DeleteUserRequest.encode(request).finish();
-    const promise = this.rpc.request(this.service, "DeleteUser", data);
-    return promise.then((data) => ApiResponse.decode(new BinaryReader(data)));
+  DeleteUsers(request: BatchDeleteUsersRequest): Promise<BatchDeleteUsersResponse> {
+    const data = BatchDeleteUsersRequest.encode(request).finish();
+    const promise = this.rpc.request(this.service, "DeleteUsers", data);
+    return promise.then((data) => BatchDeleteUsersResponse.decode(new BinaryReader(data)));
   }
 }
 

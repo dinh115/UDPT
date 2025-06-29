@@ -152,8 +152,14 @@ message UpdateUserResponse {
   string error = 3;
 }
 
-message DeleteUserRequest {
-  string id = 1;
+message BatchDeleteUsersRequest {
+  repeated string userIds = 1;
+}
+
+message BatchDeleteUsersResponse {
+  bool success = 1;
+  string message = 2;
+  string error = 3;
 }
 
 message BatchGetUsersRequest {
@@ -224,7 +230,7 @@ service UserService {
   rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
-  rpc DeleteUser(DeleteUserRequest) returns (ApiResponse);
+  rpc DeleteUsers(BatchDeleteUsersRequest) returns (BatchDeleteUsersResponse);
 }
 
 service InternalService {

@@ -2,6 +2,23 @@ import Joi from 'joi';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 
 // =================== VALIDATION SCHEMAS ===================
+
+export const validateUserIdSchema = Joi.object({
+    id: Joi.string()
+        .custom((value, helpers) => {
+            if (!isValidUUIDv4(value)) {
+                return helpers.error('any.invalid');
+            }
+            return value;
+        })
+        .required()
+        .messages({
+            'any.required': 'User ID is required',
+            'any.invalid': 'User ID must be a valid UUID v4'
+        }),
+}
+)
+
 export const loginSchema = Joi.object({
     username: Joi.string().required().messages({
         'string.username': 'Please provide a valid username address',

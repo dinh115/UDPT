@@ -3,13 +3,11 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 
-import redisConnection from './config/redis';
 import logger from './config/logger';
 import { connectDatabase } from './config/database';
 
 // Import gRPC handlers
-import { AuthServiceHandlers } from './handlers/authHandler';
-import { UserServiceHandlers } from './handlers/userHandler';
+import { UserServiceHandlers } from './handlers/doctorHandler';
 import { InternalServiceHandlers } from './handlers/internalHandler';
 import { HealthServiceHandlers } from './handlers';
 
@@ -18,7 +16,7 @@ import { config } from './config/environments';
 
 
 // =================== GRPC SETUP ===================
-const PROTO_PATH = path.join(__dirname, 'proto/user.proto');
+const PROTO_PATH = path.join(__dirname, 'proto/doctor.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     keepCase: true,
@@ -28,43 +26,37 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     oneofs: true,
 });
 
-const userProto = grpc.loadPackageDefinition(packageDefinition) as any;
+const doctorProto = grpc.loadPackageDefinition(packageDefinition) as any;
+
 // =================== GRPC SERVER SETUP ===================
 function createGrpcServer(): grpc.Server {
     const server = new grpc.Server();
 
     // Initialize handlers
-    const authHandlers = new AuthServiceHandlers();
-    const userHandlers = new UserServiceHandlers();
+    const doctorHandlers = new UserServiceHandlers();
     const internalHandlers = new InternalServiceHandlers();
     const healthHandlers = new HealthServiceHandlers();
 
     // Add services to gRPC server
-    server.addService(userProto.user.AuthService.service, {
-        Login: authHandlers.login.bind(authHandlers),
-        Register: authHandlers.register.bind(authHandlers),
-        Logout: authHandlers.logout.bind(authHandlers),
-        VerifyToken: authHandlers.verifyToken.bind(authHandlers),
-        GetProfile: authHandlers.getProfile.bind(authHandlers),
-        UpdateProfile: authHandlers.updateProfile.bind(authHandlers),
+    server.addService(doctorProto.doctor.DoctorService.service, {
+        CreateDoctorProfile: doctorHandlers.createDoctorProfile.bind(doctorHandlers),
+        findDoctors: doctorHandlers.getDoctors.bind(doctorHandlers),
+        GetDoctorById: doctorHandlers.getDoctorProfileById.bind(doctorHandlers),
+        UpdateDoctorProfile: doctorHandlers.updateDoctorProfile.bind(doctorHandlers),
+        UpdateDoctorAvailability: doctorHandlers.updateDoctorAvailability.bind(doctorHandlers),
+        DeleteDoctors: doctorHandlers.deleteDoctors.bind(doctorHandlers),
     });
 
-    server.addService(userProto.user.UserService.service, {
-        GetUser: userHandlers.getUser.bind(userHandlers),
-        GetUsers: userHandlers.getUsers.bind(userHandlers),
-        CreateUser: userHandlers.createUser.bind(userHandlers),
-        UpdateUser: userHandlers.updateUser.bind(userHandlers),
-        DeleteUsers: userHandlers.deleteUsers.bind(userHandlers),
+    server.addService(doctorProto.doctor.InternalService.service, {
+        GetDoctorInternal: internalHandlers.getDoctorInternal.bind(internalHandlers),
+        GetDoctorsInternal: internalHandlers.getDoctorsInternal.bind(internalHandlers),
+        BatchGetDoctors: internalHandlers.batchGetDoctors.bind(internalHandlers),
+        GetAvailableTimeSlots: internalHandlers.getAvailableSlots.bind(internalHandlers),
+        GenerateTimeSlots: internalHandlers.generateTimeSlot.bind(internalHandlers),
+        GetDoctorSlotStatistics: internalHandlers.getDoctorSlotStatistics.bind(internalHandlers),
     });
 
-    server.addService(userProto.user.InternalService.service, {
-        GetUserInternal: internalHandlers.getUserInternal.bind(internalHandlers),
-        BatchGetUsers: internalHandlers.batchGetUsers.bind(internalHandlers),
-        CheckUserStatus: internalHandlers.checkUserStatus.bind(internalHandlers),
-        VerifyUsers: internalHandlers.verifyUsers.bind(internalHandlers),
-    });
-
-    server.addService(userProto.user.HealthService.service, {
+    server.addService(doctorProto.doctor.HealthService.service, {
         Check: healthHandlers.check.bind(healthHandlers),
     });
 
@@ -130,8 +122,6 @@ const startServers = async () => {
     try {
         // Connect to database and Redis
         await connectDatabase();
-        await redisConnection.connect();
-
         // Start gRPC server
         const grpcServer = createGrpcServer();
 
@@ -147,7 +137,7 @@ const startServers = async () => {
                     throw err;
                 }
 
-                logger.info(chalk.blue(`✓ gRPC server running on ${grpcHost}:${boundPort}`));
+                logger.info(chalk.blue(`✓ Doctor gRPC server running on ${grpcHost}:${boundPort}`));
             }
         );
 
@@ -161,7 +151,7 @@ const startServers = async () => {
                     logger.error('Error during gRPC server shutdown:', err);
                     grpcServer.forceShutdown();
                 } else {
-                    logger.info(chalk.green('✓ gRPC server shut down gracefully'));
+                    logger.info(chalk.green('✓ Doctor gRPC server shut down gracefully'));
                 }
             });
 
@@ -178,8 +168,7 @@ const startServers = async () => {
         return { grpcServer };
 
     } catch (error) {
-        logger.error('Failed to start servers:', error);
-        await redisConnection.disconnect();
+        logger.error('Failed to start doctor servers:', error);
         process.exit(1);
     }
 };
@@ -187,19 +176,16 @@ const startServers = async () => {
 // =================== ERROR HANDLERS ===================
 process.on('uncaughtException', async (error) => {
     logger.error('Uncaught Exception:', error);
-    await redisConnection.disconnect();
     process.exit(1);
 });
 
 process.on('unhandledRejection', async (reason, promise) => {
     logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    await redisConnection.disconnect();
     process.exit(1);
 });
 
 // Start the servers
 startServers().catch(error => {
-    logger.error('Failed to start application:', error);
+    logger.error('Failed to start doctor application:', error);
     process.exit(1);
 });
-

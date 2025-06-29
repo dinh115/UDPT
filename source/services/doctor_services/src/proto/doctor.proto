@@ -1,0 +1,244 @@
+syntax = "proto3";
+
+package doctor;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+
+// Core Messages
+message TimeSlot {
+  string startTime = 1;
+  string endTime = 2;
+  bool isBooked = 3;
+}
+
+message Availability {
+  string day = 1;
+  repeated TimeSlot slots = 2;
+}
+
+
+message Doctor {
+  string id = 1;
+  string userId = 2;
+  string specialization = 3;
+  int32 experience = 4;
+  repeated string qualifications = 5;
+  repeated Availability availability = 6;
+  google.protobuf.Timestamp createdAt = 7;
+  google.protobuf.Timestamp updatedAt = 8;
+}
+
+// Request Messages
+message CreateDoctorProfileRequest {
+  string userId = 1;
+  string specialization = 2;
+  int32 experience = 3;
+  repeated string qualifications = 4;
+  repeated Availability availability = 5;
+}
+
+message findDoctorsRequest {
+  optional string specialization = 1;
+  int32 page = 2;
+  int32 limit = 3;
+  string sortBy = 4;
+  string sortOrder = 5;
+}
+
+message GetDoctorByIdRequest {
+  string doctorId = 1;
+}
+
+message UpdateDoctorProfileRequest {
+  string userId = 1;
+  optional string specialization = 2;
+  optional int32 experience = 3;
+  repeated string qualifications = 4;
+  repeated Availability availability = 5;
+}
+
+message GetAvailableTimeSlotsRequest {
+  string doctorId = 1;
+  string date = 2; // YYYY-MM-DD format
+}
+
+message GenerateTimeSlotsRequest {
+  string startTime = 1;
+  string endTime = 2;
+  int32 gap = 3; // minutes
+}
+
+message UpdateDoctorAvailabilityRequest {
+  string userId = 1; // for authorization
+  repeated Availability availability = 2;
+}
+
+message GetDoctorSlotStatisticsRequest {
+  string doctorId = 1;
+  optional string date = 2;
+}
+
+
+// Response Messages
+message ApiResponse {
+  bool success = 1;
+  string message = 2;
+  optional string error = 3;
+}
+
+message CreateDoctorProfileResponse {
+  bool success = 1;
+  string message = 2;
+  optional Doctor doctor = 3;
+  optional string error = 4;
+}
+
+message PaginationMeta {
+  int32 currentPage = 1;
+  int32 totalPages = 2;
+  int32 totalItems = 3;
+  int32 itemsPerPage = 4;
+  bool hasNext = 5;
+  bool hasPrevious = 6;
+}
+
+message findDoctorsResponse {
+  bool success = 1;
+  repeated Doctor doctors = 2;
+  PaginationMeta pagination = 3;
+  string error = 4;
+}
+
+message GetDoctorByIdResponse {
+  bool success = 1;
+  string message = 2;
+  optional Doctor doctor = 3;
+  optional string error = 4;
+}
+
+message UpdateDoctorProfileResponse {
+  bool success = 1;
+  string message = 2;
+  optional Doctor doctor = 3;
+  optional string error = 4;
+}
+
+message GetAvailableTimeSlotsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated TimeSlot slots = 3;
+  optional string error = 4;
+}
+
+message TimeSlotGeneration {
+  string startTime = 1;
+  string endTime = 2;
+  int32 gap = 3;
+  int32 totalSlots = 4;
+  repeated TimeSlot slots = 5;
+}
+
+message GenerateTimeSlotsResponse {
+  bool success = 1;
+  string message = 2;
+  optional TimeSlotGeneration data = 3;
+  optional string error = 4;
+}
+
+message SlotStatistics {
+  optional string date = 1;
+  optional string dayOfWeek = 2;
+  int32 totalSlots = 3;
+  int32 availableSlots = 4;
+  int32 bookedSlots = 5;
+}
+
+message WeeklyStatistics {
+  repeated SlotStatistics weekly = 1;
+  SlotStatistics overall = 2;
+}
+
+message GetDoctorSlotStatisticsResponse {
+  bool success = 1;
+  string message = 2;
+  oneof statistics {
+    SlotStatistics dailyStats = 3;
+    WeeklyStatistics weeklyStats = 4;
+  }
+  optional string error = 5;
+}
+
+message BatchGetDoctorsRequest {
+  repeated string doctorIds = 1;
+}
+
+message BatchGetDoctorsResponse {
+  bool success = 1;
+  repeated Doctor doctors = 2;
+  string error = 3;
+}
+
+message BatchDeleteDoctorsRequest {
+  repeated string doctorIds = 1;
+}
+
+message BatchDeleteDoctorsResponse {
+  bool success = 1;
+  string message = 2;
+  string error = 3;
+}
+
+// =================== HEALTH CHECK ===================
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  bool success = 1;
+  string status = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  double uptime = 4;
+  string environment = 5;
+}
+
+
+service HealthService {
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+// Service Definition
+service DoctorService {
+  // Create doctor profile
+  rpc CreateDoctorProfile(CreateDoctorProfileRequest) returns (CreateDoctorProfileResponse);
+  
+  // Get all doctors with pagination and filtering
+  rpc findDoctors(findDoctorsRequest) returns (findDoctorsResponse);
+  
+  // Get doctor by ID
+  rpc GetDoctorById(GetDoctorByIdRequest) returns (GetDoctorByIdResponse);
+  
+  // Update doctor profile
+  rpc UpdateDoctorProfile(UpdateDoctorProfileRequest) returns (UpdateDoctorProfileResponse);
+
+  // Update doctor availability
+  rpc UpdateDoctorAvailability(UpdateDoctorAvailabilityRequest) returns (UpdateDoctorProfileResponse);
+  
+  // Delete doctor
+  rpc DeleteDoctors(BatchDeleteDoctorsRequest) returns (BatchDeleteDoctorsResponse);
+
+}
+
+service InternalService {
+  rpc GetDoctorInternal(GetDoctorByIdRequest) returns (GetDoctorByIdResponse);
+  rpc GetDoctorsInternal(findDoctorsRequest) returns (findDoctorsResponse);
+  rpc BatchGetDoctors(BatchGetDoctorsRequest) returns (BatchGetDoctorsResponse);
+  
+  // Get available time slots for a doctor on a specific date
+  rpc GetAvailableTimeSlots(GetAvailableTimeSlotsRequest) returns (GetAvailableTimeSlotsResponse);
+
+  // Generate time slots utility
+  rpc GenerateTimeSlots(GenerateTimeSlotsRequest) returns (GenerateTimeSlotsResponse);
+ 
+  // Get doctor slot statistics
+  rpc GetDoctorSlotStatistics(GetDoctorSlotStatisticsRequest) returns (GetDoctorSlotStatisticsResponse);
+}

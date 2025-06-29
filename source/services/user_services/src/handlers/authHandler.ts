@@ -4,7 +4,6 @@ import userService from '../services/userService';
 import logger from '../config/logger';
 import { handleGrpcError } from './errorHandler';
 import {
-    //AuthenticatedCall, 
     convertToUserProto,
     getTokenFromMetadata,
     authenticateGrpcCall,
@@ -53,6 +52,7 @@ export class AuthServiceHandlers {
 
             const result = await authService.login(value);
 
+
             const response = LoginResponse.create({
                 success: true,
                 token: result.token,
@@ -60,10 +60,20 @@ export class AuthServiceHandlers {
             });
 
             callback(null, response);
-        } catch (error) {
+        } catch (error: any) {
             logger.error('Login handler error:', error);
-            const err = handleGrpcError(error);
-            callback(err, null);
+            if (error && error.name === 'InvalidCredential') {
+                const response = LoginResponse.create({
+                    success: false,
+                    error: 'Invalid username or password'
+                });
+                return callback(null, response);
+            }
+            else {
+                const err = handleGrpcError(error);
+                callback(err, null);
+            }
+
         }
     }
 

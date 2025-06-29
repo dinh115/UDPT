@@ -180,17 +180,24 @@ export class UserService {
     }
   }
 
-  async deleteUser(id: string): Promise<boolean> {
+  /**
+   * Delete one or multiple users by ID(s)
+   */
+  async deleteUsers(ids: string | string[]): Promise<boolean> {
     try {
-      const result = await User.findByIdAndDelete(id);
-
-      // if (result) {
-      //   // Remove from cache
-      //   await cacheService.invalidateUserCache(id);
-      //   return true;
-      // }
-
-      return !!result;
+      if (Array.isArray(ids)) {
+        const result = await User.deleteMany({ _id: { $in: ids } });
+        // Optionally invalidate cache for each id
+        // await Promise.all(ids.map(id => cacheService.invalidateUserCache(id)));
+        return result.deletedCount === ids.length;
+      } else {
+        const result = await User.findByIdAndDelete(ids);
+        // if (result) {
+        //   await cacheService.invalidateUserCache(ids);
+        //   return true;
+        // }
+        return !!result;
+      }
     } catch (error) {
       logger.error('Delete user error:', error);
       throw error;

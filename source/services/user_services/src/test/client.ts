@@ -4,6 +4,7 @@ import path from 'path';
 import chalk from 'chalk';
 import * as Responses from '@/proto/generated/user'
 import { roles } from '../types';
+
 // Load the proto file
 const PROTO_PATH = path.join(__dirname, '../proto/user.proto');
 
@@ -575,9 +576,9 @@ class GrpcTestClient {
     async testDeleteUser(): Promise<void> {
         console.log(chalk.yellow('\n--- Testing Delete User (Placeholder) ---'));
 
-        const deleteUser = promisify(userClient, 'DeleteUser');
+        const deleteUsers = promisify(userClient, 'DeleteUsers');
         try {
-            const response = await deleteUser({ id: toBeDeletedId }, createMetadata(adminToken)) as Responses.ApiResponse;
+            const response = await deleteUsers({ userIds: [toBeDeletedId] }, createMetadata(adminToken)) as Responses.BatchDeleteUsersResponse;
             console.log(chalk.yellow('\n--- Response Data ---\n ' + JSON.stringify(response)));
 
             if (response.success) {
@@ -589,7 +590,7 @@ class GrpcTestClient {
             console.log(chalk.red('✗ Delete user error:'), error);
         }
         try {
-            const response = await deleteUser({ id: adminUserId }, createMetadata(patientToken)) as Responses.ApiResponse;
+            const response = await deleteUsers({ userIds: [adminUserId] }, createMetadata(patientToken)) as Responses.BatchDeleteUsersResponse;
             console.log(chalk.yellow('\n--- Response Data ---\n ' + JSON.stringify(response)));
 
             if (!response.success) {
@@ -601,7 +602,7 @@ class GrpcTestClient {
             console.log(chalk.red('✗ Delete user error:'), error);
         }
         try {
-            const response = await deleteUser({ id: 'non-existent-id' }, createMetadata(adminToken)) as Responses.ApiResponse;
+            const response = await deleteUsers({ userIds: ['non-existent-id'] }, createMetadata(adminToken)) as Responses.BatchDeleteUsersResponse;
             console.log(chalk.yellow('\n--- Response Data ---\n ' + JSON.stringify(response)));
 
             if (!response.success) {

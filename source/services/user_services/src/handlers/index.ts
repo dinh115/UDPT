@@ -9,17 +9,6 @@ import {
     HealthCheckResponse
 } from '../proto/generated/user';
 
-// export interface AuthenticatedCall extends grpc.ServerUnaryCall<any, any> {
-//     user?: {
-//         userId: string;
-//         email: string;
-//         username: string;
-//         role: string;
-//         status: string;
-//     };
-// }
-
-// Enhanced interface for user metadata
 interface UserMetadata {
     userId?: string;
     email?: string;
