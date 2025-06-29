@@ -1,6 +1,7 @@
 import { authenticate } from "../authentication/authentication.js";
 
-const skipPoint = ['/api/patient/login',];
+const skipPoint = ['/api/user/login',
+    '/api/user/login',];
 
 export const auth = async (req, res, next) => {
     try {
@@ -12,7 +13,7 @@ export const auth = async (req, res, next) => {
         }
 
         const user = await authenticate(req, next);
-        req.header['__user-info'] = JSON.stringify(user);
+        req.headers['__user-info'] = JSON.stringify(user);
         console.log('Authenticated user:', user);
         next();
     }

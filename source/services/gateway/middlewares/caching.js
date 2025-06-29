@@ -31,7 +31,7 @@ export const caching = (req, res, next) => {
     const originalJson = res.json.bind(res);
     res.send = (body) => {
         cacheService.setCache(req.url, req.method, JSON.parse(body));
-        return originalSend(body);
+        return originalJson(body);
     }
     next();
 };

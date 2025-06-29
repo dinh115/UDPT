@@ -31,7 +31,7 @@ export class AppointmentController {
             // Check if the requested time slot is available in doctor's schedule
             const availableSlot = await UtilHelper.getSlotOrResponse(doctorId, appointmentDateTime, timeSlot, res)
             if (!availableSlot) return;
-
+            
             // Check if user already has an appointment at this time
             const isUserConflict = await UtilHelper.isUserTimeConflictResponse({
                 patient: userId,
