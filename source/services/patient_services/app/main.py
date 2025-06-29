@@ -12,34 +12,34 @@ async def root():
     return {"message": "Patient visit service running."}
 
 # parallel
-# async def main():
-#     # gRPC
-#     grpc_server = await grpc_serve()
-#     grpc_task = asyncio.create_task(grpc_server.wait_for_termination())
-
-#     # FastAPI
-#     config = uvicorn.Config(app, host="0.0.0.0", port=3001)
-#     server = uvicorn.Server(config)
-#     uvicorn_task = asyncio.create_task(server.serve())
-
-#     try:
-#         await asyncio.gather(grpc_task, uvicorn_task)
-#     except asyncio.CancelledError:
-#         print("Cancelled — Shutting down...")
-#     finally:
-#         await grpc_server.stop(grace=None)  # hoặc `grace=1` để đợi hoàn thành
-#         print("gRPC server shutdown completed.")
-
-# only gRPC
 async def main():
-    server = await grpc_serve()
+    # gRPC
+    grpc_server = await grpc_serve()
+    grpc_task = asyncio.create_task(grpc_server.wait_for_termination())
+
+    # FastAPI
+    config = uvicorn.Config(app, host="0.0.0.0", port=3001)
+    server = uvicorn.Server(config)
+    uvicorn_task = asyncio.create_task(server.serve())
+
     try:
-        await server.wait_for_termination()
+        await asyncio.gather(grpc_task, uvicorn_task)
     except asyncio.CancelledError:
         print("Cancelled — Shutting down...")
     finally:
-        await server.stop(grace=None)
+        await grpc_server.stop(grace=None)  # hoặc `grace=1` để đợi hoàn thành
         print("gRPC server shutdown completed.")
+
+# # only gRPC
+# async def main():
+#     server = await grpc_serve()
+#     try:
+#         await server.wait_for_termination()
+#     except asyncio.CancelledError:
+#         print("Cancelled — Shutting down...")
+#     finally:
+#         await server.stop(grace=None)
+#         print("gRPC server shutdown completed.")
 
 
 if __name__ == "__main__":

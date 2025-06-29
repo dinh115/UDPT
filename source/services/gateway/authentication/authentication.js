@@ -14,7 +14,7 @@ export const authenticate = async (req, next) => {
     try {
         let jwtToken = req.headers['authorization'];
         if (!jwtToken) throw new AuthenticationError('MISSING_TOKEN', "Missing token");
-        jwtToken = jwtToken?.split(' ')[1]; // Extract the token from the header
+        jwtToken = jwtToken?.split(' ')[1]; // Extract token
         if (!jwtToken) throw new AuthenticationError('MISSING_TOKEN', "Invalid token format");
         console.log('JWT Token:', jwtToken);
 
@@ -26,7 +26,7 @@ export const authenticate = async (req, next) => {
                 authenticationUrl,
                 {jwtToken: jwtToken},
                 {
-                    validateStatus: (status) => status < 500 // Accept all 2xx and 3xx responses
+                    validateStatus: (status) => status < 500 // Accept 2xx and 3xx responses
                 }
             );
 

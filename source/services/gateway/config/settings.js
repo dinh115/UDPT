@@ -1,8 +1,61 @@
 import dotenv from 'dotenv';
+import grpc from '@grpc/grpc-js';
+import protoLoader from '@grpc/proto-loader';
+import path from 'path';
+
 dotenv.config();
 
-export const ContextPathMap = new Map([
-  ['patient', process.env.PATIENT_SERVICES],
-  ['b', process.env.B_SERVICES],
-  ['c', process.env.C_SERVICES]
-]);
+// export const ContextPathMap = new Map([
+//   ['patient', process.env.PATIENT_SERVICES],
+//   ['b', process.env.B_SERVICES],
+//   ['c', process.env.C_SERVICES]
+// ]);
+
+
+function loadClient(protoPath, packageName, serviceName, address) {
+  const packageDefinition = protoLoader.loadSync(protoPath, {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true,
+  });
+
+  const grpcObject = grpc.loadPackageDefinition(packageDefinition);
+  const pkg = grpcObject[packageName];
+  if (!pkg || !pkg[serviceName]) {
+    throw new Error(`Service ${serviceName} not found in package ${packageName}`);
+  }
+    
+  return new grpcObject[packageName][serviceName](address, grpc.credentials.createInsecure());
+}
+
+// Load gRPC clients
+const serviceKeys = ['PATIENT', 
+  'DOCTOR', 
+  'X'];
+
+// Create map
+export const GrpcClientMap = new Map();
+
+for (const key of serviceKeys) {
+  const protoPath = process.env[`${key}_PROTO_PATH`];
+  const packageName = process.env[`${key}_PACKAGE`];
+  const serviceName = process.env[`${key}_SERVICE`];
+  const address = process.env[`${key}_ADDRESS`];
+
+  if (!protoPath || !packageName || !serviceName || !address) {
+    console.error(`Missing environment variable for ${key}`);
+    continue;
+  }
+  else {
+    GrpcClientMap.set(key.toLowerCase(), 
+      loadClient(
+        path.resolve(protoPath), 
+        packageName, 
+        serviceName, 
+        address
+      )
+    );
+  }
+}
