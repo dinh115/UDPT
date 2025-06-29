@@ -1,0 +1,14 @@
+{
+    "patientName": "Nguyễn Đình Phương Đại",
+    "patientEmail": "nguyendinhphuongdai@gmail.com",
+    "date": "20/03/2024",
+    "startTime": "10:00",
+    "endTime": "11:00",
+    "doctorName": "Dr. Sarah Smith",
+    "consultationFee": 50000
+}
+
+python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. notification.proto
+cd source/services/notification_services
+EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS", "pdai.congviec@gmail.com")
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD", "ixouorzcsxgrsdeu")
