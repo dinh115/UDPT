@@ -1,31 +1,33 @@
-from app.models import patient_model as model
-from app.models.patient_schema import Patient
 from fastapi import HTTPException
+from app.models.patient_model import (
+    create_visit,
+    get_visit_by_id,
+    get_visits_by_patient,
+    update_visit,
+    delete_visit
+)
+from app.models.patient_schema import PatientVisitCreate, PatientVisitUpdate
 
-async def get_patients_logic():
-    return await model.get_all_patients()
+async def create_visit_controller(data: PatientVisitCreate):
+    return await create_visit(data)
 
-async def get_patient_logic(id: str):
-    patient = await model.get_patient_by_id(id)
-    if not patient:
-        raise HTTPException(status_code=404, detail="Patient not found")
-    return patient
+async def get_my_visits_controller(patient_id: str):
+    return await get_visits_by_patient(patient_id)
 
-async def create_patient_logic(patient: Patient):
-    existing = await model.get_patient_by_email(patient.email)
-    if existing:
-        raise HTTPException(status_code=400, detail="Email already exists")
-    await model.insert_patient(patient)
-    return await model.get_patient_by_email(patient.email)
+async def get_visit_controller(visit_id: str):
+    visit = await get_visit_by_id(visit_id)
+    if not visit:
+        raise HTTPException(status_code=404, detail="Visit not found")
+    return visit
 
-async def update_patient_logic(id: str, patient: Patient):
-    existing = await model.get_patient_by_id(id)
-    if not existing:
-        raise HTTPException(status_code=404, detail="Patient not found")
-    return await model.update_patient(id, patient)
+async def update_visit_controller(visit_id: str, data: PatientVisitUpdate):
+    updated = await update_visit(visit_id, data)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Visit not found")
+    return updated
 
-async def delete_patient_logic(id: str):
-    deleted = await model.delete_patient(id)
-    if deleted == 0:
-        raise HTTPException(status_code=404, detail="Patient not found")
-    return {"message": "Patient deleted"}
+async def delete_visit_controller(visit_id: str):
+    success = await delete_visit(visit_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Visit not found")
+    return {"message": "Visit deleted successfully"}

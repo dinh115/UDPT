@@ -1,26 +1,26 @@
-from fastapi import APIRouter
-from typing import List
-from app.models.patient_schema import Patient, PatientInDB
+from fastapi import APIRouter, Depends
+from app.models.patient_schema import PatientVisitCreate, PatientVisitUpdate, PatientVisitOut
 from app.controllers import patient_controller as controller
+from typing import List
 
-router = APIRouter()
+router = APIRouter(prefix="/patient-visits", tags=["Patient Visits"])
 
-@router.get("/", response_model=List[PatientInDB])
-async def get_patients():
-    return await controller.get_patients_logic()
+@router.post("/", response_model=PatientVisitOut)
+async def create_visit_route(data: PatientVisitCreate):
+    return await controller.create_visit_controller(data)
 
-@router.get("/{id}", response_model=PatientInDB)
-async def get_patient(id: str):
-    return await controller.get_patient_logic(id)
+@router.get("/user/{patient_id}", response_model=List[PatientVisitOut])
+async def get_my_visits_route(patient_id: str):
+    return await controller.get_my_visits_controller(patient_id)
 
-@router.post("/", response_model=PatientInDB)
-async def add_patient(patient: Patient):
-    return await controller.create_patient_logic(patient)
+@router.get("/{visit_id}", response_model=PatientVisitOut)
+async def get_visit_route(visit_id: str):
+    return await controller.get_visit_controller(visit_id)
 
-@router.put("/{id}", response_model=PatientInDB)
-async def update_patient(id: str, patient: Patient):
-    return await controller.update_patient_logic(id, patient)
+@router.put("/{visit_id}", response_model=PatientVisitOut)
+async def update_visit_route(visit_id: str, data: PatientVisitUpdate):
+    return await controller.update_visit_controller(visit_id, data)
 
-@router.delete("/{id}")
-async def delete_patient(id: str):
-    return await controller.delete_patient_logic(id)
+@router.delete("/{visit_id}")
+async def delete_visit_route(visit_id: str):
+    return await controller.delete_visit_controller(visit_id)
