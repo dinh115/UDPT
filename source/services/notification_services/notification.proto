@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package appointment;
+
+service AppointmentService {
+  rpc SendReminder (AppointmentRequest) returns (AppointmentResponse);
+  rpc SendPrescriptionReady (PrescriptionReadyRequest) returns (AppointmentResponse);
+}
+
+message AppointmentRequest {
+  string patientName = 1;
+  string patientEmail = 2;
+  string date = 3;
+  string startTime = 4;
+  string endTime = 5;
+  string doctorName = 6;
+  int32 consultationFee = 7;
+}
+
+message PrescriptionReadyRequest {
+  string patientEmail = 1;
+}
+
+
+message AppointmentResponse {
+  bool success = 1;
+  string message = 2;
+}
