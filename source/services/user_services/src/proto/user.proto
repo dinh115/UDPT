@@ -1,0 +1,246 @@
+syntax = "proto3";
+
+package user;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+// =================== COMMON TYPES ===================
+message User {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string firstName = 4;
+  string lastName = 5;
+  string role = 6; // patient, admin, doctor, employee
+  string status = 7; // active, inactive
+  google.protobuf.Timestamp createdAt = 8;
+  google.protobuf.Timestamp updatedAt = 9;
+}
+
+message UserWithPassword {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string password = 4;
+  string firstName = 5;
+  string lastName = 6;
+  string role = 7;
+  string status = 8;
+  google.protobuf.Timestamp createdAt = 9;
+  google.protobuf.Timestamp updatedAt = 10;
+}
+
+message PaginationMeta {
+  int32 currentPage = 1;
+  int32 totalPages = 2;
+  int32 totalItems = 3;
+  int32 itemsPerPage = 4;
+  bool hasNext = 5;
+  bool hasPrevious = 6;
+}
+
+message ApiResponse {
+  bool success = 1;
+  string message = 2;
+  string error = 3;
+}
+
+// =================== AUTH REQUESTS/RESPONSES ===================
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  bool success = 1;
+  string token = 2;
+  User user = 3;
+  string error = 4;
+}
+
+message RegisterRequest {
+  string email = 1;
+  string username = 2;
+  string password = 3;
+  string firstName = 4;
+  string lastName = 5;
+}
+
+message RegisterResponse {
+  bool success = 1;
+  string token = 2;
+  User user = 3;
+  string error = 4;
+}
+
+message LogoutRequest {
+  // Use metadata for token
+}
+
+message VerifyTokenRequest {
+  string token = 1;
+}
+
+message VerifyTokenResponse {
+  bool success = 1;
+  string userId = 2;
+  string username =3;
+  string email = 4;
+  string role = 5;
+  string status = 6;
+  string error = 7;
+}
+
+// =================== USER MANAGEMENT REQUESTS/RESPONSES ===================
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserResponse {
+  bool success = 1;
+  User user = 2;
+  string error = 3;
+}
+
+message GetUsersRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  optional string status = 3;
+  optional string role = 4;
+  optional string search = 5;
+  optional string sortBy = 6;
+  optional string sortOrder = 7;
+}
+
+message GetUsersResponse {
+  bool success = 1;
+  repeated User users = 2;
+  PaginationMeta pagination = 3;
+  string error = 4;
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string username = 2;
+  string password = 3;
+  string firstName = 4;
+  string lastName = 5;
+  string role = 6;
+  string status = 7;
+}
+
+message CreateUserResponse {
+  bool success = 1;
+  User user = 2;
+  string error = 3;
+}
+
+message UpdateUserRequest {
+  optional string id = 1;
+  optional string email = 2;
+  optional string password = 3;
+  optional string firstName = 4;
+  optional string lastName = 5;
+  optional string role = 6;
+  optional string status = 7;
+}
+
+message UpdateUserResponse {
+  bool success = 1;
+  User user = 2;
+  string error = 3;
+}
+
+message BatchDeleteUsersRequest {
+  repeated string userIds = 1;
+}
+
+message BatchDeleteUsersResponse {
+  bool success = 1;
+  string message = 2;
+  string error = 3;
+}
+
+message BatchGetUsersRequest {
+  repeated string userIds = 1;
+}
+
+message BatchGetUsersResponse {
+  bool success = 1;
+  repeated User users = 2;
+  string error = 3;
+}
+
+message CheckUserStatusRequest {
+  string id = 1;
+}
+
+message CheckUserStatusResponse {
+  bool success = 1;
+  string id = 2;
+  string status = 3;
+  string role = 4;
+  bool exists = 5;
+  bool active = 6;
+  string error = 7;
+}
+
+message VerifyUsersRequest {
+  repeated string userIds = 1;
+}
+
+message UserVerificationResult {
+  string userId = 1;
+  bool exists = 2;
+  bool active = 3;
+  string status = 4;
+  string role = 5;
+}
+
+message VerifyUsersResponse {
+  bool success = 1;
+  repeated UserVerificationResult results = 2;
+  string error = 3;
+}
+
+// =================== HEALTH CHECK ===================
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  bool success = 1;
+  string status = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  double uptime = 4;
+  string environment = 5;
+}
+
+// =================== SERVICES ===================
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Logout(LogoutRequest) returns (ApiResponse);
+  rpc VerifyToken(VerifyTokenRequest) returns (VerifyTokenResponse);
+  rpc GetProfile(google.protobuf.Empty) returns (GetUserResponse);
+  rpc UpdateProfile(UpdateUserRequest) returns (UpdateUserResponse);
+}
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  rpc DeleteUsers(BatchDeleteUsersRequest) returns (BatchDeleteUsersResponse);
+}
+
+service InternalService {
+  rpc GetUserInternal(GetUserRequest) returns (GetUserResponse);
+  rpc GetUsersInternal(GetUsersRequest) returns (GetUsersResponse);
+  rpc BatchGetUsers(BatchGetUsersRequest) returns (BatchGetUsersResponse);
+  rpc CheckUserStatus(CheckUserStatusRequest) returns (CheckUserStatusResponse);
+  rpc VerifyUsers(VerifyUsersRequest) returns (VerifyUsersResponse);
+}
+
+service HealthService {
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+}
