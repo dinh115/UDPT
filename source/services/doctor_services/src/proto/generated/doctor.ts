@@ -81,6 +81,13 @@ export interface UpdateDoctorAvailabilityRequest {
   availability: Availability[];
 }
 
+export interface UpdateBookingRequest {
+  doctorId: string;
+  appointmentDate: string;
+  timeSlot: TimeSlot | undefined;
+  isBooked: boolean;
+}
+
 export interface GetDoctorSlotStatisticsRequest {
   doctorId: string;
   date?: string | undefined;
@@ -130,6 +137,13 @@ export interface UpdateDoctorProfileResponse {
   error?: string | undefined;
 }
 
+export interface UpdateBookingResponse {
+  success: boolean;
+  message: string;
+  timeSlot?: TimeSlot | undefined;
+  error?: string | undefined;
+}
+
 export interface GetAvailableTimeSlotsResponse {
   success: boolean;
   message: string;
@@ -174,7 +188,7 @@ export interface GetDoctorSlotStatisticsResponse {
 }
 
 export interface BatchGetDoctorsRequest {
-  doctorIds: Doctor[];
+  doctorIds: string[];
 }
 
 export interface BatchGetDoctorsResponse {
@@ -1244,6 +1258,116 @@ export const UpdateDoctorAvailabilityRequest: MessageFns<UpdateDoctorAvailabilit
   },
 };
 
+function createBaseUpdateBookingRequest(): UpdateBookingRequest {
+  return { doctorId: "", appointmentDate: "", timeSlot: undefined, isBooked: false };
+}
+
+export const UpdateBookingRequest: MessageFns<UpdateBookingRequest> = {
+  encode(message: UpdateBookingRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.doctorId !== "") {
+      writer.uint32(10).string(message.doctorId);
+    }
+    if (message.appointmentDate !== "") {
+      writer.uint32(18).string(message.appointmentDate);
+    }
+    if (message.timeSlot !== undefined) {
+      TimeSlot.encode(message.timeSlot, writer.uint32(26).fork()).join();
+    }
+    if (message.isBooked !== false) {
+      writer.uint32(32).bool(message.isBooked);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): UpdateBookingRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateBookingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.doctorId = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.appointmentDate = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.timeSlot = TimeSlot.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.isBooked = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateBookingRequest {
+    return {
+      doctorId: isSet(object.doctorId) ? globalThis.String(object.doctorId) : "",
+      appointmentDate: isSet(object.appointmentDate) ? globalThis.String(object.appointmentDate) : "",
+      timeSlot: isSet(object.timeSlot) ? TimeSlot.fromJSON(object.timeSlot) : undefined,
+      isBooked: isSet(object.isBooked) ? globalThis.Boolean(object.isBooked) : false,
+    };
+  },
+
+  toJSON(message: UpdateBookingRequest): unknown {
+    const obj: any = {};
+    if (message.doctorId !== "") {
+      obj.doctorId = message.doctorId;
+    }
+    if (message.appointmentDate !== "") {
+      obj.appointmentDate = message.appointmentDate;
+    }
+    if (message.timeSlot !== undefined) {
+      obj.timeSlot = TimeSlot.toJSON(message.timeSlot);
+    }
+    if (message.isBooked !== false) {
+      obj.isBooked = message.isBooked;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateBookingRequest>, I>>(base?: I): UpdateBookingRequest {
+    return UpdateBookingRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateBookingRequest>, I>>(object: I): UpdateBookingRequest {
+    const message = createBaseUpdateBookingRequest();
+    message.doctorId = object.doctorId ?? "";
+    message.appointmentDate = object.appointmentDate ?? "";
+    message.timeSlot = (object.timeSlot !== undefined && object.timeSlot !== null)
+      ? TimeSlot.fromPartial(object.timeSlot)
+      : undefined;
+    message.isBooked = object.isBooked ?? false;
+    return message;
+  },
+};
+
 function createBaseGetDoctorSlotStatisticsRequest(): GetDoctorSlotStatisticsRequest {
   return { doctorId: "", date: undefined };
 }
@@ -1994,6 +2118,116 @@ export const UpdateDoctorProfileResponse: MessageFns<UpdateDoctorProfileResponse
   },
 };
 
+function createBaseUpdateBookingResponse(): UpdateBookingResponse {
+  return { success: false, message: "", timeSlot: undefined, error: undefined };
+}
+
+export const UpdateBookingResponse: MessageFns<UpdateBookingResponse> = {
+  encode(message: UpdateBookingResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.success !== false) {
+      writer.uint32(8).bool(message.success);
+    }
+    if (message.message !== "") {
+      writer.uint32(18).string(message.message);
+    }
+    if (message.timeSlot !== undefined) {
+      TimeSlot.encode(message.timeSlot, writer.uint32(26).fork()).join();
+    }
+    if (message.error !== undefined) {
+      writer.uint32(34).string(message.error);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): UpdateBookingResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateBookingResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.success = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.timeSlot = TimeSlot.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.error = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateBookingResponse {
+    return {
+      success: isSet(object.success) ? globalThis.Boolean(object.success) : false,
+      message: isSet(object.message) ? globalThis.String(object.message) : "",
+      timeSlot: isSet(object.timeSlot) ? TimeSlot.fromJSON(object.timeSlot) : undefined,
+      error: isSet(object.error) ? globalThis.String(object.error) : undefined,
+    };
+  },
+
+  toJSON(message: UpdateBookingResponse): unknown {
+    const obj: any = {};
+    if (message.success !== false) {
+      obj.success = message.success;
+    }
+    if (message.message !== "") {
+      obj.message = message.message;
+    }
+    if (message.timeSlot !== undefined) {
+      obj.timeSlot = TimeSlot.toJSON(message.timeSlot);
+    }
+    if (message.error !== undefined) {
+      obj.error = message.error;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateBookingResponse>, I>>(base?: I): UpdateBookingResponse {
+    return UpdateBookingResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateBookingResponse>, I>>(object: I): UpdateBookingResponse {
+    const message = createBaseUpdateBookingResponse();
+    message.success = object.success ?? false;
+    message.message = object.message ?? "";
+    message.timeSlot = (object.timeSlot !== undefined && object.timeSlot !== null)
+      ? TimeSlot.fromPartial(object.timeSlot)
+      : undefined;
+    message.error = object.error ?? undefined;
+    return message;
+  },
+};
+
 function createBaseGetAvailableTimeSlotsResponse(): GetAvailableTimeSlotsResponse {
   return { success: false, message: "", slots: [], error: undefined };
 }
@@ -2677,7 +2911,7 @@ function createBaseBatchGetDoctorsRequest(): BatchGetDoctorsRequest {
 export const BatchGetDoctorsRequest: MessageFns<BatchGetDoctorsRequest> = {
   encode(message: BatchGetDoctorsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.doctorIds) {
-      Doctor.encode(v!, writer.uint32(10).fork()).join();
+      writer.uint32(10).string(v!);
     }
     return writer;
   },
@@ -2694,7 +2928,7 @@ export const BatchGetDoctorsRequest: MessageFns<BatchGetDoctorsRequest> = {
             break;
           }
 
-          message.doctorIds.push(Doctor.decode(reader, reader.uint32()));
+          message.doctorIds.push(reader.string());
           continue;
         }
       }
@@ -2709,7 +2943,7 @@ export const BatchGetDoctorsRequest: MessageFns<BatchGetDoctorsRequest> = {
   fromJSON(object: any): BatchGetDoctorsRequest {
     return {
       doctorIds: globalThis.Array.isArray(object?.doctorIds)
-        ? object.doctorIds.map((e: any) => Doctor.fromJSON(e))
+        ? object.doctorIds.map((e: any) => globalThis.String(e))
         : [],
     };
   },
@@ -2717,7 +2951,7 @@ export const BatchGetDoctorsRequest: MessageFns<BatchGetDoctorsRequest> = {
   toJSON(message: BatchGetDoctorsRequest): unknown {
     const obj: any = {};
     if (message.doctorIds?.length) {
-      obj.doctorIds = message.doctorIds.map((e) => Doctor.toJSON(e));
+      obj.doctorIds = message.doctorIds;
     }
     return obj;
   },
@@ -2727,7 +2961,7 @@ export const BatchGetDoctorsRequest: MessageFns<BatchGetDoctorsRequest> = {
   },
   fromPartial<I extends Exact<DeepPartial<BatchGetDoctorsRequest>, I>>(object: I): BatchGetDoctorsRequest {
     const message = createBaseBatchGetDoctorsRequest();
-    message.doctorIds = object.doctorIds?.map((e) => Doctor.fromPartial(e)) || [];
+    message.doctorIds = object.doctorIds?.map((e) => e) || [];
     return message;
   },
 };
@@ -3242,6 +3476,8 @@ export interface InternalService {
   GenerateTimeSlots(request: GenerateTimeSlotsRequest): Promise<GenerateTimeSlotsResponse>;
   /** Get doctor slot statistics */
   GetDoctorSlotStatistics(request: GetDoctorSlotStatisticsRequest): Promise<GetDoctorSlotStatisticsResponse>;
+  /** Update booking status */
+  UpdateBooking(request: UpdateBookingRequest): Promise<UpdateBookingResponse>;
 }
 
 export const InternalServiceServiceName = "doctor.InternalService";
@@ -3257,6 +3493,7 @@ export class InternalServiceClientImpl implements InternalService {
     this.GetAvailableTimeSlots = this.GetAvailableTimeSlots.bind(this);
     this.GenerateTimeSlots = this.GenerateTimeSlots.bind(this);
     this.GetDoctorSlotStatistics = this.GetDoctorSlotStatistics.bind(this);
+    this.UpdateBooking = this.UpdateBooking.bind(this);
   }
   GetDoctorInternal(request: GetDoctorByIdRequest): Promise<GetDoctorByIdResponse> {
     const data = GetDoctorByIdRequest.encode(request).finish();
@@ -3292,6 +3529,12 @@ export class InternalServiceClientImpl implements InternalService {
     const data = GetDoctorSlotStatisticsRequest.encode(request).finish();
     const promise = this.rpc.request(this.service, "GetDoctorSlotStatistics", data);
     return promise.then((data) => GetDoctorSlotStatisticsResponse.decode(new BinaryReader(data)));
+  }
+
+  UpdateBooking(request: UpdateBookingRequest): Promise<UpdateBookingResponse> {
+    const data = UpdateBookingRequest.encode(request).finish();
+    const promise = this.rpc.request(this.service, "UpdateBooking", data);
+    return promise.then((data) => UpdateBookingResponse.decode(new BinaryReader(data)));
   }
 }
 

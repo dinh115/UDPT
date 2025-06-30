@@ -54,6 +54,7 @@ function createGrpcServer(): grpc.Server {
         GetAvailableTimeSlots: internalHandlers.getAvailableSlots.bind(internalHandlers),
         GenerateTimeSlots: internalHandlers.generateTimeSlot.bind(internalHandlers),
         GetDoctorSlotStatistics: internalHandlers.getDoctorSlotStatistics.bind(internalHandlers),
+        UpdateBooking: internalHandlers.updateBooking.bind(internalHandlers),
     });
 
     server.addService(doctorProto.doctor.HealthService.service, {

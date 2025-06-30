@@ -9,7 +9,8 @@ import {
     validateDoctorIdSchema,
     getAvailableTimeSlotsSchema,
     doctorQuerySchema,
-    getDoctorTimeSlotsStatisticsSchema
+    getDoctorTimeSlotsStatisticsSchema,
+    updateBookingSchema
 } from '../config/joiSchema';
 import {
     GetDoctorByIdRequest,
@@ -23,7 +24,9 @@ import {
     GetAvailableTimeSlotsRequest,
     GetAvailableTimeSlotsResponse,
     GenerateTimeSlotsRequest,
-    GenerateTimeSlotsResponse
+    GenerateTimeSlotsResponse,
+    UpdateBookingRequest,
+    UpdateBookingResponse
 
 } from '../proto/generated/doctor';
 import chalk from 'chalk';
@@ -308,6 +311,46 @@ export class InternalServiceHandlers {
         }
         catch (error) {
             logger.error('Generate doctor time slots internal handler error:', error);
+            const err = handleGrpcError(error);
+            callback(err, null);
+        }
+    }
+
+    async updateBooking(
+        call: grpc.ServerUnaryCall<UpdateBookingRequest, UpdateBookingResponse>,
+        callback: grpc.sendUnaryData<UpdateBookingResponse>
+    ): Promise<void> {
+        try {
+            if (!authenticateService(call.metadata)) {
+                const response = UpdateBookingResponse.create({
+                    success: false,
+                    error: 'Service token is required.'
+                })
+                return callback(null, response);
+            }
+
+            const { error, value } = updateBookingSchema.validate(call.request);
+            if (error) {
+                const response = UpdateBookingResponse.create({
+                    success: false,
+                    error: error.details[0].message
+                })
+                return callback(null, response);
+            }
+
+            const { doctorId, appointmentDate, timeSlot, isBooked } = value;
+
+            const result = await doctorService.updateSlotBookingStatus(doctorId, new Date(appointmentDate), timeSlot, isBooked);
+
+            const response = UpdateBookingResponse.create({
+                success: true,
+                message: 'Booking updated successfully.',
+                timeSlot: result
+            })
+
+            callback(null, response);
+        } catch (error) {
+            logger.error('Update booking internal handler error:', error);
             const err = handleGrpcError(error);
             callback(err, null);
         }

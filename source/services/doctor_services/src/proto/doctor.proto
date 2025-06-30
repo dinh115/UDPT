@@ -75,6 +75,13 @@ message UpdateDoctorAvailabilityRequest {
   repeated Availability availability = 2;
 }
 
+message UpdateBookingRequest {
+  string doctorId = 1;
+  string appointmentDate = 2;
+  TimeSlot timeSlot = 3;
+  bool isBooked = 4;
+}
+
 message GetDoctorSlotStatisticsRequest {
   string doctorId = 1;
   optional string date = 2;
@@ -122,6 +129,13 @@ message UpdateDoctorProfileResponse {
   bool success = 1;
   string message = 2;
   optional Doctor doctor = 3;
+  optional string error = 4;
+}
+
+message UpdateBookingResponse {
+  bool success = 1;
+  string message = 2;
+  optional TimeSlot timeSlot = 3;
   optional string error = 4;
 }
 
@@ -241,4 +255,7 @@ service InternalService {
  
   // Get doctor slot statistics
   rpc GetDoctorSlotStatistics(GetDoctorSlotStatisticsRequest) returns (GetDoctorSlotStatisticsResponse);
+
+  // Update booking status
+  rpc UpdateBooking(UpdateBookingRequest) returns (UpdateBookingResponse);  
 }
