@@ -13,6 +13,11 @@ message TimeSlot {
   bool isBooked = 3;
 }
 
+message TimeSlotInput {
+  string startTime = 1;
+  string endTime = 2;
+}
+
 message Availability {
   string day = 1;
   repeated TimeSlot slots = 2;
@@ -78,7 +83,7 @@ message UpdateDoctorAvailabilityRequest {
 message UpdateBookingRequest {
   string doctorId = 1;
   string appointmentDate = 2;
-  TimeSlot timeSlot = 3;
+  TimeSlotInput timeSlot = 3;
   bool isBooked = 4;
 }
 

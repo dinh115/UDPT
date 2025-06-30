@@ -17,6 +17,11 @@ export interface TimeSlot {
   isBooked: boolean;
 }
 
+export interface TimeSlotInput {
+  startTime: string;
+  endTime: string;
+}
+
 export interface Availability {
   day: string;
   slots: TimeSlot[];
@@ -84,7 +89,7 @@ export interface UpdateDoctorAvailabilityRequest {
 export interface UpdateBookingRequest {
   doctorId: string;
   appointmentDate: string;
-  timeSlot: TimeSlot | undefined;
+  timeSlot: TimeSlotInput | undefined;
   isBooked: boolean;
 }
 
@@ -307,6 +312,82 @@ export const TimeSlot: MessageFns<TimeSlot> = {
     message.startTime = object.startTime ?? "";
     message.endTime = object.endTime ?? "";
     message.isBooked = object.isBooked ?? false;
+    return message;
+  },
+};
+
+function createBaseTimeSlotInput(): TimeSlotInput {
+  return { startTime: "", endTime: "" };
+}
+
+export const TimeSlotInput: MessageFns<TimeSlotInput> = {
+  encode(message: TimeSlotInput, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.startTime !== "") {
+      writer.uint32(10).string(message.startTime);
+    }
+    if (message.endTime !== "") {
+      writer.uint32(18).string(message.endTime);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TimeSlotInput {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTimeSlotInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.startTime = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.endTime = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): TimeSlotInput {
+    return {
+      startTime: isSet(object.startTime) ? globalThis.String(object.startTime) : "",
+      endTime: isSet(object.endTime) ? globalThis.String(object.endTime) : "",
+    };
+  },
+
+  toJSON(message: TimeSlotInput): unknown {
+    const obj: any = {};
+    if (message.startTime !== "") {
+      obj.startTime = message.startTime;
+    }
+    if (message.endTime !== "") {
+      obj.endTime = message.endTime;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<TimeSlotInput>, I>>(base?: I): TimeSlotInput {
+    return TimeSlotInput.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<TimeSlotInput>, I>>(object: I): TimeSlotInput {
+    const message = createBaseTimeSlotInput();
+    message.startTime = object.startTime ?? "";
+    message.endTime = object.endTime ?? "";
     return message;
   },
 };
@@ -1271,7 +1352,7 @@ export const UpdateBookingRequest: MessageFns<UpdateBookingRequest> = {
       writer.uint32(18).string(message.appointmentDate);
     }
     if (message.timeSlot !== undefined) {
-      TimeSlot.encode(message.timeSlot, writer.uint32(26).fork()).join();
+      TimeSlotInput.encode(message.timeSlot, writer.uint32(26).fork()).join();
     }
     if (message.isBooked !== false) {
       writer.uint32(32).bool(message.isBooked);
@@ -1307,7 +1388,7 @@ export const UpdateBookingRequest: MessageFns<UpdateBookingRequest> = {
             break;
           }
 
-          message.timeSlot = TimeSlot.decode(reader, reader.uint32());
+          message.timeSlot = TimeSlotInput.decode(reader, reader.uint32());
           continue;
         }
         case 4: {
@@ -1331,7 +1412,7 @@ export const UpdateBookingRequest: MessageFns<UpdateBookingRequest> = {
     return {
       doctorId: isSet(object.doctorId) ? globalThis.String(object.doctorId) : "",
       appointmentDate: isSet(object.appointmentDate) ? globalThis.String(object.appointmentDate) : "",
-      timeSlot: isSet(object.timeSlot) ? TimeSlot.fromJSON(object.timeSlot) : undefined,
+      timeSlot: isSet(object.timeSlot) ? TimeSlotInput.fromJSON(object.timeSlot) : undefined,
       isBooked: isSet(object.isBooked) ? globalThis.Boolean(object.isBooked) : false,
     };
   },
@@ -1345,7 +1426,7 @@ export const UpdateBookingRequest: MessageFns<UpdateBookingRequest> = {
       obj.appointmentDate = message.appointmentDate;
     }
     if (message.timeSlot !== undefined) {
-      obj.timeSlot = TimeSlot.toJSON(message.timeSlot);
+      obj.timeSlot = TimeSlotInput.toJSON(message.timeSlot);
     }
     if (message.isBooked !== false) {
       obj.isBooked = message.isBooked;
@@ -1361,7 +1442,7 @@ export const UpdateBookingRequest: MessageFns<UpdateBookingRequest> = {
     message.doctorId = object.doctorId ?? "";
     message.appointmentDate = object.appointmentDate ?? "";
     message.timeSlot = (object.timeSlot !== undefined && object.timeSlot !== null)
-      ? TimeSlot.fromPartial(object.timeSlot)
+      ? TimeSlotInput.fromPartial(object.timeSlot)
       : undefined;
     message.isBooked = object.isBooked ?? false;
     return message;
