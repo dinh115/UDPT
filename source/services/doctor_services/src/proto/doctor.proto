@@ -46,8 +46,8 @@ message CreateDoctorProfileRequest {
 
 message findDoctorsRequest {
   optional string specialization = 1;
-  int32 page = 2;
-  int32 limit = 3;
+  optional int32 page = 2;
+  optional int32 limit = 3;
   string sortBy = 4;
   string sortOrder = 5;
 }

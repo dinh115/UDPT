@@ -2,7 +2,7 @@ import * as grpc from '@grpc/grpc-js';
 import doctorService from '../services/doctorService';
 import logger from '../config/logger';
 import { handleGrpcError } from './errorHandler';
-import { convertToDoctorProto, authenticateService } from '.';
+import { convertToDoctorProto, authenticateService, convertDateToTimestamps } from '.';
 import {
     batchDoctorProfileSchema,
     generateTimeSlotsSchema,
@@ -72,7 +72,7 @@ export class InternalServiceHandlers {
                 doctor: convertToDoctorProto(doctor)
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get doctor by id internal handler error:', error);
             const err = handleGrpcError(error);
@@ -117,7 +117,7 @@ export class InternalServiceHandlers {
                 doctor: convertToDoctorProto(doctor)
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get doctor by user idinternal handler error:', error);
             const err = handleGrpcError(error);
@@ -165,7 +165,7 @@ export class InternalServiceHandlers {
                 }
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get doctos internal handler error:', error);
             const err = handleGrpcError(error);
@@ -202,7 +202,7 @@ export class InternalServiceHandlers {
                 doctors: doctors.map(user => convertToDoctorProto(user))
             })
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Batch get doctors internal handler error:', error);
             const err = handleGrpcError(error);
@@ -251,7 +251,7 @@ export class InternalServiceHandlers {
                         bookedSlots: stats.bookedSlots
                     }
                 })
-                callback(null, response);
+                callback(null, convertDateToTimestamps(response));
 
             }
             else {
@@ -266,7 +266,7 @@ export class InternalServiceHandlers {
                         weekly: stats.weekly,
                     }
                 })
-                callback(null, response);
+                callback(null, convertDateToTimestamps(response));
             }
 
 
@@ -306,7 +306,7 @@ export class InternalServiceHandlers {
                 message: 'OK',
                 slots: slots
             })
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get doctor available slots internal handler error:', error);
             const err = handleGrpcError(error);
@@ -354,7 +354,7 @@ export class InternalServiceHandlers {
                 }
             })
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         }
         catch (error) {
             logger.error('Generate doctor time slots internal handler error:', error);
@@ -394,7 +394,7 @@ export class InternalServiceHandlers {
                 timeSlot: result
             })
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Update booking internal handler error:', error);
             const err = handleGrpcError(error);

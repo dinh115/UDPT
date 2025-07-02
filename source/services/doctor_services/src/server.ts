@@ -9,7 +9,7 @@ import { connectDatabase } from './config/database';
 // Import gRPC handlers
 import { UserServiceHandlers } from './handlers/doctorHandler';
 import { InternalServiceHandlers } from './handlers/internalHandler';
-import { HealthServiceHandlers } from './handlers';
+import { HealthServiceHandlers, withTimestampConversion } from './handlers';
 
 // Load environment variables
 import { config } from './config/environments';
@@ -39,28 +39,28 @@ function createGrpcServer(): grpc.Server {
 
     // Add services to gRPC server
     server.addService(doctorProto.doctor.DoctorService.service, {
-        CreateDoctorProfile: doctorHandlers.createDoctorProfile.bind(doctorHandlers),
-        findDoctors: doctorHandlers.getDoctors.bind(doctorHandlers),
-        GetDoctorById: doctorHandlers.getDoctorProfileById.bind(doctorHandlers),
-        GetDoctorUserById: doctorHandlers.getDoctorProfileByUserId.bind(doctorHandlers),
-        UpdateDoctorProfile: doctorHandlers.updateDoctorProfile.bind(doctorHandlers),
-        UpdateDoctorAvailability: doctorHandlers.updateDoctorAvailability.bind(doctorHandlers),
-        DeleteDoctors: doctorHandlers.deleteDoctors.bind(doctorHandlers),
+        CreateDoctorProfile: withTimestampConversion(doctorHandlers.createDoctorProfile.bind(doctorHandlers)),
+        findDoctors: withTimestampConversion(doctorHandlers.getDoctors.bind(doctorHandlers)),
+        GetDoctorById: withTimestampConversion(doctorHandlers.getDoctorProfileById.bind(doctorHandlers)),
+        GetDoctorUserById: withTimestampConversion(doctorHandlers.getDoctorProfileByUserId.bind(doctorHandlers)),
+        UpdateDoctorProfile: withTimestampConversion(doctorHandlers.updateDoctorProfile.bind(doctorHandlers)),
+        UpdateDoctorAvailability: withTimestampConversion(doctorHandlers.updateDoctorAvailability.bind(doctorHandlers)),
+        DeleteDoctors: withTimestampConversion(doctorHandlers.deleteDoctors.bind(doctorHandlers)),
     });
 
     server.addService(doctorProto.doctor.InternalService.service, {
-        GetDoctorByIdInternal: internalHandlers.getDoctorByIdInternal.bind(internalHandlers),
-        GetDoctorByUserIdInternal: internalHandlers.getDoctorByUserIdInternal.bind(internalHandlers),
-        GetDoctorsInternal: internalHandlers.getDoctorsInternal.bind(internalHandlers),
-        BatchGetDoctors: internalHandlers.batchGetDoctors.bind(internalHandlers),
-        GetAvailableTimeSlots: internalHandlers.getAvailableSlots.bind(internalHandlers),
-        GenerateTimeSlots: internalHandlers.generateTimeSlot.bind(internalHandlers),
-        GetDoctorSlotStatistics: internalHandlers.getDoctorSlotStatistics.bind(internalHandlers),
-        UpdateBooking: internalHandlers.updateBooking.bind(internalHandlers),
+        GetDoctorByIdInternal: withTimestampConversion(internalHandlers.getDoctorByIdInternal.bind(internalHandlers)),
+        GetDoctorByUserIdInternal: withTimestampConversion(internalHandlers.getDoctorByUserIdInternal.bind(internalHandlers)),
+        GetDoctorsInternal: withTimestampConversion(internalHandlers.getDoctorsInternal.bind(internalHandlers)),
+        BatchGetDoctors: withTimestampConversion(internalHandlers.batchGetDoctors.bind(internalHandlers)),
+        GetAvailableTimeSlots: withTimestampConversion(internalHandlers.getAvailableSlots.bind(internalHandlers)),
+        GenerateTimeSlots: withTimestampConversion(internalHandlers.generateTimeSlot.bind(internalHandlers)),
+        GetDoctorSlotStatistics: withTimestampConversion(internalHandlers.getDoctorSlotStatistics.bind(internalHandlers)),
+        UpdateBooking: withTimestampConversion(internalHandlers.updateBooking.bind(internalHandlers)),
     });
 
     server.addService(doctorProto.doctor.HealthService.service, {
-        Check: healthHandlers.check.bind(healthHandlers),
+        Check: withTimestampConversion(healthHandlers.check.bind(healthHandlers)),
     });
 
     // Add interceptors for logging and error handling
