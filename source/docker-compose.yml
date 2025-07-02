@@ -10,6 +10,9 @@ services:
       # - doctor-services
     networks:
       - internal
+    volumes:
+      - ./services/gateway:/app
+      - ./services/patient_services/proto:/app/shared_proto/patient
 
   patient-services:
     build:

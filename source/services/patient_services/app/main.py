@@ -1,49 +1,18 @@
 import asyncio
-import uvicorn
-from app.grpc_server import serve as grpc_serve
-from fastapi import FastAPI
-from app.routes.patient_route import router
+import grpc
+from app.grpc_handler.patient_service import PatientServiceHandler
+from app.grpc import patient_pb2_grpc
 
-app = FastAPI(title="Patient Service")
-app.include_router(router)
-
-@app.get("/")
-async def root():
-    return {"message": "Patient visit service running."}
-
-# parallel
-async def main():
-    # gRPC
-    grpc_server = await grpc_serve()
-    grpc_task = asyncio.create_task(grpc_server.wait_for_termination())
-
-    # FastAPI
-    config = uvicorn.Config(app, host="0.0.0.0", port=3001)
-    server = uvicorn.Server(config)
-    uvicorn_task = asyncio.create_task(server.serve())
-
-    try:
-        await asyncio.gather(grpc_task, uvicorn_task)
-    except asyncio.CancelledError:
-        print("Cancelled — Shutting down...")
-    finally:
-        await grpc_server.stop(grace=None)  # hoặc `grace=1` để đợi hoàn thành
-        print("gRPC server shutdown completed.")
-
-# # only gRPC
-# async def main():
-#     server = await grpc_serve()
-#     try:
-#         await server.wait_for_termination()
-#     except asyncio.CancelledError:
-#         print("Cancelled — Shutting down...")
-#     finally:
-#         await server.stop(grace=None)
-#         print("gRPC server shutdown completed.")
-
+async def serve():
+    server = grpc.aio.server()
+    patient_pb2_grpc.add_PatientServiceServicer_to_server(PatientServiceHandler(), server)
+    server.add_insecure_port("[::]:3001")
+    await server.start()
+    print("gRPC server running at 3001")
+    await server.wait_for_termination()
 
 if __name__ == "__main__":
     try:
-        asyncio.run(main())
+        asyncio.run(serve())
     except KeyboardInterrupt:
-        print("Exiting...")
+        print("Shutting down...")
