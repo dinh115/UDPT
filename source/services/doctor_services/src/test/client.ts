@@ -617,7 +617,7 @@ class DoctorGrpcTestClient {
     async testGetDoctorInternal(): Promise<void> {
         console.log(chalk.yellow('\n--- Testing Get Doctor Internal ---'));
 
-        const getDoctorInternal = promisify(internalClient, 'GetDoctorInternal');
+        const getDoctorInternal = promisify(internalClient, 'GetDoctorByIdInternal');
 
         // Test with service token
         try {

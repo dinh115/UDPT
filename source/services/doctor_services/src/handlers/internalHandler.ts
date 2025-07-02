@@ -10,7 +10,8 @@ import {
     getAvailableTimeSlotsSchema,
     doctorQuerySchema,
     getDoctorTimeSlotsStatisticsSchema,
-    updateBookingSchema
+    updateBookingSchema,
+    validateUserIdSchema
 } from '../config/joiSchema';
 import {
     GetDoctorByIdRequest,
@@ -26,14 +27,15 @@ import {
     GenerateTimeSlotsRequest,
     GenerateTimeSlotsResponse,
     UpdateBookingRequest,
-    UpdateBookingResponse
+    UpdateBookingResponse,
+    GetDoctorByUserIdRequest
 
 } from '../proto/generated/doctor';
 import chalk from 'chalk';
 
 // =================== INTERNAL SERVICE HANDLERS ===================
 export class InternalServiceHandlers {
-    async getDoctorInternal(
+    async getDoctorByIdInternal(
         call: grpc.ServerUnaryCall<GetDoctorByIdRequest, GetDoctorByIdResponse>,
         callback: grpc.sendUnaryData<GetDoctorByIdResponse>
     ): Promise<void> {
@@ -72,7 +74,52 @@ export class InternalServiceHandlers {
 
             callback(null, response);
         } catch (error) {
-            logger.error('Get doctor internal handler error:', error);
+            logger.error('Get doctor by id internal handler error:', error);
+            const err = handleGrpcError(error);
+            callback(err, null);
+        }
+    }
+
+    async getDoctorByUserIdInternal(
+        call: grpc.ServerUnaryCall<GetDoctorByUserIdRequest, GetDoctorByIdResponse>,
+        callback: grpc.sendUnaryData<GetDoctorByIdResponse>
+    ): Promise<void> {
+        try {
+            if (!authenticateService(call.metadata)) {
+                const response = GetDoctorByIdResponse.create({
+                    success: false,
+                    error: 'Service token is required.'
+                })
+                return callback(null, response);
+            }
+            const { error, value } = validateUserIdSchema.validate(call.request);
+            if (error) {
+                const response = GetDoctorByIdResponse.create({
+                    success: false,
+                    error: error.details[0].message,
+                });
+                return callback(null, response);
+            }
+
+            const { userId } = value;
+            const doctor = await doctorService.getDoctorByUserId(userId);
+
+            if (!doctor) {
+                const response = GetDoctorByIdResponse.create({
+                    success: false,
+                    error: 'User not found'
+                })
+                return callback(null, response);
+            }
+
+            const response = GetDoctorByIdResponse.create({
+                success: true,
+                doctor: convertToDoctorProto(doctor)
+            });
+
+            callback(null, response);
+        } catch (error) {
+            logger.error('Get doctor by user idinternal handler error:', error);
             const err = handleGrpcError(error);
             callback(err, null);
         }
@@ -338,8 +385,8 @@ export class InternalServiceHandlers {
                 return callback(null, response);
             }
 
-            const { doctorId, appointmentDate, timeSlot, isBooked } = value;
-
+            const { doctorId, appointmentDate, timeSlot } = value;
+            const { isBooked } = call.request;
             const result = await doctorService.updateSlotBookingStatus(doctorId, new Date(appointmentDate), timeSlot, isBooked);
 
             const response = UpdateBookingResponse.create({

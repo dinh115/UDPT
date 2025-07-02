@@ -71,7 +71,7 @@ export class DoctorService {
             return dayAvailability.slots.filter(slot => !slot.isBooked);
         }
         catch (error) {
-            logger.error('Update user error:', error);
+            logger.error('Get doctor available slots error:', error);
             throw error;
         }
     }
@@ -271,6 +271,17 @@ export class DoctorService {
 
         } catch (error) {
             logger.error('Get Doctor by ID error:', error);
+            throw error;
+        }
+    }
+
+    async getDoctorByUserId(userId: string): Promise<IDoctor | null> {
+        try {
+            const doctor = await Doctor.findOne({ userId: userId })
+            return doctor;
+
+        } catch (error) {
+            logger.error('Get Doctor by User ID error:', error);
             throw error;
         }
     }

@@ -14,9 +14,7 @@ export const timeSlotSchema = Joi.object({
     endTime: Joi.string().required().messages({
         'any.required': 'End time is required'
     }),
-    isBooked: Joi.boolean().required().messages({
-        'any.required': 'isBooked flag is required'
-    })
+    isBooked: Joi.boolean().optional()
 });
 
 export const availabilitySchema = Joi.object({

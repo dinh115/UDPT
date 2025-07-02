@@ -1,7 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
-import { IAppointment, AppointmentStatus } from '../types/appointment.types';
+import { v4 as uuidv4 } from 'uuid';
+import { IAppointment, AppointmentStatus } from '../types';
 
 const timeSlotSchema = new Schema({
+    _id: {
+        type: String,
+        default: () => uuidv4()
+    },
     startTime: {
         type: String,
         required: true,
@@ -12,18 +17,34 @@ const timeSlotSchema = new Schema({
         required: true,
         match: [/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid time format. Use HH:MM']
     }
-}, { _id: false });
+});
 
 const appointmentSchema = new Schema<IAppointment>({
-    patient: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+    _id: {
+        type: String,
+        default: () => uuidv4()
     },
-    doctor: {
-        type: Schema.Types.ObjectId,
-        ref: 'Doctor',
-        required: true
+    patientId: {
+        type: String,
+        required: true,
+        validate: {
+            validator: function (v: string) {
+                // UUID v4 validation regex
+                return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
+            },
+            message: 'Patient ID must be a valid UUID v4'
+        }
+    },
+    doctorId: {
+        type: String,
+        required: true,
+        validate: {
+            validator: function (v: string) {
+                // UUID v4 validation regex
+                return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
+            },
+            message: 'Doctor ID must be a valid UUID v4'
+        }
     },
     appointmentDate: {
         type: Date,
@@ -53,12 +74,13 @@ const appointmentSchema = new Schema<IAppointment>({
         maxlength: [500, 'Notes cannot be more than 500 characters']
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    _id: false
 });
 
 // Compound index to prevent double booking for confirmed appointments
 appointmentSchema.index({
-    doctor: 1,
+    doctorId: 1,
     appointmentDate: 1,
     'timeSlot.startTime': 1
 }, {
@@ -69,8 +91,8 @@ appointmentSchema.index({
 });
 
 // Index for better query performance
-appointmentSchema.index({ patient: 1, appointmentDate: -1 });
-appointmentSchema.index({ doctor: 1, appointmentDate: 1 });
+appointmentSchema.index({ patientId: 1, appointmentDate: -1 });
+appointmentSchema.index({ doctorId: 1, appointmentDate: 1 });
 appointmentSchema.index({ status: 1 });
 
 export default mongoose.model<IAppointment>('Appointment', appointmentSchema);
