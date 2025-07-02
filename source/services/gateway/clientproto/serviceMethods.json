@@ -6,5 +6,58 @@
   "doctor": {
     "method": "GetDoctor",
     "requestKey": "doctor_id"
+  },
+  "medicine": {
+    "GetAllMedicines": {},
+    "GetMedicineById": {
+      "id": "string"
+    },
+    "CreateMedicine": {
+      "name": "string",
+      "description": "string",
+      "price": "number",
+      "quantity": "number",
+      "manufacturer": "string",
+      "expiryDate": "string"
+    },
+    "UpdateMedicine": {
+      "id": "string",
+      "name": "string",
+      "description": "string",
+      "price": "number",
+      "quantity": "number",
+      "manufacturer": "string",
+      "expiryDate": "string"
+    },
+    "DeleteMedicine": {
+      "id": "string"
+    },
+    "RestoreMedicine": {
+      "id": "string"
+    }
+  },
+  "prescription": {
+    "GetAllPrescriptions": {},
+    "GetPrescriptionById": {
+      "id": "string"
+    },
+    "CreatePrescription": {
+      "patientId": "string",
+      "doctorId": "string",
+      "medicines": "array",
+      "notes": "string",
+      "prescriptionDate": "string"
+    },
+    "UpdatePrescription": {
+      "id": "string",
+      "patientId": "string",
+      "doctorId": "string",
+      "medicines": "array",
+      "notes": "string",
+      "prescriptionDate": "string"
+    },
+    "DeletePrescription": {
+      "id": "string"
+    }
   }
 }
