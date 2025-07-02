@@ -6,6 +6,7 @@ services:
       - "3000:3000"
     depends_on:
       - patient-services
+      - medicine-services
       # - appointment-services
       # - doctor-services
     networks:
@@ -34,6 +35,14 @@ services:
   #     - "3003"
   #   networks:
   #     - internal
+
+  medicine-services:
+    build:
+      context: ./services/medicine_services
+    expose:
+      - "3004"
+    networks:
+      - internal
 
   # frontend:
   #   build:
