@@ -82,21 +82,10 @@ export class AuthServiceHandlers {
         callback: grpc.sendUnaryData<RegisterResponse>
     ): Promise<void> {
         try {
-            const request = call.request;
-            console.log('Raw request:', request);
-
-            console.log(chalk.bold.blue(request.firstName + ' ' + request.lastName));
-
-            const registerData = {
-                email: request.email,
-                username: request.username,
-                password: request.password,
-                firstName: request.firstName,
-                lastName: request.lastName
-            };
-            console.log(chalk.bold.green(JSON.stringify(registerData)))
-
-            const { error, value } = registerSchema.validate(registerData);
+            console.log(typeof call.request.dateOfBirth);
+            console.log(call.request.dateOfBirth instanceof Date);
+            console.log(call.request.dateOfBirth);
+            const { error, value } = registerSchema.validate(call.request, { stripUnknown: true });
             console.log(chalk.bold.green('Value: ' + JSON.stringify(value)))
 
             if (error) {

@@ -23,6 +23,35 @@ const userSchema = new Schema<IUser>({
         minlength: 3,
         maxlength: 20
     },
+    phone: {
+        type: String,
+        required: true,
+        trim: true,
+        validate: {
+            validator: function (v: string) {
+                // Basic phone regex - adjust as needed for your requirements
+                return /^[\+]?[1-9][\d]{0,15}$/.test(v);
+            },
+            message: 'Phone number is not valid'
+        }
+    },
+    address: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 1
+    },
+    dateOfBirth: {
+        type: Date,
+        required: true,
+        validate: {
+            validator: function (v: Date) {
+                // No future dates allowed
+                return v <= new Date();
+            },
+            message: 'Date of birth cannot be in the future'
+        }
+    },
     password: {
         type: String,
         required: true,
@@ -62,6 +91,8 @@ const userSchema = new Schema<IUser>({
 userSchema.index({ status: 1 });
 userSchema.index({ role: 1 });
 userSchema.index({ createdAt: -1 });
+userSchema.index({ phone: 1 }); // Add phone index
+userSchema.index({ dateOfBirth: 1 }); // Add DOB index for age-based queries
 
 // Compound indexes for common query patterns (optional optimizations)
 userSchema.index({ status: 1, role: 1 }); // For filtering by both status and role

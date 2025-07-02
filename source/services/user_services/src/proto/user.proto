@@ -16,6 +16,9 @@ message User {
   string status = 7; // active, inactive
   google.protobuf.Timestamp createdAt = 8;
   google.protobuf.Timestamp updatedAt = 9;
+  string phone = 10;                           
+  string address = 11;                         
+  google.protobuf.Timestamp dateOfBirth = 12; 
 }
 
 message UserWithPassword {
@@ -65,6 +68,9 @@ message RegisterRequest {
   string password = 3;
   string firstName = 4;
   string lastName = 5;
+  string phone = 6;                           
+  string address = 7;                         
+  google.protobuf.Timestamp dateOfBirth = 8; 
 }
 
 message RegisterResponse {

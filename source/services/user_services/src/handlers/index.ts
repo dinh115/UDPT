@@ -17,6 +17,54 @@ interface UserMetadata {
     status?: string;
 }
 
+export function dateToProtoTimestamp(date: Date) {
+    const seconds = Math.floor(date.getTime() / 1000);
+    const nanos = (date.getTime() % 1000) * 1e6;
+    return { seconds, nanos };
+}
+
+export function protoTimestampToDate(timestamp: { seconds: number | string; nanos: number }) {
+    const millis = Number(timestamp.seconds) * 1000 + Math.floor(timestamp.nanos / 1e6);
+    return new Date(millis);
+}
+
+export function isTimestamp(obj: any): boolean {
+    return (
+        obj &&
+        typeof obj === 'object' &&
+        'seconds' in obj &&
+        'nanos' in obj &&
+        Object.keys(obj).length === 2
+    );
+}
+
+export function convertTimestampsToDate(obj: any): any {
+    if (Array.isArray(obj)) {
+        return obj.map(convertTimestampsToDate);
+    } else if (obj !== null && typeof obj === 'object') {
+        const newObj: any = {};
+        for (const [key, value] of Object.entries(obj)) {
+            if (isTimestamp(value)) {
+                const timestampValue = value as { seconds: number | string; nanos: number };
+                const millis =
+                    Number(timestampValue.seconds) * 1000 +
+                    Math.floor(Number(timestampValue.nanos) / 1e6);
+                newObj[key] = new Date(millis);
+            } else {
+                newObj[key] = convertTimestampsToDate(value);
+            }
+        }
+        return newObj;
+    }
+    return obj;
+}
+
+export function withTimestampConversion(handler: any) {
+    return (call: any, callback: any) => {
+        call.request = convertTimestampsToDate(call.request);
+        handler(call, callback);
+    };
+}
 // Helper function to extract token from metadata
 export function getTokenFromMetadata(metadata: grpc.Metadata): string | null {
     // Try different possible metadata keys for token
@@ -48,7 +96,10 @@ export function convertToUserProto(user: IUser): User {
         role: user.role,
         status: user.status,
         createdAt: user.createdAt,
-        updatedAt: user.updatedAt
+        updatedAt: user.updatedAt,
+        phone: user.phone,
+        address: user.address,
+        dateOfBirth: user.dateOfBirth
     };
 }
 

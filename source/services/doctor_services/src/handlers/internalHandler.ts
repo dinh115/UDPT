@@ -385,8 +385,7 @@ export class InternalServiceHandlers {
                 return callback(null, response);
             }
 
-            const { doctorId, appointmentDate, timeSlot } = value;
-            const { isBooked } = call.request;
+            const { doctorId, appointmentDate, timeSlot, isBooked } = value;
             const result = await doctorService.updateSlotBookingStatus(doctorId, new Date(appointmentDate), timeSlot, isBooked);
 
             const response = UpdateBookingResponse.create({

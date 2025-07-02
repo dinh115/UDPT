@@ -10,7 +10,7 @@ import {
 import logger from '../config/logger';
 import { createError } from '@/handlers/errorHandler';
 // import { cacheService } from './cacheService';
-// import bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 
 export class UserService {
 
@@ -164,7 +164,7 @@ export class UserService {
       if (userData.firstName !== undefined) user.firstName = userData.firstName.trim();
       if (userData.lastName !== undefined) user.lastName = userData.lastName.trim();
       if (userData.email !== undefined) user.email = userData.email.toLowerCase();
-      if (userData.password !== undefined) user.password = userData.password;
+      if (userData.password !== undefined) user.password = await bcrypt.hash(userData.password, 12);;
       if (userData.role !== undefined) user.role = userData.role;
       if (userData.status !== undefined) user.status = userData.status;
 
