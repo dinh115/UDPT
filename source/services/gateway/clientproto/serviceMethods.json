@@ -1,0 +1,10 @@
+{
+  "patient": {
+    "method": "GetPatient",
+    "requestKey": "patient_id"
+  },
+  "doctor": {
+    "method": "GetDoctor",
+    "requestKey": "doctor_id"
+  }
+}

@@ -1,0 +1,52 @@
+ixou orzc sxgr sdeu
+http://localhost:8080/send-appointment-reminder
+{
+    "patientName": "Nguyễn Đình Phương Đại",
+    "patientEmail": "nguyendinhphuongdai@gmail.com",
+    "date": "20/03/2024",
+    "startTime": "10:00",
+    "endTime": "11:00",
+    "doctorName": "Dr. Sarah Smith",
+    "consultationFee": 50000
+}
+
+http://localhost:8080/send-bulk-appointment-reminders
+[
+    {
+        "patientName": "Nguyễn Đình Phương Đại",
+        "patientEmail": "nguyendinhphuongdai@gmail.com",
+        "date": "20/03/2024",
+        "startTime": "10:00",
+        "endTime": "11:00",
+        "doctorName": "Dr. Sarah Smith",
+        "consultationFee": 50000
+    },
+    {
+        "patientName": "Nguyễn Ngọc Phương Lan",
+        "patientEmail": "lanphuongnam2k3@gmail.com",
+        "date": "20/03/2024",
+        "startTime": "11:00",
+        "endTime": "12:00",
+        "doctorName": "Dr. Sarah Smith",
+        "consultationFee": 50000
+    }
+]
+http://localhost:8080/send-prescription-email?to=nguyendinhphuongdai@gmail.com
+
+cd C:\Program Files\Erlang OTP\lib\rabbitmq_server-4.1.0\sbin
+rabbitmq-server.bat 
+
+open other cmd
+cd C:\Program Files\Erlang OTP\lib\rabbitmq_server-4.1.0\sbin
+.\rabbitmq-plugins enable rabbitmq_management
+Asynchronous: 
+http://localhost:8080/api/notifications/appointment
+{
+    "patientName": "Nguyễn Đình Phương Đại",
+    "patientEmail": "nguyendinhphuongdai@gmail.com",
+    "date": "20/03/2024",
+    "startTime": "10:00",
+    "endTime": "11:00",
+    "doctorName": "Dr. Sarah Smith",
+    "consultationFee": 50000
+}

@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "uni.hcmus.medicineservice.grpc";
+option java_outer_classname = "MedicineServiceProto";
+
+service MedicineService {
+  rpc GetAllMedicines (Empty) returns (MedicineListResponse);
+  rpc GetMedicineById (MedicineIdRequest) returns (MedicineResponse);
+  rpc CreateMedicine (CreateMedicineRequest) returns (MedicineResponse);
+  rpc UpdateMedicine (UpdateMedicineRequest) returns (MedicineResponse);
+  rpc DeleteMedicine (MedicineIdRequest) returns (Empty);
+  rpc RestoreMedicine (MedicineIdRequest) returns (Empty);
+}
+
+message Empty {}
+
+message MedicineIdRequest {
+  string medicine_id = 1;
+}
+
+message MedicineResponse {
+  string medicine_id = 1;
+  string name = 2;
+  string unit = 3;
+  string supplier = 4;
+  double price = 5;
+  int32 stock_quantity = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message MedicineListResponse {
+  repeated MedicineResponse medicines = 1;
+}
+
+message CreateMedicineRequest {
+  string name = 1;
+  string unit = 2;
+  string supplier = 3;
+  double price = 4;
+  int32 stock_quantity = 5;
+}
+
+message UpdateMedicineRequest {
+  string medicine_id = 1;
+  string name = 2;
+  string unit = 3;
+  string supplier = 4;
+  double price = 5;
+  int32 stock_quantity = 6;
+}

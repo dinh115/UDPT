@@ -4,3 +4,4 @@
 # Ignore environment files and build outputs
 **/.env
 **/dist/
+**/__pycache__/
