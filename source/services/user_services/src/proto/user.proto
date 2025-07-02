@@ -18,7 +18,7 @@ message User {
   google.protobuf.Timestamp updatedAt = 9;
   string phone = 10;                           
   string address = 11;                         
-  google.protobuf.Timestamp dateOfBirth = 12; 
+  string dateOfBirth = 12; 
 }
 
 message UserWithPassword {
@@ -70,7 +70,7 @@ message RegisterRequest {
   string lastName = 5;
   string phone = 6;                           
   string address = 7;                         
-  google.protobuf.Timestamp dateOfBirth = 8; 
+  string dateOfBirth = 8; 
 }
 
 message RegisterResponse {
@@ -95,7 +95,10 @@ message VerifyTokenResponse {
   string email = 4;
   string role = 5;
   string status = 6;
-  string error = 7;
+  string phone = 7;                           
+  string address = 8;                         
+  string dateOfBirth = 9;
+  string error = 10;
 }
 
 // =================== USER MANAGEMENT REQUESTS/RESPONSES ===================
@@ -110,8 +113,8 @@ message GetUserResponse {
 }
 
 message GetUsersRequest {
-  int32 page = 1;
-  int32 limit = 2;
+  optional int32 page = 1;
+  optional int32 limit = 2;
   optional string status = 3;
   optional string role = 4;
   optional string search = 5;
@@ -133,7 +136,10 @@ message CreateUserRequest {
   string firstName = 4;
   string lastName = 5;
   string role = 6;
-  string status = 7;
+  string phone = 7;                           
+  string address = 8;                         
+  string dateOfBirth = 9; 
+  string status = 10;
 }
 
 message CreateUserResponse {
@@ -150,6 +156,9 @@ message UpdateUserRequest {
   optional string lastName = 5;
   optional string role = 6;
   optional string status = 7;
+  optional string phone = 8;                           
+  optional string address = 9;                         
+  optional string dateOfBirth = 10; 
 }
 
 message UpdateUserResponse {

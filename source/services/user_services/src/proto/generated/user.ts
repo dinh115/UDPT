@@ -26,7 +26,7 @@ export interface User {
   updatedAt: Date | undefined;
   phone: string;
   address: string;
-  dateOfBirth: Date | undefined;
+  dateOfBirth: string;
 }
 
 export interface UserWithPassword {
@@ -78,7 +78,7 @@ export interface RegisterRequest {
   lastName: string;
   phone: string;
   address: string;
-  dateOfBirth: Date | undefined;
+  dateOfBirth: string;
 }
 
 export interface RegisterResponse {
@@ -103,6 +103,9 @@ export interface VerifyTokenResponse {
   email: string;
   role: string;
   status: string;
+  phone: string;
+  address: string;
+  dateOfBirth: string;
   error: string;
 }
 
@@ -118,8 +121,8 @@ export interface GetUserResponse {
 }
 
 export interface GetUsersRequest {
-  page: number;
-  limit: number;
+  page?: number | undefined;
+  limit?: number | undefined;
   status?: string | undefined;
   role?: string | undefined;
   search?: string | undefined;
@@ -141,6 +144,9 @@ export interface CreateUserRequest {
   firstName: string;
   lastName: string;
   role: string;
+  phone: string;
+  address: string;
+  dateOfBirth: string;
   status: string;
 }
 
@@ -158,6 +164,9 @@ export interface UpdateUserRequest {
   lastName?: string | undefined;
   role?: string | undefined;
   status?: string | undefined;
+  phone?: string | undefined;
+  address?: string | undefined;
+  dateOfBirth?: string | undefined;
 }
 
 export interface UpdateUserResponse {
@@ -243,7 +252,7 @@ function createBaseUser(): User {
     updatedAt: undefined,
     phone: "",
     address: "",
-    dateOfBirth: undefined,
+    dateOfBirth: "",
   };
 }
 
@@ -282,8 +291,8 @@ export const User: MessageFns<User> = {
     if (message.address !== "") {
       writer.uint32(90).string(message.address);
     }
-    if (message.dateOfBirth !== undefined) {
-      Timestamp.encode(toTimestamp(message.dateOfBirth), writer.uint32(98).fork()).join();
+    if (message.dateOfBirth !== "") {
+      writer.uint32(98).string(message.dateOfBirth);
     }
     return writer;
   },
@@ -388,7 +397,7 @@ export const User: MessageFns<User> = {
             break;
           }
 
-          message.dateOfBirth = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.dateOfBirth = reader.string();
           continue;
         }
       }
@@ -413,7 +422,7 @@ export const User: MessageFns<User> = {
       updatedAt: isSet(object.updatedAt) ? fromJsonTimestamp(object.updatedAt) : undefined,
       phone: isSet(object.phone) ? globalThis.String(object.phone) : "",
       address: isSet(object.address) ? globalThis.String(object.address) : "",
-      dateOfBirth: isSet(object.dateOfBirth) ? fromJsonTimestamp(object.dateOfBirth) : undefined,
+      dateOfBirth: isSet(object.dateOfBirth) ? globalThis.String(object.dateOfBirth) : "",
     };
   },
 
@@ -452,8 +461,8 @@ export const User: MessageFns<User> = {
     if (message.address !== "") {
       obj.address = message.address;
     }
-    if (message.dateOfBirth !== undefined) {
-      obj.dateOfBirth = message.dateOfBirth.toISOString();
+    if (message.dateOfBirth !== "") {
+      obj.dateOfBirth = message.dateOfBirth;
     }
     return obj;
   },
@@ -474,7 +483,7 @@ export const User: MessageFns<User> = {
     message.updatedAt = object.updatedAt ?? undefined;
     message.phone = object.phone ?? "";
     message.address = object.address ?? "";
-    message.dateOfBirth = object.dateOfBirth ?? undefined;
+    message.dateOfBirth = object.dateOfBirth ?? "";
     return message;
   },
 };
@@ -1119,7 +1128,7 @@ function createBaseRegisterRequest(): RegisterRequest {
     lastName: "",
     phone: "",
     address: "",
-    dateOfBirth: undefined,
+    dateOfBirth: "",
   };
 }
 
@@ -1146,8 +1155,8 @@ export const RegisterRequest: MessageFns<RegisterRequest> = {
     if (message.address !== "") {
       writer.uint32(58).string(message.address);
     }
-    if (message.dateOfBirth !== undefined) {
-      Timestamp.encode(toTimestamp(message.dateOfBirth), writer.uint32(66).fork()).join();
+    if (message.dateOfBirth !== "") {
+      writer.uint32(66).string(message.dateOfBirth);
     }
     return writer;
   },
@@ -1220,7 +1229,7 @@ export const RegisterRequest: MessageFns<RegisterRequest> = {
             break;
           }
 
-          message.dateOfBirth = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.dateOfBirth = reader.string();
           continue;
         }
       }
@@ -1241,7 +1250,7 @@ export const RegisterRequest: MessageFns<RegisterRequest> = {
       lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
       phone: isSet(object.phone) ? globalThis.String(object.phone) : "",
       address: isSet(object.address) ? globalThis.String(object.address) : "",
-      dateOfBirth: isSet(object.dateOfBirth) ? fromJsonTimestamp(object.dateOfBirth) : undefined,
+      dateOfBirth: isSet(object.dateOfBirth) ? globalThis.String(object.dateOfBirth) : "",
     };
   },
 
@@ -1268,8 +1277,8 @@ export const RegisterRequest: MessageFns<RegisterRequest> = {
     if (message.address !== "") {
       obj.address = message.address;
     }
-    if (message.dateOfBirth !== undefined) {
-      obj.dateOfBirth = message.dateOfBirth.toISOString();
+    if (message.dateOfBirth !== "") {
+      obj.dateOfBirth = message.dateOfBirth;
     }
     return obj;
   },
@@ -1286,7 +1295,7 @@ export const RegisterRequest: MessageFns<RegisterRequest> = {
     message.lastName = object.lastName ?? "";
     message.phone = object.phone ?? "";
     message.address = object.address ?? "";
-    message.dateOfBirth = object.dateOfBirth ?? undefined;
+    message.dateOfBirth = object.dateOfBirth ?? "";
     return message;
   },
 };
@@ -1501,7 +1510,18 @@ export const VerifyTokenRequest: MessageFns<VerifyTokenRequest> = {
 };
 
 function createBaseVerifyTokenResponse(): VerifyTokenResponse {
-  return { success: false, userId: "", username: "", email: "", role: "", status: "", error: "" };
+  return {
+    success: false,
+    userId: "",
+    username: "",
+    email: "",
+    role: "",
+    status: "",
+    phone: "",
+    address: "",
+    dateOfBirth: "",
+    error: "",
+  };
 }
 
 export const VerifyTokenResponse: MessageFns<VerifyTokenResponse> = {
@@ -1524,8 +1544,17 @@ export const VerifyTokenResponse: MessageFns<VerifyTokenResponse> = {
     if (message.status !== "") {
       writer.uint32(50).string(message.status);
     }
+    if (message.phone !== "") {
+      writer.uint32(58).string(message.phone);
+    }
+    if (message.address !== "") {
+      writer.uint32(66).string(message.address);
+    }
+    if (message.dateOfBirth !== "") {
+      writer.uint32(74).string(message.dateOfBirth);
+    }
     if (message.error !== "") {
-      writer.uint32(58).string(message.error);
+      writer.uint32(82).string(message.error);
     }
     return writer;
   },
@@ -1590,6 +1619,30 @@ export const VerifyTokenResponse: MessageFns<VerifyTokenResponse> = {
             break;
           }
 
+          message.phone = reader.string();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.address = reader.string();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.dateOfBirth = reader.string();
+          continue;
+        }
+        case 10: {
+          if (tag !== 82) {
+            break;
+          }
+
           message.error = reader.string();
           continue;
         }
@@ -1610,6 +1663,9 @@ export const VerifyTokenResponse: MessageFns<VerifyTokenResponse> = {
       email: isSet(object.email) ? globalThis.String(object.email) : "",
       role: isSet(object.role) ? globalThis.String(object.role) : "",
       status: isSet(object.status) ? globalThis.String(object.status) : "",
+      phone: isSet(object.phone) ? globalThis.String(object.phone) : "",
+      address: isSet(object.address) ? globalThis.String(object.address) : "",
+      dateOfBirth: isSet(object.dateOfBirth) ? globalThis.String(object.dateOfBirth) : "",
       error: isSet(object.error) ? globalThis.String(object.error) : "",
     };
   },
@@ -1634,6 +1690,15 @@ export const VerifyTokenResponse: MessageFns<VerifyTokenResponse> = {
     if (message.status !== "") {
       obj.status = message.status;
     }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
+    if (message.address !== "") {
+      obj.address = message.address;
+    }
+    if (message.dateOfBirth !== "") {
+      obj.dateOfBirth = message.dateOfBirth;
+    }
     if (message.error !== "") {
       obj.error = message.error;
     }
@@ -1651,6 +1716,9 @@ export const VerifyTokenResponse: MessageFns<VerifyTokenResponse> = {
     message.email = object.email ?? "";
     message.role = object.role ?? "";
     message.status = object.status ?? "";
+    message.phone = object.phone ?? "";
+    message.address = object.address ?? "";
+    message.dateOfBirth = object.dateOfBirth ?? "";
     message.error = object.error ?? "";
     return message;
   },
@@ -1808,8 +1876,8 @@ export const GetUserResponse: MessageFns<GetUserResponse> = {
 
 function createBaseGetUsersRequest(): GetUsersRequest {
   return {
-    page: 0,
-    limit: 0,
+    page: undefined,
+    limit: undefined,
     status: undefined,
     role: undefined,
     search: undefined,
@@ -1820,10 +1888,10 @@ function createBaseGetUsersRequest(): GetUsersRequest {
 
 export const GetUsersRequest: MessageFns<GetUsersRequest> = {
   encode(message: GetUsersRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.page !== 0) {
+    if (message.page !== undefined) {
       writer.uint32(8).int32(message.page);
     }
-    if (message.limit !== 0) {
+    if (message.limit !== undefined) {
       writer.uint32(16).int32(message.limit);
     }
     if (message.status !== undefined) {
@@ -1918,8 +1986,8 @@ export const GetUsersRequest: MessageFns<GetUsersRequest> = {
 
   fromJSON(object: any): GetUsersRequest {
     return {
-      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
-      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : undefined,
       status: isSet(object.status) ? globalThis.String(object.status) : undefined,
       role: isSet(object.role) ? globalThis.String(object.role) : undefined,
       search: isSet(object.search) ? globalThis.String(object.search) : undefined,
@@ -1930,10 +1998,10 @@ export const GetUsersRequest: MessageFns<GetUsersRequest> = {
 
   toJSON(message: GetUsersRequest): unknown {
     const obj: any = {};
-    if (message.page !== 0) {
+    if (message.page !== undefined) {
       obj.page = Math.round(message.page);
     }
-    if (message.limit !== 0) {
+    if (message.limit !== undefined) {
       obj.limit = Math.round(message.limit);
     }
     if (message.status !== undefined) {
@@ -1959,8 +2027,8 @@ export const GetUsersRequest: MessageFns<GetUsersRequest> = {
   },
   fromPartial<I extends Exact<DeepPartial<GetUsersRequest>, I>>(object: I): GetUsersRequest {
     const message = createBaseGetUsersRequest();
-    message.page = object.page ?? 0;
-    message.limit = object.limit ?? 0;
+    message.page = object.page ?? undefined;
+    message.limit = object.limit ?? undefined;
     message.status = object.status ?? undefined;
     message.role = object.role ?? undefined;
     message.search = object.search ?? undefined;
@@ -2081,7 +2149,18 @@ export const GetUsersResponse: MessageFns<GetUsersResponse> = {
 };
 
 function createBaseCreateUserRequest(): CreateUserRequest {
-  return { email: "", username: "", password: "", firstName: "", lastName: "", role: "", status: "" };
+  return {
+    email: "",
+    username: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    role: "",
+    phone: "",
+    address: "",
+    dateOfBirth: "",
+    status: "",
+  };
 }
 
 export const CreateUserRequest: MessageFns<CreateUserRequest> = {
@@ -2104,8 +2183,17 @@ export const CreateUserRequest: MessageFns<CreateUserRequest> = {
     if (message.role !== "") {
       writer.uint32(50).string(message.role);
     }
+    if (message.phone !== "") {
+      writer.uint32(58).string(message.phone);
+    }
+    if (message.address !== "") {
+      writer.uint32(66).string(message.address);
+    }
+    if (message.dateOfBirth !== "") {
+      writer.uint32(74).string(message.dateOfBirth);
+    }
     if (message.status !== "") {
-      writer.uint32(58).string(message.status);
+      writer.uint32(82).string(message.status);
     }
     return writer;
   },
@@ -2170,6 +2258,30 @@ export const CreateUserRequest: MessageFns<CreateUserRequest> = {
             break;
           }
 
+          message.phone = reader.string();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.address = reader.string();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.dateOfBirth = reader.string();
+          continue;
+        }
+        case 10: {
+          if (tag !== 82) {
+            break;
+          }
+
           message.status = reader.string();
           continue;
         }
@@ -2190,6 +2302,9 @@ export const CreateUserRequest: MessageFns<CreateUserRequest> = {
       firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : "",
       lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
       role: isSet(object.role) ? globalThis.String(object.role) : "",
+      phone: isSet(object.phone) ? globalThis.String(object.phone) : "",
+      address: isSet(object.address) ? globalThis.String(object.address) : "",
+      dateOfBirth: isSet(object.dateOfBirth) ? globalThis.String(object.dateOfBirth) : "",
       status: isSet(object.status) ? globalThis.String(object.status) : "",
     };
   },
@@ -2214,6 +2329,15 @@ export const CreateUserRequest: MessageFns<CreateUserRequest> = {
     if (message.role !== "") {
       obj.role = message.role;
     }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
+    if (message.address !== "") {
+      obj.address = message.address;
+    }
+    if (message.dateOfBirth !== "") {
+      obj.dateOfBirth = message.dateOfBirth;
+    }
     if (message.status !== "") {
       obj.status = message.status;
     }
@@ -2231,6 +2355,9 @@ export const CreateUserRequest: MessageFns<CreateUserRequest> = {
     message.firstName = object.firstName ?? "";
     message.lastName = object.lastName ?? "";
     message.role = object.role ?? "";
+    message.phone = object.phone ?? "";
+    message.address = object.address ?? "";
+    message.dateOfBirth = object.dateOfBirth ?? "";
     message.status = object.status ?? "";
     return message;
   },
@@ -2337,6 +2464,9 @@ function createBaseUpdateUserRequest(): UpdateUserRequest {
     lastName: undefined,
     role: undefined,
     status: undefined,
+    phone: undefined,
+    address: undefined,
+    dateOfBirth: undefined,
   };
 }
 
@@ -2362,6 +2492,15 @@ export const UpdateUserRequest: MessageFns<UpdateUserRequest> = {
     }
     if (message.status !== undefined) {
       writer.uint32(58).string(message.status);
+    }
+    if (message.phone !== undefined) {
+      writer.uint32(66).string(message.phone);
+    }
+    if (message.address !== undefined) {
+      writer.uint32(74).string(message.address);
+    }
+    if (message.dateOfBirth !== undefined) {
+      writer.uint32(82).string(message.dateOfBirth);
     }
     return writer;
   },
@@ -2429,6 +2568,30 @@ export const UpdateUserRequest: MessageFns<UpdateUserRequest> = {
           message.status = reader.string();
           continue;
         }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.phone = reader.string();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.address = reader.string();
+          continue;
+        }
+        case 10: {
+          if (tag !== 82) {
+            break;
+          }
+
+          message.dateOfBirth = reader.string();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2447,6 +2610,9 @@ export const UpdateUserRequest: MessageFns<UpdateUserRequest> = {
       lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : undefined,
       role: isSet(object.role) ? globalThis.String(object.role) : undefined,
       status: isSet(object.status) ? globalThis.String(object.status) : undefined,
+      phone: isSet(object.phone) ? globalThis.String(object.phone) : undefined,
+      address: isSet(object.address) ? globalThis.String(object.address) : undefined,
+      dateOfBirth: isSet(object.dateOfBirth) ? globalThis.String(object.dateOfBirth) : undefined,
     };
   },
 
@@ -2473,6 +2639,15 @@ export const UpdateUserRequest: MessageFns<UpdateUserRequest> = {
     if (message.status !== undefined) {
       obj.status = message.status;
     }
+    if (message.phone !== undefined) {
+      obj.phone = message.phone;
+    }
+    if (message.address !== undefined) {
+      obj.address = message.address;
+    }
+    if (message.dateOfBirth !== undefined) {
+      obj.dateOfBirth = message.dateOfBirth;
+    }
     return obj;
   },
 
@@ -2488,6 +2663,9 @@ export const UpdateUserRequest: MessageFns<UpdateUserRequest> = {
     message.lastName = object.lastName ?? undefined;
     message.role = object.role ?? undefined;
     message.status = object.status ?? undefined;
+    message.phone = object.phone ?? undefined;
+    message.address = object.address ?? undefined;
+    message.dateOfBirth = object.dateOfBirth ?? undefined;
     return message;
   },
 };

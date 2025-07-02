@@ -17,12 +17,6 @@ interface UserMetadata {
     status?: string;
 }
 
-export function dateToProtoTimestamp(date: Date) {
-    const seconds = Math.floor(date.getTime() / 1000);
-    const nanos = (date.getTime() % 1000) * 1e6;
-    return { seconds, nanos };
-}
-
 export function protoTimestampToDate(timestamp: { seconds: number | string; nanos: number }) {
     const millis = Number(timestamp.seconds) * 1000 + Math.floor(timestamp.nanos / 1e6);
     return new Date(millis);
@@ -65,6 +59,28 @@ export function withTimestampConversion(handler: any) {
         handler(call, callback);
     };
 }
+
+export function dateToProtoTimestamp(date: Date) {
+    const seconds = Math.floor(date.getTime() / 1000);
+    const nanos = (date.getTime() % 1000) * 1e6;
+    return { seconds, nanos };
+}
+
+export function convertDateToTimestamps(obj: any): any {
+    if (Array.isArray(obj)) {
+        return obj.map(convertDateToTimestamps);
+    } else if (obj instanceof Date) {
+        return dateToProtoTimestamp(obj);
+    } else if (obj !== null && typeof obj === 'object') {
+        const newObj: any = {};
+        for (const [key, value] of Object.entries(obj)) {
+            newObj[key] = convertDateToTimestamps(value);
+        }
+        return newObj;
+    }
+    return obj;
+}
+
 // Helper function to extract token from metadata
 export function getTokenFromMetadata(metadata: grpc.Metadata): string | null {
     // Try different possible metadata keys for token
@@ -99,7 +115,7 @@ export function convertToUserProto(user: IUser): User {
         updatedAt: user.updatedAt,
         phone: user.phone,
         address: user.address,
-        dateOfBirth: user.dateOfBirth
+        dateOfBirth: user.dateOfBirth.toISOString()
     };
 }
 
@@ -234,7 +250,7 @@ export class HealthServiceHandlers {
                 environment: process.env.NODE_ENV || 'development'
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Health check handler error:', error);
             callback({ code: grpc.status.INTERNAL, message: 'Internal server error' }, null);

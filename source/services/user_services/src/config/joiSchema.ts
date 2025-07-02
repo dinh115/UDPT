@@ -71,10 +71,26 @@ export const registerSchema = Joi.object({
         'string.max': 'Address cannot exceed 200 characters',
         'any.required': 'Address is required'
     }),
-    dateOfBirth: Joi.date().max('now').required().messages({
-        'date.max': 'Date of birth cannot be in the future',
-        'any.required': 'Date of birth is required'
-    })
+    dateOfBirth: Joi.string()
+        .pattern(/^\d{4}-\d{2}-\d{2}$/)
+        .required()
+        .custom((value, helpers) => {
+            const date = new Date(value);
+            if (isNaN(date.getTime())) {
+                return helpers.error('any.invalid', { value });
+            }
+            const now = new Date();
+            if (date > now) {
+                return helpers.error('date.max', { value });
+            }
+            return value;
+        }, 'Date Validation')
+        .messages({
+            'string.pattern.base': 'Date must be in YYYY-MM-DD format',
+            'any.required': 'Date is required',
+            'any.invalid': 'Date is invalid',
+            'date.max': 'Date cannot be in the future'
+        })
 });
 
 
@@ -122,9 +138,26 @@ export const createUserSchema = Joi.object({
         'string.min': 'Address cannot be empty',
         'string.max': 'Address cannot exceed 200 characters'
     }),
-    dateOfBirth: Joi.date().max('now').optional().messages({
-        'date.max': 'Date of birth cannot be in the future'
-    })
+    dateOfBirth: Joi.string()
+        .pattern(/^\d{4}-\d{2}-\d{2}$/)
+        .required()
+        .custom((value, helpers) => {
+            const date = new Date(value);
+            if (isNaN(date.getTime())) {
+                return helpers.error('any.invalid', { value });
+            }
+            const now = new Date();
+            if (date > now) {
+                return helpers.error('date.max', { value });
+            }
+            return value;
+        }, 'Date Validation')
+        .messages({
+            'string.pattern.base': 'Date must be in YYYY-MM-DD format',
+            'any.required': 'Date is required',
+            'any.invalid': 'Date is invalid',
+            'date.max': 'Date cannot be in the future'
+        })
 });
 
 export const updateUserSchema = Joi.object({
@@ -158,9 +191,25 @@ export const updateUserSchema = Joi.object({
         'string.min': 'Address cannot be empty',
         'string.max': 'Address cannot exceed 200 characters'
     }),
-    dateOfBirth: Joi.date().max('now').optional().messages({
-        'date.max': 'Date of birth cannot be in the future'
-    })
+    dateOfBirth: Joi.string()
+        .pattern(/^\d{4}-\d{2}-\d{2}$/)
+        .optional()
+        .custom((value, helpers) => {
+            const date = new Date(value);
+            if (isNaN(date.getTime())) {
+                return helpers.error('any.invalid', { value });
+            }
+            const now = new Date();
+            if (date > now) {
+                return helpers.error('date.max', { value });
+            }
+            return value;
+        }, 'Date Validation')
+        .messages({
+            'string.pattern.base': 'Date must be in YYYY-MM-DD format',
+            'any.invalid': 'Date is invalid',
+            'date.max': 'Date cannot be in the future'
+        })
 
 });
 

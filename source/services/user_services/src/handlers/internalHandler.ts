@@ -2,7 +2,7 @@ import * as grpc from '@grpc/grpc-js';
 import userService from '../services/userService';
 import logger from '../config/logger';
 import { handleGrpcError } from './errorHandler';
-import { convertToUserProto, authenticateService } from '.';
+import { convertToUserProto, authenticateService, convertDateToTimestamps } from '.';
 import { batchUsersSchema, userQuerySchema, validateUserIdSchema } from '../config/joiSchema';
 import {
     GetUserRequest,
@@ -56,7 +56,7 @@ export class InternalServiceHandlers {
                 user: convertToUserProto(user)
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get user internal handler error:', error);
             const err = handleGrpcError(error);
@@ -117,7 +117,7 @@ export class InternalServiceHandlers {
                 }
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get users handler error:', error);
             const err = handleGrpcError(error);
@@ -155,7 +155,7 @@ export class InternalServiceHandlers {
                 users: users.map(user => convertToUserProto(user))
             })
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Batch get users handler error:', error);
             const err = handleGrpcError(error);
@@ -197,7 +197,7 @@ export class InternalServiceHandlers {
                 }
             );
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Check user status handler error:', error);
             const err = handleGrpcError(error);
@@ -233,7 +233,7 @@ export class InternalServiceHandlers {
                 success: true,
                 results: verificationResults
             })
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Verify users handler error:', error);
             const err = handleGrpcError(error);

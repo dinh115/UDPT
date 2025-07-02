@@ -31,8 +31,8 @@ export class UserService {
    */
   async findUsers(options: FindUsersOptions): Promise<FindUsersResult> {
     const {
-      page,
-      limit,
+      page = 1,
+      limit = 10,
       status,
       role,
       search,
@@ -167,6 +167,10 @@ export class UserService {
       if (userData.password !== undefined) user.password = await bcrypt.hash(userData.password, 12);;
       if (userData.role !== undefined) user.role = userData.role;
       if (userData.status !== undefined) user.status = userData.status;
+      if (userData.phone !== undefined) user.phone = userData.phone.trim();
+      if (userData.address !== undefined) user.address = userData.address.trim();
+      if (userData.dateOfBirth !== undefined) user.dateOfBirth = userData.dateOfBirth;
+
 
       await user.save();
 
