@@ -58,8 +58,41 @@ export const registerSchema = Joi.object({
         'string.min': 'Last name cannot be empty',
         'string.max': 'Last name cannot exceed 50 characters',
         'any.required': 'Last name is required'
-    })
+    }),
+    phone: Joi.string()
+        .pattern(/^[\+]?[1-9][\d]{0,15}$/)
+        .required()
+        .messages({
+            'string.pattern.base': 'Please provide a valid phone number',
+            'any.required': 'Phone number is required'
+        }),
+    address: Joi.string().trim().min(1).max(200).required().messages({
+        'string.min': 'Address cannot be empty',
+        'string.max': 'Address cannot exceed 200 characters',
+        'any.required': 'Address is required'
+    }),
+    dateOfBirth: Joi.string()
+        .pattern(/^\d{4}-\d{2}-\d{2}$/)
+        .required()
+        .custom((value, helpers) => {
+            const date = new Date(value);
+            if (isNaN(date.getTime())) {
+                return helpers.error('any.invalid', { value });
+            }
+            const now = new Date();
+            if (date > now) {
+                return helpers.error('date.max', { value });
+            }
+            return value;
+        }, 'Date Validation')
+        .messages({
+            'string.pattern.base': 'Date must be in YYYY-MM-DD format',
+            'any.required': 'Date is required',
+            'any.invalid': 'Date is invalid',
+            'date.max': 'Date cannot be in the future'
+        })
 });
+
 
 export const createUserSchema = Joi.object({
     email: Joi.string().email().required().messages({
@@ -94,7 +127,37 @@ export const createUserSchema = Joi.object({
     }),
     status: Joi.string().valid('active', 'inactive').optional().default('active').messages({
         'any.only': 'Status must be either active or inactive'
-    })
+    }),
+    phone: Joi.string()
+        .pattern(/^[\+]?[1-9][\d]{0,15}$/)
+        .optional()
+        .messages({
+            'string.pattern.base': 'Please provide a valid phone number'
+        }),
+    address: Joi.string().trim().min(1).max(200).optional().messages({
+        'string.min': 'Address cannot be empty',
+        'string.max': 'Address cannot exceed 200 characters'
+    }),
+    dateOfBirth: Joi.string()
+        .pattern(/^\d{4}-\d{2}-\d{2}$/)
+        .required()
+        .custom((value, helpers) => {
+            const date = new Date(value);
+            if (isNaN(date.getTime())) {
+                return helpers.error('any.invalid', { value });
+            }
+            const now = new Date();
+            if (date > now) {
+                return helpers.error('date.max', { value });
+            }
+            return value;
+        }, 'Date Validation')
+        .messages({
+            'string.pattern.base': 'Date must be in YYYY-MM-DD format',
+            'any.required': 'Date is required',
+            'any.invalid': 'Date is invalid',
+            'date.max': 'Date cannot be in the future'
+        })
 });
 
 export const updateUserSchema = Joi.object({
@@ -117,7 +180,37 @@ export const updateUserSchema = Joi.object({
     }),
     status: Joi.string().valid('active', 'inactive').optional().messages({
         'any.only': 'Status must be either active or inactive'
-    })
+    }),
+    phone: Joi.string()
+        .pattern(/^[\+]?[1-9][\d]{0,15}$/)
+        .optional()
+        .messages({
+            'string.pattern.base': 'Please provide a valid phone number'
+        }),
+    address: Joi.string().trim().min(1).max(200).optional().messages({
+        'string.min': 'Address cannot be empty',
+        'string.max': 'Address cannot exceed 200 characters'
+    }),
+    dateOfBirth: Joi.string()
+        .pattern(/^\d{4}-\d{2}-\d{2}$/)
+        .optional()
+        .custom((value, helpers) => {
+            const date = new Date(value);
+            if (isNaN(date.getTime())) {
+                return helpers.error('any.invalid', { value });
+            }
+            const now = new Date();
+            if (date > now) {
+                return helpers.error('date.max', { value });
+            }
+            return value;
+        }, 'Date Validation')
+        .messages({
+            'string.pattern.base': 'Date must be in YYYY-MM-DD format',
+            'any.invalid': 'Date is invalid',
+            'date.max': 'Date cannot be in the future'
+        })
+
 });
 
 export const tokenVerifySchema = Joi.object({

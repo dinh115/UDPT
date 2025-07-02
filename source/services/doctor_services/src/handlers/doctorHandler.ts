@@ -13,7 +13,7 @@ import {
     validateUserIdSchema
 } from '../config/joiSchema';
 import chalk from 'chalk';
-import { convertToDoctorProto, getUserFromMetadata } from '.';
+import { convertToDoctorProto, getUserFromMetadata, convertDateToTimestamps } from '.';
 import {
     GetDoctorByIdRequest,
     GetDoctorByUserIdRequest,
@@ -64,7 +64,7 @@ export class UserServiceHandlers {
                 doctor: convertToDoctorProto(doctorData),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get doctor by id handler error:', error);
             const err = handleGrpcError(error);
@@ -103,7 +103,7 @@ export class UserServiceHandlers {
                 doctor: convertToDoctorProto(doctorData),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get doctor by user id handler error:', error);
             const err = handleGrpcError(error);
@@ -156,7 +156,7 @@ export class UserServiceHandlers {
                 }
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get doctors handler error:', error);
             const err = handleGrpcError(error);
@@ -211,7 +211,7 @@ export class UserServiceHandlers {
                 doctor: convertToDoctorProto(doctorData),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Create doctor handler error:', error);
             const err = handleGrpcError(error);
@@ -292,7 +292,7 @@ export class UserServiceHandlers {
                 doctor: convertToDoctorProto(doctorData),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Update user handler error:', error);
             const err = handleGrpcError(error);
@@ -351,7 +351,7 @@ export class UserServiceHandlers {
                 message: 'User deleted successfully',
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Delete user handler error:', error);
             const err = handleGrpcError(error);
@@ -422,7 +422,7 @@ export class UserServiceHandlers {
                 doctor: convertToDoctorProto(doctorData),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Update user handler error:', error);
             const err = handleGrpcError(error);

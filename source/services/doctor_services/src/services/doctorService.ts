@@ -211,8 +211,8 @@ export class DoctorService {
     async findDoctors(options: findDoctorsRequest): Promise<FindDoctorResult> {
         const {
             specialization,
-            page,
-            limit,
+            page = 1,
+            limit = 10,
             sortBy,
             sortOrder,
         } = options;

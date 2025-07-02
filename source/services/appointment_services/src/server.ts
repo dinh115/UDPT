@@ -8,7 +8,7 @@ import { connectDatabase } from './config/database';
 
 // Import gRPC handlers
 import { AppointmentServiceHandlers } from './handlers/appointmentHandler';
-import { HealthServiceHandlers } from './handlers/';
+import { HealthServiceHandlers, withTimestampConversion } from './handlers/';
 
 // Load environment variables
 import { config } from './config/environments';
@@ -36,16 +36,16 @@ function createGrpcServer(): grpc.Server {
 
     // Add AppointmentService to gRPC server
     server.addService(appointmentProto.appointment.AppointmentService.service, {
-        BookAppointment: appointmentHandlers.bookAppointment.bind(appointmentHandlers),
-        UpdateAppointment: appointmentHandlers.updateAppointment.bind(appointmentHandlers),
-        AcceptAppointment: appointmentHandlers.acceptAppointment.bind(appointmentHandlers),
-        CancelAppointment: appointmentHandlers.cancelAppointment.bind(appointmentHandlers),
-        GetMyAppointments: appointmentHandlers.getMyAppointments.bind(appointmentHandlers),
+        BookAppointment: withTimestampConversion(appointmentHandlers.bookAppointment.bind(appointmentHandlers)),
+        UpdateAppointment: withTimestampConversion(appointmentHandlers.updateAppointment.bind(appointmentHandlers)),
+        AcceptAppointment: withTimestampConversion(appointmentHandlers.acceptAppointment.bind(appointmentHandlers)),
+        CancelAppointment: withTimestampConversion(appointmentHandlers.cancelAppointment.bind(appointmentHandlers)),
+        GetMyAppointments: withTimestampConversion(appointmentHandlers.getMyAppointments.bind(appointmentHandlers)),
     });
 
     // Add HealthService to gRPC server
     server.addService(appointmentProto.appointment.HealthService.service, {
-        Check: healthHandlers.check.bind(healthHandlers),
+        Check: withTimestampConversion(healthHandlers.check.bind(healthHandlers)),
     });
 
     // Add interceptors for logging and error handling

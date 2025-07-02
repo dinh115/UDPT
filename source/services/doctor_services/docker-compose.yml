@@ -1,0 +1,75 @@
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: doctor-service-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_DATABASE: doctor-management
+    ports:
+      - "27018:27017"  # Different port to avoid conflicts with user service
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - doctor-service-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # Doctor Management Service
+  doctor-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: doctor-service
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "50052:50052"
+    environment:
+      # Server Configuration
+      GRPC_PORT: 50052
+      GRPC_HOST: 0.0.0.0
+      NODE_ENV: production
+      
+      # Database Configuration
+      MONGODB_URI: mongodb://admin:adminpassword@mongodb:27017/doctor-management?authSource=admin
+      MONGODB_TEST_URI: mongodb://admin:adminpassword@mongodb:27017/doctor-management-test?authSource=admin
+      
+      # Timeslot Generation Config
+      TIMESLOT_GAP: ${TIMESLOT_GAP:-30}
+      
+      # Service Token
+      SERVICE_TOKEN: ${SERVICE_TOKEN:-service-secret-token-123}
+      
+      # Logging
+      LOG_LEVEL: info
+    networks:
+      - doctor-service-network
+    volumes:
+      # Optional: Mount logs directory
+      - ./logs:/usr/src/app/logs
+    healthcheck:
+      test: ["CMD", "node", "-e", "const grpc = require('@grpc/grpc-js'); const client = new grpc.Client('localhost:50052', grpc.credentials.createInsecure()); client.waitForReady(Date.now() + 1000, (err) => process.exit(err ? 1 : 0));"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+networks:
+  doctor-service-network:
+    driver: bridge
+    name: doctor-service-network
+
+volumes:
+  mongodb_data:
+    driver: local
+    name: doctor-service-mongodb-data

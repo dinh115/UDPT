@@ -7,6 +7,7 @@ import {
     convertToUserProto,
     getTokenFromMetadata,
     authenticateGrpcCall,
+    convertDateToTimestamps
 } from '.'
 import {
     loginSchema,
@@ -59,7 +60,7 @@ export class AuthServiceHandlers {
                 user: convertToUserProto(result.user)
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error: any) {
             logger.error('Login handler error:', error);
             if (error && error.name === 'InvalidCredential') {
@@ -82,22 +83,11 @@ export class AuthServiceHandlers {
         callback: grpc.sendUnaryData<RegisterResponse>
     ): Promise<void> {
         try {
-            const request = call.request;
-            console.log('Raw request:', request);
-
-            console.log(chalk.bold.blue(request.firstName + ' ' + request.lastName));
-
-            const registerData = {
-                email: request.email,
-                username: request.username,
-                password: request.password,
-                firstName: request.firstName,
-                lastName: request.lastName
-            };
-            console.log(chalk.bold.green(JSON.stringify(registerData)))
-
-            const { error, value } = registerSchema.validate(registerData);
-            console.log(chalk.bold.green('Value: ' + JSON.stringify(value)))
+            //console.log(typeof call.request.dateOfBirth);
+            //console.log(call.request.dateOfBirth instanceof Date);
+            //console.log(call.request.dateOfBirth);
+            const { error, value } = registerSchema.validate(call.request, { stripUnknown: true });
+            //console.log(chalk.bold.green('Value: ' + JSON.stringify(value)))
 
             if (error) {
                 const response = RegisterResponse.create({
@@ -115,7 +105,7 @@ export class AuthServiceHandlers {
                 user: convertToUserProto(result.user)
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Register handler error:', error);
             const err = handleGrpcError(error);
@@ -146,7 +136,7 @@ export class AuthServiceHandlers {
                 success: true,
                 message: "Logged out successfully"
             });
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Logout handler error:', error);
             const err = handleGrpcError(error);
@@ -187,7 +177,7 @@ export class AuthServiceHandlers {
                 status: decoded.status
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Verify token handler error:', error);
             const err = handleGrpcError(error);
@@ -224,7 +214,7 @@ export class AuthServiceHandlers {
                 user: convertToUserProto(userData)
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get profile handler error:', error);
             const err = handleGrpcError(error);
@@ -259,12 +249,9 @@ export class AuthServiceHandlers {
             }
 
             // Validate input using Joi
-            const { firstName, lastName, email, password, role, status } = call.request;
-            const { error, value } = updateUserSchema.validate(
-                { firstName, lastName, email, password, role, status }
-            );
+            const { error, value } = updateUserSchema.validate(call.request, { stripUnknown: true });
 
-            console.log(JSON.stringify(value));
+            //console.log(JSON.stringify(value));
             if (error) {
                 const errorMessage = error.details[0].message;
                 const response = UpdateUserResponse.create({
@@ -306,7 +293,7 @@ export class AuthServiceHandlers {
                 user: convertToUserProto(userData),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Update profile handler error:', error);
             const err = handleGrpcError(error);

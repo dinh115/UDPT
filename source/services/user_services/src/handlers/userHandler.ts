@@ -7,6 +7,7 @@ import chalk from 'chalk';
 import {
     convertToUserProto,
     authenticateGrpcCall,
+    convertDateToTimestamps,
 } from '.'
 import {
     createUserSchema,
@@ -78,7 +79,7 @@ export class UserServiceHandlers {
                 user: convertToUserProto(userData),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get user handler error:', error);
             const err = handleGrpcError(error);
@@ -149,7 +150,7 @@ export class UserServiceHandlers {
                 }
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get users handler error:', error);
             const err = handleGrpcError(error);
@@ -202,7 +203,7 @@ export class UserServiceHandlers {
                 user: convertToUserProto(userData),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Create user handler error:', error);
             const err = handleGrpcError(error);
@@ -226,7 +227,7 @@ export class UserServiceHandlers {
                 return callback(null, response);
             }
             // Check for authenticated user
-            const { id, firstName, lastName, email, password, role, status } = call.request;
+            const { id } = call.request;
 
             if (!id) {
                 const response = UpdateUserResponse.create({
@@ -246,8 +247,7 @@ export class UserServiceHandlers {
             }
 
             // Validate input using Joi
-            const { error, value } = updateUserSchema.validate(
-                { firstName, lastName, email, password, role, status });
+            const { error, value } = updateUserSchema.validate(call.request, { stripUnknown: true });
             if (error) {
                 const errorMessage = error.details[0].message;
                 const response = UpdateUserResponse.create({
@@ -283,7 +283,7 @@ export class UserServiceHandlers {
                 user: convertToUserProto(userData),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Update user handler error:', error);
             const err = handleGrpcError(error);
@@ -339,7 +339,7 @@ export class UserServiceHandlers {
                 message: 'User deleted successfully',
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Delete user handler error:', error);
             const err = handleGrpcError(error);
