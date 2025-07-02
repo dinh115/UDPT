@@ -1,14 +1,12 @@
-import express, { application } from 'express';
+import express from 'express';
 import morgan from 'morgan';
-
+import dotenv from 'dotenv';
+import { setupRoutes } from './routes/gateway_route.js';
 //import {errorHandler} from './middlewares/errorHandler.js';
 import {caching} from './middlewares/caching.js';
 import {auth} from './middlewares/auth.js';
 import {logging} from './middlewares/logging.js';
 
-import router from './routes/gateway_route.js';
-import dotenv from 'dotenv';
-import e from 'express';
 
 dotenv.config();
 const app = express();
@@ -36,32 +34,37 @@ const midlleware = {
 };
 
 
-// dev
+// Middleware
 app.use(morgan('dev'));
 app.use(express.json());
-// add middleware
 app.use(express.urlencoded({ extended: true }));
-// app.use(`/`,[midlleware.caching,midlleware.authentication, midlleware.logging,midlleware.errorHandler]);
 
+app.use(`/`, midlleware.logging);
+app.use(`/`, midlleware.caching);
+// app.use(`/`, midlleware.authentication);
 
+(async () => {
+  console.time("SetupRoutes");
+  await setupRoutes(app);
+  console.timeEnd("SetupRoutes");
 
-app.use('/', router);
+  const server = app.listen(PORT, () => {
+    console.log(`🚀 Gateway service started on port ${PORT}`);
+  });
 
-// Proxy configuration
+  function gracefulShutdown(signal) {
+    console.log(`${signal} received. Closing server...`);
+    server.close(() => {
+      console.log('HTTP server closed.');
+      process.exit(0);
+    });
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received, shutting down gracefully');
-  process.exit(0);
-});
+    setTimeout(() => {
+      console.warn('Forcing shutdown...');
+      process.exit(1);
+    }, 5000);
+  }
 
-process.on('SIGINT', () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  process.exit(0);
-});
-
-app.listen(PORT, () => {
-  console.log(`Gateway service started on port ${PORT}`);
-  logger.info(`Gateway service started on port ${PORT}`);
-  logger.info(`Environment: ${process.env.NODE_ENV}`);
-});
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+})();

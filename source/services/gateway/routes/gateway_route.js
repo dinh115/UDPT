@@ -1,3 +1,4 @@
+// routes/gateway_route.js
 import express from "express";
 import { GrpcClientMap } from "../config/settings.js";
 import { readFile } from "fs/promises";
@@ -7,42 +8,47 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const filePath = path.join(__dirname, "../clientproto/serviceMethods.json");
+export async function setupRoutes(app) {
+  const filePath = path.join(__dirname, "../clientproto/serviceMethods.json");
+  const raw = await readFile(filePath, "utf-8");
+  const serviceMethods = JSON.parse(raw);
 
-const raw = await readFile(filePath, "utf-8");
-const serviceMethods = JSON.parse(raw);
+  const router = express.Router();
 
-const router = express.Router();
+  for (const [serviceKey, methodGroup] of Object.entries(serviceMethods)) {
+    const grpcClient = GrpcClientMap.get(serviceKey);
+    if (!grpcClient) continue;
 
-// get service in map
-for (const [key, client] of GrpcClientMap.entries()) {
-  // console.log('key', key, 'client', client);
-  const config = serviceMethods[key];
-  if (!config) {
-    console.warn(`No configuration found for service: ${key}`);
-    continue;
+    for (const [httpMethodRaw, methods] of Object.entries(methodGroup)) {
+      const httpMethod = httpMethodRaw.toLowerCase();
+      for (const [routeKey, config] of Object.entries(methods)) {
+        const grpcMethod = config.grpcMethod || routeKey;
+        const paramKeys = config.params || [];
+
+        let routePath = `/api/${serviceKey}/${routeKey}`;
+        if (paramKeys.length > 0) {
+          routePath += "/" + paramKeys.map(p => `:${p}`).join("/");
+        }
+
+        router[httpMethod](routePath, async (req, res) => {
+          const request = {};
+
+          if (["post", "put"].includes(httpMethod)) {
+            Object.assign(request, req.body);
+          } else {
+            for (const key of paramKeys) {
+              request[key] = req.params[key];
+            }
+          }
+
+          grpcClient[grpcMethod](request, (err, response) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json(response);
+          });
+        });
+      }
+    }
   }
 
-  const { method, requestKey } = config;
-  router.get(`/api/${key}`, async (req, res) => {
-    if (typeof client[method] !== "function") {
-      return res.status(500).json({ error: `Method ${method} not found on client` });
-    }
-    try{
-      const request = { [requestKey]: req.params.id};
-      client[method](request, (error, response) => {
-        if (error) {
-          console.error(`Error calling ${method} on ${key}:`, error);
-          return res.status(500).json({ error: `Error calling ${method} on ${key}` });
-        }
-        res.json(response);
-      });
-    }
-    catch (error) {
-      console.error(`Unexpected error calling ${method} on ${key}:`, error);
-      res.status(500).json({ error: `Unexpected error calling ${method} on ${key}` });
-    }
-  });
+  app.use("/", router);
 }
-
-export default router;

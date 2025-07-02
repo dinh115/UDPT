@@ -5,12 +5,6 @@ import path from 'path';
 
 dotenv.config();
 
-// export const ContextPathMap = new Map([
-//   ['patient', process.env.PATIENT_SERVICES],
-//   ['b', process.env.B_SERVICES],
-//   ['c', process.env.C_SERVICES]
-// ]);
-
 
 function loadClient(protoPath, packageName, serviceName, address) {
   const packageDefinition = protoLoader.loadSync(protoPath, {
@@ -35,7 +29,6 @@ const serviceKeys = ['PATIENT'];
 
 // Create map
 export const GrpcClientMap = new Map();
-
 for (const key of serviceKeys) {
   const protoPath = process.env[`${key}_PROTO_PATH`];
   const packageName = process.env[`${key}_PACKAGE`];

@@ -1,7 +1,29 @@
 {
   "patient": {
-    "method": "GetPatient",
-    "requestKey": "patient_id"
+    "GET": {
+      "GetVisit": {
+        "grpcMethod": "GetVisit",
+        "params": ["id"]
+      },
+      "ListVisits": {
+        "grpcMethod": "ListVisits",
+        "params": ["userId"]
+      },
+      "Check": {
+        "grpcMethod": "Check"
+      }
+    },
+    "POST": {
+      "CreateVisit": {
+        "grpcMethod": "CreateVisit"
+      }
+    },
+    "PUT": {
+      "UpdateVisit": {
+        "grpcMethod": "UpdateVisit",
+        "params": ["id"]
+      }
+    }
   },
   "doctor": {
     "method": "GetDoctor",
