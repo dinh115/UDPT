@@ -9,12 +9,14 @@ import {
     createDoctorProfileSchema,
     updateDoctorProfileSchema,
     updateDoctorAvailabilitySchema,
-    batchDoctorProfileSchema
+    batchDoctorProfileSchema,
+    validateUserIdSchema
 } from '../config/joiSchema';
 import chalk from 'chalk';
 import { convertToDoctorProto, getUserFromMetadata } from '.';
 import {
     GetDoctorByIdRequest,
+    GetDoctorByUserIdRequest,
     GetDoctorByIdResponse,
     findDoctorsRequest,
     findDoctorsResponse,
@@ -64,11 +66,51 @@ export class UserServiceHandlers {
 
             callback(null, response);
         } catch (error) {
-            logger.error('Get doctor handler error:', error);
+            logger.error('Get doctor by id handler error:', error);
             const err = handleGrpcError(error);
             callback(err, null);
         }
     }
+
+    async getDoctorProfileByUserId(
+        call: grpc.ServerUnaryCall<GetDoctorByUserIdRequest, GetDoctorByIdResponse>,
+        callback: grpc.sendUnaryData<GetDoctorByIdResponse>
+    ): Promise<void> {
+        try {
+            // Get user metadata
+            const user = getUserFromMetadata(call.metadata);
+            //console.log(chalk.green(JSON.stringify(user)));
+
+            const { error, value } = validateUserIdSchema.validate(call.request);
+            if (error) {
+                const response = GetDoctorByIdResponse.create({
+                    success: false,
+                    error: error.details[0].message,
+                });
+                return callback(null, response);
+            }
+
+            const doctorData = await doctorService.getDoctorByUserId(value.userId);
+            if (!doctorData) {
+                const response = GetDoctorByIdResponse.create({
+                    success: false,
+                    error: 'Doctor not found',
+                });
+                return callback(null, response);
+            }
+            const response = GetDoctorByIdResponse.create({
+                success: true,
+                doctor: convertToDoctorProto(doctorData),
+            });
+
+            callback(null, response);
+        } catch (error) {
+            logger.error('Get doctor by user id handler error:', error);
+            const err = handleGrpcError(error);
+            callback(err, null);
+        }
+    }
+
 
     async getDoctors(
         call: grpc.ServerUnaryCall<findDoctorsRequest, findDoctorsResponse>,
@@ -116,7 +158,7 @@ export class UserServiceHandlers {
 
             callback(null, response);
         } catch (error) {
-            logger.error('Get doctos handler error:', error);
+            logger.error('Get doctors handler error:', error);
             const err = handleGrpcError(error);
             callback(err, null);
         }

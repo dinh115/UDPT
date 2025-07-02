@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+package appointment;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+// Message definitions
+message TimeSlot {
+  string startTime = 1; // Format: HH:MM
+  string endTime = 2;   // Format: HH:MM
+}
+
+message Appointment {
+  string id = 1;
+  string patientId = 2;
+  string doctorId = 3;
+  string appointmentDate = 4;
+  TimeSlot timeSlot = 5;
+  string status = 6;
+  optional string notes = 7;
+  google.protobuf.Timestamp createdAt = 8;
+  google.protobuf.Timestamp updatedAt = 9;
+}
+
+// Request/Response messages
+message BookAppointmentRequest {
+  string doctorId = 1;
+  string appointmentDate = 2;
+  TimeSlot timeSlot = 3;
+  string notes = 4;
+  optional string patientId = 5; // For employees and admins
+}
+
+message BookAppointmentResponse {
+  bool success = 1;
+  string message = 2;
+  Appointment appointment = 3;
+  string error = 4;
+}
+
+message UpdateAppointmentRequest {
+  string appointmentId = 1;
+  optional string appointmentDate = 2;
+  optional TimeSlot timeSlot = 3;
+  optional string notes = 4;
+}
+
+message UpdateAppointmentResponse {
+  bool success = 1;
+  string message = 2;
+  Appointment appointment = 3;
+  string error = 4;
+}
+
+message AcceptAppointmentRequest {
+  string appointmentId = 1;
+}
+
+message AcceptAppointmentResponse {
+  bool success = 1;
+  string message = 2;
+  Appointment appointment = 3;
+  string error = 4;
+}
+
+message CancelAppointmentRequest {
+  string appointmentId = 1;
+}
+
+message CancelAppointmentResponse {
+  bool success = 1;
+  string message = 2;
+  Appointment appointment = 3;
+  string error = 4;
+}
+
+message GetMyAppointmentsRequest {
+  optional string status = 1;
+  optional int32 page = 2;
+  optional int32 limit = 3;
+}
+
+message PaginationInfo {
+  int32 page = 1;
+  int32 limit = 2;
+  int64 total = 3;
+  int32 totalPages = 4;
+}
+
+message GetMyAppointmentsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated Appointment appointments = 3;
+  PaginationInfo pagination = 4;
+  string error = 5;
+}
+
+
+// =================== HEALTH CHECK ===================
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  bool success = 1;
+  string status = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  double uptime = 4;
+  string environment = 5;
+}
+
+
+service HealthService {
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+
+// Service definition
+service AppointmentService {
+  // Book a new appointment
+  rpc BookAppointment(BookAppointmentRequest) returns (BookAppointmentResponse);
+  
+  // Update an existing appointment
+  rpc UpdateAppointment(UpdateAppointmentRequest) returns (UpdateAppointmentResponse);
+  
+  // Accept/confirm an appointment (doctors, employees, admins)
+  rpc AcceptAppointment(AcceptAppointmentRequest) returns (AcceptAppointmentResponse);
+  
+  // Cancel an appointment
+  rpc CancelAppointment(CancelAppointmentRequest) returns (CancelAppointmentResponse);
+  
+  // Get user's appointments with pagination
+  rpc GetMyAppointments(GetMyAppointmentsRequest) returns (GetMyAppointmentsResponse);
+}

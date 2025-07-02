@@ -16,7 +16,7 @@ import { config } from './config/environments';
 
 
 // =================== GRPC SETUP ===================
-const PROTO_PATH = path.join(__dirname, 'proto/doctor.proto');
+const PROTO_PATH = path.join(process.cwd(), 'src/proto/doctor.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     keepCase: true,
@@ -42,18 +42,21 @@ function createGrpcServer(): grpc.Server {
         CreateDoctorProfile: doctorHandlers.createDoctorProfile.bind(doctorHandlers),
         findDoctors: doctorHandlers.getDoctors.bind(doctorHandlers),
         GetDoctorById: doctorHandlers.getDoctorProfileById.bind(doctorHandlers),
+        GetDoctorUserById: doctorHandlers.getDoctorProfileByUserId.bind(doctorHandlers),
         UpdateDoctorProfile: doctorHandlers.updateDoctorProfile.bind(doctorHandlers),
         UpdateDoctorAvailability: doctorHandlers.updateDoctorAvailability.bind(doctorHandlers),
         DeleteDoctors: doctorHandlers.deleteDoctors.bind(doctorHandlers),
     });
 
     server.addService(doctorProto.doctor.InternalService.service, {
-        GetDoctorInternal: internalHandlers.getDoctorInternal.bind(internalHandlers),
+        GetDoctorByIdInternal: internalHandlers.getDoctorByIdInternal.bind(internalHandlers),
+        GetDoctorByUserIdInternal: internalHandlers.getDoctorByUserIdInternal.bind(internalHandlers),
         GetDoctorsInternal: internalHandlers.getDoctorsInternal.bind(internalHandlers),
         BatchGetDoctors: internalHandlers.batchGetDoctors.bind(internalHandlers),
         GetAvailableTimeSlots: internalHandlers.getAvailableSlots.bind(internalHandlers),
         GenerateTimeSlots: internalHandlers.generateTimeSlot.bind(internalHandlers),
         GetDoctorSlotStatistics: internalHandlers.getDoctorSlotStatistics.bind(internalHandlers),
+        UpdateBooking: internalHandlers.updateBooking.bind(internalHandlers),
     });
 
     server.addService(doctorProto.doctor.HealthService.service, {

@@ -6,7 +6,7 @@ import * as Responses from '@/proto/generated/user'
 import { roles } from '../types';
 
 // Load the proto file
-const PROTO_PATH = path.join(__dirname, '../proto/user.proto');
+const PROTO_PATH = path.join(process.cwd(), 'src/proto/user.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     keepCase: true,

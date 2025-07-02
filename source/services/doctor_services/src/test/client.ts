@@ -4,7 +4,7 @@ import path from 'path';
 import chalk from 'chalk';
 
 // Load the proto file
-const PROTO_PATH = path.join(__dirname, '../proto/doctor.proto');
+const PROTO_PATH = path.join(process.cwd(), 'src/proto/doctor.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     keepCase: true,
@@ -611,12 +611,13 @@ class DoctorGrpcTestClient {
         await this.testGetAvailableTimeSlots();
         await this.testGenerateTimeSlots();
         await this.testGetDoctorSlotStatistics();
+        await this.testBookingDoctorSlot();
     }
 
     async testGetDoctorInternal(): Promise<void> {
         console.log(chalk.yellow('\n--- Testing Get Doctor Internal ---'));
 
-        const getDoctorInternal = promisify(internalClient, 'GetDoctorInternal');
+        const getDoctorInternal = promisify(internalClient, 'GetDoctorByIdInternal');
 
         // Test with service token
         try {
@@ -839,6 +840,34 @@ class DoctorGrpcTestClient {
             }
         } catch (error) {
             console.log(chalk.red('✗ Get weekly slot statistics error:'), error);
+        }
+    }
+
+    async testBookingDoctorSlot() {
+        console.log(chalk.yellow('\n--- Testing Booking Doctor Slot ---'));
+
+        const bookSlot = promisify(internalClient, 'UpdateBooking');
+        try {
+            const response = await bookSlot({
+                doctorId: cardiologistId,
+                appointmentDate: '2025-08-25', // Monday
+                timeSlot: {
+                    startTime: '09:00',
+                    endTime: '09:30'
+                },
+                isBooked: true
+            }, createServiceMetadata()) as any;
+
+            console.log(chalk.yellow('\n--- Booking Slot Response ---\n'), JSON.stringify(response, null, 2));
+
+            if (response.success) {
+                console.log(chalk.green('✓ Booking doctor slot successful'));
+                console.log('   Slot booked for patient:', response.booking.timeSlot);
+            } else {
+                console.log(chalk.red('✗ Booking doctor slot failed:'), response.error);
+            }
+        } catch (error) {
+            console.log(chalk.red('✗ Booking doctor slot error:'), error);
         }
     }
 

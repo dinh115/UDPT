@@ -18,7 +18,7 @@ import { config } from './config/environments';
 
 
 // =================== GRPC SETUP ===================
-const PROTO_PATH = path.join(__dirname, 'proto/user.proto');
+const PROTO_PATH = path.join(process.cwd(), 'src/proto/user.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     keepCase: true,

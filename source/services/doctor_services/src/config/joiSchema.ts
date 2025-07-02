@@ -14,9 +14,7 @@ export const timeSlotSchema = Joi.object({
     endTime: Joi.string().required().messages({
         'any.required': 'End time is required'
     }),
-    isBooked: Joi.boolean().required().messages({
-        'any.required': 'isBooked flag is required'
-    })
+    isBooked: Joi.boolean().optional()
 });
 
 export const availabilitySchema = Joi.object({
@@ -301,6 +299,36 @@ export const generateTimeSlotsSchema = Joi.object({
 
     return value;
 });
+
+export const updateBookingSchema = Joi.object({
+    doctorId: Joi.string()
+        .custom((value, helpers) => {
+            if (!isValidUUIDv4(value)) {
+                return helpers.error('any.invalid');
+            }
+            return value;
+        })
+        .required()
+        .messages({
+            'any.required': 'Doctor ID is required',
+            'any.invalid': 'Doctor ID must be a valid UUID v4'
+        }),
+
+    appointmentDate: Joi.string()
+        .pattern(/^\d{4}-\d{2}-\d{2}$/)
+        .required()
+        .messages({
+            'string.pattern.base': 'Appointment date must be in YYYY-MM-DD format',
+            'any.required': 'Appointment date is required'
+        }),
+
+    timeSlot: timeSlotSchema,
+
+    isBooked: Joi.boolean().required().messages({
+        'any.required': 'isBooked flag is required'
+    })
+});
+
 /**
  * Check if a string is a valid UUID v4
  */

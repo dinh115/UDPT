@@ -39,26 +39,6 @@ export interface IUser extends Document {
     updatedAt: Date;
 }
 
-export interface AuthRequest extends Request {
-    user?: IUser;
-}
-
-// API Response types
-export interface ApiResponse<T = any> {
-    success: boolean;
-    data?: T;
-    message?: string;
-    error?: string;
-}
-
-export interface PaginatedResponse<T> extends ApiResponse<T[]> {
-    pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-    };
-}
 
 export enum DayOfWeek {
     MONDAY = 'Monday',
@@ -83,8 +63,8 @@ export interface IAvailability {
 }
 
 export interface IDoctor extends Document {
-    _id: string; // This will now be a UUID string
-    userId: string; // Changed from Types.ObjectId to string (UUID)
+    _id: string;
+    userId: string;
     specialization: string;
     experience: number;
     qualifications: string[];

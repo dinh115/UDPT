@@ -1,7 +1,7 @@
 import Doctor from '../models/Doctor';
 import logger from '../config/logger';
 import {
-    ITimeSlot, DayOfWeek, IDoctor, FindDoctorResult
+    ITimeSlot, DayOfWeek, IDoctor, FindDoctorResult, ITimeSlotInput
 } from "../types";
 import {
     CreateDoctorProfileRequest,
@@ -16,10 +16,44 @@ import {
 export class DoctorService {
 
     // Helper method to get day of week from date
-    private _getDayOfWeek(date: Date): DayOfWeek {
+    private _getDayOfWeek(dateInput: Date | string): DayOfWeek {
+        const date = (dateInput instanceof Date) ? dateInput : new Date(dateInput);
+
+        if (isNaN(date.getTime())) {
+            throw new Error('Invalid date');
+        }
+
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         return days[date.getDay()] as DayOfWeek;
     }
+
+
+    // Helper method to find and update slot booking status
+    async updateSlotBookingStatus(
+        doctorId: string,
+        appointmentDate: Date,
+        timeSlot: ITimeSlotInput,
+        isBooked: boolean
+    ) {
+        const dayOfWeek = this._getDayOfWeek(appointmentDate);
+
+        const doctor = await Doctor.findById(doctorId);
+        if (!doctor) throw new Error('DOctor not found');
+
+        const dayAvailability = doctor.availability.find(avail => avail.day === dayOfWeek);
+        if (!dayAvailability) throw new Error('Doctor is not available on this day');
+
+        const slot = dayAvailability.slots.find(s =>
+            s.startTime === timeSlot.startTime && s.endTime === timeSlot.endTime
+        );
+
+        if (!slot) throw new Error('Time slot not found');
+
+        slot.isBooked = isBooked;
+        await doctor.save();
+        return slot;
+    }
+
     async getDoctorAvailableSlots(doctorId: string, date: string) {
         try {
             const doctor = await Doctor.findById(doctorId);
@@ -37,7 +71,7 @@ export class DoctorService {
             return dayAvailability.slots.filter(slot => !slot.isBooked);
         }
         catch (error) {
-            logger.error('Update user error:', error);
+            logger.error('Get doctor available slots error:', error);
             throw error;
         }
     }
@@ -237,6 +271,17 @@ export class DoctorService {
 
         } catch (error) {
             logger.error('Get Doctor by ID error:', error);
+            throw error;
+        }
+    }
+
+    async getDoctorByUserId(userId: string): Promise<IDoctor | null> {
+        try {
+            const doctor = await Doctor.findOne({ userId: userId })
+            return doctor;
+
+        } catch (error) {
+            logger.error('Get Doctor by User ID error:', error);
             throw error;
         }
     }

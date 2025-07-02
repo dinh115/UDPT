@@ -9,7 +9,9 @@ import {
     validateDoctorIdSchema,
     getAvailableTimeSlotsSchema,
     doctorQuerySchema,
-    getDoctorTimeSlotsStatisticsSchema
+    getDoctorTimeSlotsStatisticsSchema,
+    updateBookingSchema,
+    validateUserIdSchema
 } from '../config/joiSchema';
 import {
     GetDoctorByIdRequest,
@@ -23,14 +25,17 @@ import {
     GetAvailableTimeSlotsRequest,
     GetAvailableTimeSlotsResponse,
     GenerateTimeSlotsRequest,
-    GenerateTimeSlotsResponse
+    GenerateTimeSlotsResponse,
+    UpdateBookingRequest,
+    UpdateBookingResponse,
+    GetDoctorByUserIdRequest
 
 } from '../proto/generated/doctor';
 import chalk from 'chalk';
 
 // =================== INTERNAL SERVICE HANDLERS ===================
 export class InternalServiceHandlers {
-    async getDoctorInternal(
+    async getDoctorByIdInternal(
         call: grpc.ServerUnaryCall<GetDoctorByIdRequest, GetDoctorByIdResponse>,
         callback: grpc.sendUnaryData<GetDoctorByIdResponse>
     ): Promise<void> {
@@ -69,7 +74,52 @@ export class InternalServiceHandlers {
 
             callback(null, response);
         } catch (error) {
-            logger.error('Get doctor internal handler error:', error);
+            logger.error('Get doctor by id internal handler error:', error);
+            const err = handleGrpcError(error);
+            callback(err, null);
+        }
+    }
+
+    async getDoctorByUserIdInternal(
+        call: grpc.ServerUnaryCall<GetDoctorByUserIdRequest, GetDoctorByIdResponse>,
+        callback: grpc.sendUnaryData<GetDoctorByIdResponse>
+    ): Promise<void> {
+        try {
+            if (!authenticateService(call.metadata)) {
+                const response = GetDoctorByIdResponse.create({
+                    success: false,
+                    error: 'Service token is required.'
+                })
+                return callback(null, response);
+            }
+            const { error, value } = validateUserIdSchema.validate(call.request);
+            if (error) {
+                const response = GetDoctorByIdResponse.create({
+                    success: false,
+                    error: error.details[0].message,
+                });
+                return callback(null, response);
+            }
+
+            const { userId } = value;
+            const doctor = await doctorService.getDoctorByUserId(userId);
+
+            if (!doctor) {
+                const response = GetDoctorByIdResponse.create({
+                    success: false,
+                    error: 'User not found'
+                })
+                return callback(null, response);
+            }
+
+            const response = GetDoctorByIdResponse.create({
+                success: true,
+                doctor: convertToDoctorProto(doctor)
+            });
+
+            callback(null, response);
+        } catch (error) {
+            logger.error('Get doctor by user idinternal handler error:', error);
             const err = handleGrpcError(error);
             callback(err, null);
         }
@@ -308,6 +358,46 @@ export class InternalServiceHandlers {
         }
         catch (error) {
             logger.error('Generate doctor time slots internal handler error:', error);
+            const err = handleGrpcError(error);
+            callback(err, null);
+        }
+    }
+
+    async updateBooking(
+        call: grpc.ServerUnaryCall<UpdateBookingRequest, UpdateBookingResponse>,
+        callback: grpc.sendUnaryData<UpdateBookingResponse>
+    ): Promise<void> {
+        try {
+            if (!authenticateService(call.metadata)) {
+                const response = UpdateBookingResponse.create({
+                    success: false,
+                    error: 'Service token is required.'
+                })
+                return callback(null, response);
+            }
+
+            const { error, value } = updateBookingSchema.validate(call.request);
+            if (error) {
+                const response = UpdateBookingResponse.create({
+                    success: false,
+                    error: error.details[0].message
+                })
+                return callback(null, response);
+            }
+
+            const { doctorId, appointmentDate, timeSlot } = value;
+            const { isBooked } = call.request;
+            const result = await doctorService.updateSlotBookingStatus(doctorId, new Date(appointmentDate), timeSlot, isBooked);
+
+            const response = UpdateBookingResponse.create({
+                success: true,
+                message: 'Booking updated successfully.',
+                timeSlot: result
+            })
+
+            callback(null, response);
+        } catch (error) {
+            logger.error('Update booking internal handler error:', error);
             const err = handleGrpcError(error);
             callback(err, null);
         }
