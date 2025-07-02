@@ -28,7 +28,7 @@ const userSchema = new Schema<IUser>({
         required: true,
         trim: true,
         validate: {
-            validator: function (v: string) {
+            validator: function(v: string) {
                 // Basic phone regex - adjust as needed for your requirements
                 return /^[\+]?[1-9][\d]{0,15}$/.test(v);
             },
@@ -45,7 +45,7 @@ const userSchema = new Schema<IUser>({
         type: Date,
         required: true,
         validate: {
-            validator: function (v: Date) {
+            validator: function(v: Date) {
                 // No future dates allowed
                 return v <= new Date();
             },

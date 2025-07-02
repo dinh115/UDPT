@@ -1,0 +1,80 @@
+services:
+  # MongoDB Database for Appointment Service
+  appointment-mongodb:
+    image: mongo:7
+    container_name: appointment-service-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_DATABASE: appointment-management
+    ports:
+      - "27019:27017"  # Different port to avoid conflicts with other services
+    volumes:
+      - appointment_mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - appointment-service-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # Note: Doctor service should be running separately
+  # This compose file only manages the appointment service and its database
+
+  # Appointment Management Service
+  appointment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: appointment-service
+    restart: unless-stopped
+    depends_on:
+      appointment-mongodb:
+        condition: service_healthy
+    ports:
+      - "50053:50053"
+    environment:
+      # Server Configuration
+      GRPC_PORT: 50053
+      GRPC_HOST: 0.0.0.0
+      NODE_ENV: production
+      
+      # Database Configuration
+      MONGODB_URI: mongodb://admin:adminpassword@appointment-mongodb:27017/appointment-management?authSource=admin
+      MONGODB_TEST_URI: mongodb://admin:adminpassword@appointment-mongodb:27017/appointment-management-test?authSource=admin
+      
+      # Doctor Service Configuration (expects doctor service to be running externally)
+      DOCTOR_SERVICE_GRPC_URL: host.docker.internal:50052
+      DOCTOR_GRPC_HOST: host.docker.internal
+      DOCTOR_GRPC_PORT: 50052
+      
+      # Service Token for Internal APIs
+      SERVICE_TOKEN: ${SERVICE_TOKEN:-service-secret-token-123}
+      
+      # Logging
+      LOG_LEVEL: info
+    networks:
+      - appointment-service-network
+    volumes:
+      # Optional: Mount logs directory
+      - ./logs:/usr/src/app/logs
+    healthcheck:
+      test: ["CMD", "node", "-e", "const grpc = require('@grpc/grpc-js'); const client = new grpc.Client('localhost:50053', grpc.credentials.createInsecure()); client.waitForReady(Date.now() + 1000, (err) => process.exit(err ? 1 : 0));"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+networks:
+  appointment-service-network:
+    driver: bridge
+    name: appointment-service-network
+
+volumes:
+  appointment_mongodb_data:
+    driver: local
+    name: appointment-service-mongodb-data
