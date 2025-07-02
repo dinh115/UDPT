@@ -1,0 +1,83 @@
+// python -m grpc_tools.protoc -Iapp/grpc --python_out=app/grpc --grpc_python_out=app/grpc app/grpc/patient.proto
+
+syntax = "proto3";
+
+package patientPackage;
+
+import "google/protobuf/timestamp.proto";
+
+service PatientService {
+  rpc GetVisit(GetVisitRequest) returns (GetVisitResponse);
+  rpc ListVisits(ListVisitsRequest) returns (ListVisitsResponse);
+  rpc CreateVisit(CreateVisitRequest) returns (CreateVisitResponse);
+  rpc UpdateVisit(UpdateVisitRequest) returns (CreateVisitResponse); // dùng lại response
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+message HealthCheckRequest {}
+message HealthCheckResponse {
+  bool healthy = 1;
+}
+
+message GetVisitRequest {
+  string id = 1;
+}
+
+message GetVisitResponse {
+  Visit visit = 1;
+}
+
+message ListVisitsRequest {
+  string userId = 1;
+}
+
+message ListVisitsResponse {
+  repeated Visit visits = 1;
+}
+
+message CreateVisitRequest {
+  Visit visit = 1;
+}
+
+message UpdateVisitRequest {
+  string id = 1;
+  Visit visit = 2;
+}
+
+message CreateVisitResponse {
+  Visit visit = 1;
+}
+
+message Visit {
+  string id = 1;
+  string userId = 2;
+  string doctorId = 3;
+  google.protobuf.Timestamp visitDate = 4;
+  string department = 5;
+  string reason_for_visit = 6;
+  repeated Diagnosis diagnosis = 7;
+  VitalSigns vital_signs = 8;
+  repeated TestResult tests = 9;
+  string notes = 10;
+}
+
+message Diagnosis {
+  string code = 1;
+  string description = 2;
+}
+
+message VitalSigns {
+  float temperature = 1;
+  string blood_pressure = 2;
+  int32 pulse = 3;
+  int32 respiratory_rate = 4;
+  float weight = 5;
+  float height = 6;
+}
+
+message TestResult {
+  string name = 1;
+  string result = 2;
+  google.protobuf.Timestamp date = 3;
+  string file_url = 4;
+}

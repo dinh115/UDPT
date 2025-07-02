@@ -26,12 +26,11 @@ export const caching = (req, res, next) => {
     // If not cached, proceed with the request
     console.log(`Cache miss for ${req.url}`);
 
-    // Store the response in cache after the request is processed
-
+    // Override the res.send method to cache the response
     const originalJson = res.json.bind(res);
-    res.send = (body) => {
-        cacheService.setCache(req.url, req.method, JSON.parse(body));
+    res.json = (body) => {
+        cacheService.addRoute(req.url, req.method, body);
         return originalJson(body);
-    }
+    };
     next();
 };
