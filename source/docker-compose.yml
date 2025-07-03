@@ -1,0 +1,249 @@
+services:
+  # ========================== Databases ==========================
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    networks:
+      - internal
+    volumes:
+      - mongo-data:/data/db
+
+  user-mongodb:
+    image: mongo:7
+    container_name: user-services-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_DATABASE: user-services
+    expose:
+      - "27017"
+    volumes:
+      - user_mongodb_data:/data/db
+      - ./services/user_services/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - internal
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  doctor-mongodb:
+    image: mongo:7
+    container_name: doctor-service-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_DATABASE: doctor-management
+    expose:
+      - "27017"
+    volumes:
+      - doctor_mongodb_data:/data/db
+      - ./services/doctor_services/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - internal
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  appointment-mongodb:
+    image: mongo:7
+    container_name: appointment-service-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_DATABASE: appointment-management
+    expose:
+      - "27017"
+    volumes:
+      - appointment_mongodb_data:/data/db
+      - ./services/appointment_services/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - internal
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # ========================== Cache ==========================
+  redis:
+    image: redis:7-alpine
+    container_name: user-services-redis
+    restart: unless-stopped
+    expose:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    command: redis-server --appendonly yes
+
+  # ========================== Core Services ==========================
+  gateway:
+    build:
+      context: ./services/gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - patient-services
+      - user-services
+      - doctor-services
+      - appointment-services
+    networks:
+      - internal
+    volumes:
+      - ./services/gateway:/app
+      - ./services/patient_services/app/grpc:/app/shared_proto/patient
+      - ./services/medicine_services/src/main/proto:/app/shared_proto/medicine
+      - ./services/user_services/proto:/app/shared_proto/user
+      - ./services/doctor_services/proto:/app/shared_proto/doctor
+      - ./services/appointment_services/proto:/app/shared_proto/appointment
+    environment:
+      NODE_ENV: production
+      USER_SERVICE_URL: user-services:50051
+      DOCTOR_SERVICE_URL: doctor-services:50052
+      APPOINTMENT_SERVICE_URL: appointment-services:50053
+      PATIENT_SERVICE_URL: patient-services:3001
+      SERVICE_TOKEN: ${SERVICE_TOKEN:-service-secret-token-123}
+
+  patient-services:
+    build:
+      context: ./services/patient_services
+    environment:
+      MONGODB_URI: mongodb://mongo:27017
+    expose:
+      - "3001"
+    networks:
+      - internal
+
+  # appointment-services:
+  #   build:
+  #     context: ./services/appointment_services
+  #   expose:
+  #     - "3002"
+  #   networks:
+  #     - internal
+
+  # doctor-services:
+  #   build:
+  #     context: ./services/doctor_services
+  #   expose:
+  #     - "3003"
+  #   networks:
+  #     - internal
+
+  # medicine-services:
+  #   build:
+  #     context: ./services/medicine_services
+  #   expose:
+  #     - "3004"
+  #   networks:
+  #     - internal
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #   ports:
+  #     - "8080:80"
+  #   depends_on:
+  #     - gateway
+  #   networks:
+  #     - internal
+
+  user-services:
+    build:
+      context: ./services/user_services
+    container_name: user-services-service
+    restart: unless-stopped
+    depends_on:
+      user-mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    expose:
+      - "50051"
+    environment:
+      GRPC_PORT: 50051
+      GRPC_HOST: 0.0.0.0
+      NODE_ENV: production
+      MONGODB_URI: mongodb://admin:adminpassword@user-mongodb:27017/user-services?authSource=admin
+      REDIS_URL: redis://redis:6379
+      SERVICE_TOKEN: ${SERVICE_TOKEN:-service-secret-token-123}
+    networks:
+      - internal
+    volumes:
+      - ./logs/user-services:/usr/src/app/logs
+
+  doctor-services:
+    build:
+      context: ./services/doctor_services
+    container_name: doctor-service
+    restart: unless-stopped
+    depends_on:
+      doctor-mongodb:
+        condition: service_healthy
+    expose:
+      - "50052"
+    environment:
+      GRPC_PORT: 50052
+      GRPC_HOST: 0.0.0.0
+      NODE_ENV: production
+      MONGODB_URI: mongodb://admin:adminpassword@doctor-mongodb:27017/doctor-management?authSource=admin
+      SERVICE_TOKEN: ${SERVICE_TOKEN:-service-secret-token-123}
+    networks:
+      - internal
+    volumes:
+      - ./logs/doctor-services:/usr/src/app/logs
+
+  appointment-services:
+    build:
+      context: ./services/appointment_services
+    container_name: appointment-service
+    restart: unless-stopped
+    depends_on:
+      appointment-mongodb:
+        condition: service_healthy
+      doctor-services:
+        condition: service_healthy
+    expose:
+      - "50053"
+    environment:
+      GRPC_PORT: 50053
+      GRPC_HOST: 0.0.0.0
+      NODE_ENV: production
+      MONGODB_URI: mongodb://admin:adminpassword@appointment-mongodb:27017/appointment-management?authSource=admin
+      DOCTOR_SERVICE_GRPC_URL: doctor-services:50052
+      SERVICE_TOKEN: ${SERVICE_TOKEN:-service-secret-token-123}
+    networks:
+      - internal
+    volumes:
+      - ./logs/appointment-services:/usr/src/app/logs
+
+# ========================== Network & Volumes ==========================
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  user_mongodb_data:
+  doctor_mongodb_data:
+  appointment_mongodb_data:
+  redis_data:
