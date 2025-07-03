@@ -10,5 +10,7 @@
 
 python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. notification.proto
 cd source/services/notification_services
+cd source/services/analysis_services
+python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. analysis.proto
 EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS", "pdai.congviec@gmail.com")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD", "ixouorzcsxgrsdeu")
