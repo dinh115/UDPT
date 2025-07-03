@@ -11,7 +11,7 @@ import { connectDatabase } from './config/database';
 import { AuthServiceHandlers } from './handlers/authHandler';
 import { UserServiceHandlers } from './handlers/userHandler';
 import { InternalServiceHandlers } from './handlers/internalHandler';
-import { HealthServiceHandlers } from './handlers';
+import { HealthServiceHandlers, withTimestampConversion } from './handlers';
 
 // Load environment variables
 import { config } from './config/environments';
@@ -41,31 +41,31 @@ function createGrpcServer(): grpc.Server {
 
     // Add services to gRPC server
     server.addService(userProto.user.AuthService.service, {
-        Login: authHandlers.login.bind(authHandlers),
-        Register: authHandlers.register.bind(authHandlers),
-        Logout: authHandlers.logout.bind(authHandlers),
-        VerifyToken: authHandlers.verifyToken.bind(authHandlers),
-        GetProfile: authHandlers.getProfile.bind(authHandlers),
-        UpdateProfile: authHandlers.updateProfile.bind(authHandlers),
+        Login: withTimestampConversion(authHandlers.login.bind(authHandlers)),
+        Register: withTimestampConversion(authHandlers.register.bind(authHandlers)),
+        Logout: withTimestampConversion(authHandlers.logout.bind(authHandlers)),
+        VerifyToken: withTimestampConversion(authHandlers.verifyToken.bind(authHandlers)),
+        GetProfile: withTimestampConversion(authHandlers.getProfile.bind(authHandlers)),
+        UpdateProfile: withTimestampConversion(authHandlers.updateProfile.bind(authHandlers)),
     });
 
     server.addService(userProto.user.UserService.service, {
-        GetUser: userHandlers.getUser.bind(userHandlers),
-        GetUsers: userHandlers.getUsers.bind(userHandlers),
-        CreateUser: userHandlers.createUser.bind(userHandlers),
-        UpdateUser: userHandlers.updateUser.bind(userHandlers),
-        DeleteUsers: userHandlers.deleteUsers.bind(userHandlers),
+        GetUser: withTimestampConversion(userHandlers.getUser.bind(userHandlers)),
+        GetUsers: withTimestampConversion(userHandlers.getUsers.bind(userHandlers)),
+        CreateUser: withTimestampConversion(userHandlers.createUser.bind(userHandlers)),
+        UpdateUser: withTimestampConversion(userHandlers.updateUser.bind(userHandlers)),
+        DeleteUsers: withTimestampConversion(userHandlers.deleteUsers.bind(userHandlers)),
     });
 
     server.addService(userProto.user.InternalService.service, {
-        GetUserInternal: internalHandlers.getUserInternal.bind(internalHandlers),
-        BatchGetUsers: internalHandlers.batchGetUsers.bind(internalHandlers),
-        CheckUserStatus: internalHandlers.checkUserStatus.bind(internalHandlers),
-        VerifyUsers: internalHandlers.verifyUsers.bind(internalHandlers),
+        GetUserInternal: withTimestampConversion(internalHandlers.getUserInternal.bind(internalHandlers)),
+        BatchGetUsers: withTimestampConversion(internalHandlers.batchGetUsers.bind(internalHandlers)),
+        CheckUserStatus: withTimestampConversion(internalHandlers.checkUserStatus.bind(internalHandlers)),
+        VerifyUsers: withTimestampConversion(internalHandlers.verifyUsers.bind(internalHandlers)),
     });
 
     server.addService(userProto.user.HealthService.service, {
-        Check: healthHandlers.check.bind(healthHandlers),
+        Check: withTimestampConversion(healthHandlers.check.bind(healthHandlers)),
     });
 
     // Add interceptors for logging and error handling

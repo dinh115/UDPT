@@ -1,14 +1,18 @@
-import express, { application } from 'express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import express from 'express';
 import morgan from 'morgan';
-
+import dotenv from 'dotenv';
+import { setupRoutes } from './routes/gateway_route.js';
+//import {errorHandler} from './middlewares/errorHandler.js';
 import {caching} from './middlewares/caching.js';
 import {auth} from './middlewares/auth.js';
 import {logging} from './middlewares/logging.js';
 
-import { ContextPathMap } from './config/settings.js';
 
+dotenv.config();
+const app = express();
+const PORT = process.env.GATEWAY_PORT;
 
+//midleware configuration
 const midlleware = {
   // Add any middleware functions here if needed
   //cache
@@ -22,40 +26,45 @@ const midlleware = {
   //logging
   logging: function (req, res, next) {
     logging(req, res, next);
-  }
+  },
   //error handling
+  errorHandler: function (err, req, res, next) {
+    errorHandler(err, req, res, next);
+  }
 };
 
 
-const app = express();
-const PORT = 3000;
+// Middleware
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Middleware configuration
-app.use(`/`,[midlleware.caching,midlleware.authentication, midlleware.logging]);
+app.use(`/`, midlleware.logging);
+app.use(`/`, midlleware.caching);
+// app.use(`/`, midlleware.authentication);
 
+(async () => {
+  console.time("SetupRoutes");
+  await setupRoutes(app);
+  console.timeEnd("SetupRoutes");
 
+  const server = app.listen(PORT, () => {
+    console.log(`🚀 Gateway service started on port ${PORT}`);
+  });
 
-// Routing services
-for (let [key, value] of ContextPathMap.entries()) {
-  //console.log('key', key, 'value', value);
-  app.use(`/api/${key}`, createProxyMiddleware({
-    target: `${value}`, // Target URL for the service
-    timeout: 5000, // Timeout for the proxy request
-    proxyTimeout: 5000, // Timeout for the proxy response
-    changeOrigin: true,
-    pathRewrite: {
-      [`^/api/${key}`]: '', // Remove the context path from the request URL
-    },
-    onProxyReq: (proxyReq, req, res) => {
-      // You can add custom headers or modify the request here if needed
-      console.log('Request to:', req.originalUrl);
-    },
-  }));
-}
+  function gracefulShutdown(signal) {
+    console.log(`${signal} received. Closing server...`);
+    server.close(() => {
+      console.log('HTTP server closed.');
+      process.exit(0);
+    });
 
-// Proxy configuration
-app.listen(PORT, () => {
-  console.log(`api-gateway running at http://localhost:${PORT}`);
-});
+    setTimeout(() => {
+      console.warn('Forcing shutdown...');
+      process.exit(1);
+    }, 5000);
+  }
+
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+})();

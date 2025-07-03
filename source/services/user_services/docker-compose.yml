@@ -1,0 +1,110 @@
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: user-services-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_DATABASE: user-services
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - user-services-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: user-services-redis
+    restart: unless-stopped
+    ports:
+      - "6378:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - user-services-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    command: redis-server --appendonly yes
+
+  # User Services Service
+  user-services-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: user-services-service
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "50051:50051"
+    environment:
+      # Server Configuration
+      GRPC_PORT: 50051
+      GRPC_HOST: 0.0.0.0
+      NODE_ENV: production
+      
+      # Database Configuration
+      MONGODB_URI: mongodb://admin:adminpassword@mongodb:27017/user-services?authSource=admin
+      MONGODB_TEST_URI: mongodb://admin:adminpassword@mongodb:27017/user-services-test?authSource=admin
+      
+      # Redis Configuration
+      REDIS_URL: redis://redis:6379
+      REDIS_PASSWORD: ""
+      
+      # JWT Configuration
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+      JWT_EXPIRES_IN: 24h
+      
+      # Service Token
+      SERVICE_TOKEN: ${SERVICE_TOKEN:-service-secret-token-123}
+      
+      # Session Configuration
+      SESSION_CACHE_TTL: 86400
+      
+      # Bcrypt Configuration
+      BCRYPT_ROUNDS: 12
+      
+      # Logging
+      LOG_LEVEL: info
+    networks:
+      - user-services-network
+    volumes:
+      # Optional: Mount logs directory
+      - ./logs:/usr/src/app/logs
+    healthcheck:
+      test: ["CMD", "node", "-e", "const grpc = require('@grpc/grpc-js'); const client = new grpc.Client('localhost:50051', grpc.credentials.createInsecure()); client.waitForReady(Date.now() + 1000, (err) => process.exit(err ? 1 : 0));"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+networks:
+  user-services-network:
+    driver: bridge
+    name: user-services-network
+
+volumes:
+  mongodb_data:
+    driver: local
+    name: user-services-mongodb-data
+  redis_data:
+    driver: local
+    name: user-services-redis-data

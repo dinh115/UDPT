@@ -153,6 +153,7 @@ export const doctorQuerySchema = Joi.object({
 
     sortBy: Joi.string()
         .valid('createdAt', 'experience', 'specialization')
+        .empty('')
         .default('createdAt')
         .messages({
             'any.only': 'Sort by must be one of: createdAt, experience, specialization'
@@ -160,6 +161,7 @@ export const doctorQuerySchema = Joi.object({
 
     sortOrder: Joi.string()
         .valid('asc', 'desc')
+        .empty('')
         .default('desc')
         .messages({
             'any.only': 'Sort order must be either asc or desc'

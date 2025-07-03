@@ -49,8 +49,8 @@ export interface CreateDoctorProfileRequest {
 
 export interface findDoctorsRequest {
   specialization?: string | undefined;
-  page: number;
-  limit: number;
+  page?: number | undefined;
+  limit?: number | undefined;
   sortBy: string;
   sortOrder: string;
 }
@@ -786,7 +786,7 @@ export const CreateDoctorProfileRequest: MessageFns<CreateDoctorProfileRequest> 
 };
 
 function createBasefindDoctorsRequest(): findDoctorsRequest {
-  return { specialization: undefined, page: 0, limit: 0, sortBy: "", sortOrder: "" };
+  return { specialization: undefined, page: undefined, limit: undefined, sortBy: "", sortOrder: "" };
 }
 
 export const findDoctorsRequest: MessageFns<findDoctorsRequest> = {
@@ -794,10 +794,10 @@ export const findDoctorsRequest: MessageFns<findDoctorsRequest> = {
     if (message.specialization !== undefined) {
       writer.uint32(10).string(message.specialization);
     }
-    if (message.page !== 0) {
+    if (message.page !== undefined) {
       writer.uint32(16).int32(message.page);
     }
-    if (message.limit !== 0) {
+    if (message.limit !== undefined) {
       writer.uint32(24).int32(message.limit);
     }
     if (message.sortBy !== "") {
@@ -868,8 +868,8 @@ export const findDoctorsRequest: MessageFns<findDoctorsRequest> = {
   fromJSON(object: any): findDoctorsRequest {
     return {
       specialization: isSet(object.specialization) ? globalThis.String(object.specialization) : undefined,
-      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
-      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : undefined,
       sortBy: isSet(object.sortBy) ? globalThis.String(object.sortBy) : "",
       sortOrder: isSet(object.sortOrder) ? globalThis.String(object.sortOrder) : "",
     };
@@ -880,10 +880,10 @@ export const findDoctorsRequest: MessageFns<findDoctorsRequest> = {
     if (message.specialization !== undefined) {
       obj.specialization = message.specialization;
     }
-    if (message.page !== 0) {
+    if (message.page !== undefined) {
       obj.page = Math.round(message.page);
     }
-    if (message.limit !== 0) {
+    if (message.limit !== undefined) {
       obj.limit = Math.round(message.limit);
     }
     if (message.sortBy !== "") {
@@ -901,8 +901,8 @@ export const findDoctorsRequest: MessageFns<findDoctorsRequest> = {
   fromPartial<I extends Exact<DeepPartial<findDoctorsRequest>, I>>(object: I): findDoctorsRequest {
     const message = createBasefindDoctorsRequest();
     message.specialization = object.specialization ?? undefined;
-    message.page = object.page ?? 0;
-    message.limit = object.limit ?? 0;
+    message.page = object.page ?? undefined;
+    message.limit = object.limit ?? undefined;
     message.sortBy = object.sortBy ?? "";
     message.sortOrder = object.sortOrder ?? "";
     return message;

@@ -29,6 +29,17 @@ const userClient = new userProto.user.UserService(`${GRPC_HOST}:${GRPC_PORT}`, g
 const internalClient = new userProto.user.InternalService(`${GRPC_HOST}:${GRPC_PORT}`, grpc.credentials.createInsecure());
 const healthClient = new userProto.user.HealthService(`${GRPC_HOST}:${GRPC_PORT}`, grpc.credentials.createInsecure());
 
+export function dateToProtoTimestamp(date: Date) {
+    const seconds = Math.floor(date.getTime() / 1000);
+    const nanos = (date.getTime() % 1000) * 1e6;
+    return { seconds, nanos };
+}
+
+export function protoTimestampToDate(timestamp: { seconds: number | string; nanos: number }) {
+    const millis = Number(timestamp.seconds) * 1000 + Math.floor(timestamp.nanos / 1e6);
+    return new Date(millis);
+}
+
 // Test data
 const testUsers = {
     admin: {
@@ -36,14 +47,20 @@ const testUsers = {
         password: 'Admin123!',
         email: 'admin@test.com',
         firstName: 'Admin',
-        lastName: 'User'
+        lastName: 'User',
+        phone: '+1234567890',
+        address: '123 Admin Street, Admin City, AC 12345',
+        dateOfBirth: new Date('1985-06-15')
     },
     patient: {
         username: 'patient_test',
         password: 'Patient123!',
         email: 'patient@test.com',
         firstName: 'Patient',
-        lastName: 'User'
+        lastName: 'User',
+        phone: '+1987654321',
+        address: '456 Patient Avenue, Patient Town, PT 67890',
+        dateOfBirth: new Date('1990-03-22')
     }
 };
 
@@ -106,9 +123,6 @@ class GrpcTestClient {
     async testAuthService(): Promise<void> {
         console.log(chalk.blue('\n=== Testing Auth Service ==='));
 
-        // Test Registration
-        //await this.testRegister();
-
         // Test Login
         await this.testLoginAdmin();
         await this.testLoginPatient();
@@ -132,13 +146,6 @@ class GrpcTestClient {
 
         const register = promisify(authClient, 'Register');
 
-        console.log(JSON.stringify({
-            email: testUsers.admin.email,
-            username: testUsers.admin.username,
-            password: testUsers.admin.password,
-            firstName: testUsers.admin.firstName,
-            lastName: testUsers.admin.lastName
-        }));
         // Register admin user
         try {
             const adminResponse = await register({
@@ -146,7 +153,10 @@ class GrpcTestClient {
                 username: testUsers.admin.username,
                 password: testUsers.admin.password,
                 firstName: testUsers.admin.firstName,
-                lastName: testUsers.admin.lastName
+                lastName: testUsers.admin.lastName,
+                phone: testUsers.admin.phone,
+                address: testUsers.admin.address,
+                dateOfBirth: dateToProtoTimestamp(testUsers.admin.dateOfBirth)
             }) as Responses.RegisterResponse;
 
             console.log(chalk.yellow('\n--- Response Data ---\n ' + JSON.stringify(adminResponse)));
@@ -163,20 +173,16 @@ class GrpcTestClient {
         }
 
         // Register patient user
-        console.log(JSON.stringify({
-            email: testUsers.patient.email,
-            username: testUsers.patient.username,
-            password: testUsers.patient.password,
-            firstName: testUsers.patient.firstName,
-            lastName: testUsers.patient.lastName
-        }));
         try {
             const patientResponse = await register({
                 email: testUsers.patient.email,
                 username: testUsers.patient.username,
                 password: testUsers.patient.password,
                 firstName: testUsers.patient.firstName,
-                lastName: testUsers.patient.lastName
+                lastName: testUsers.patient.lastName,
+                phone: testUsers.patient.phone,
+                address: testUsers.patient.address,
+                dateOfBirth: dateToProtoTimestamp(testUsers.admin.dateOfBirth)
             }) as Responses.RegisterResponse;
             console.log(chalk.yellow('\n--- Response Data ---\n ' + JSON.stringify(patientResponse)));
 
@@ -491,7 +497,10 @@ class GrpcTestClient {
                 firstName: 'New',
                 lastName: 'User',
                 role: 'employee',
-                status: 'active'
+                status: 'active',
+                phone: '+1234567890',
+                address: 'New User Street',
+                dateOfBirth: new Date('2000-01-01')
             }, createMetadata(adminToken)) as Responses.CreateUserResponse;
             console.log(chalk.yellow('\n--- Response Data ---\n ' + JSON.stringify(response)));
 
@@ -515,7 +524,10 @@ class GrpcTestClient {
                 firstName: 'Unauth',
                 lastName: 'User',
                 role: 'patient',
-                status: 'active'
+                status: 'active',
+                phone: '+1234567890',
+                address: 'New User Street',
+                dateOfBirth: new Date('2000-01-01')
             }, createMetadata(patientToken)) as Responses.CreateUserResponse;
             console.log(chalk.yellow('\n--- Response Data ---\n ' + JSON.stringify(response)));
 
@@ -734,6 +746,7 @@ class GrpcTestClient {
         console.log(chalk.magenta('🚀 Starting gRPC Service Tests\n'));
 
         await this.testHealthCheck();
+        //await this.testRegister();
         await this.testAuthService();
         await this.testUserService();
         await this.testInternalService();

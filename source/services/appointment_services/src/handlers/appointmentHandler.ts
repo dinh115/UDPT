@@ -11,7 +11,7 @@ import {
     isValidUUIDv4
 } from '../config/joiSchema';
 import chalk from 'chalk';
-import { convertToAppointmentProto, getUserFromMetadata } from '.';
+import { convertToAppointmentProto, getUserFromMetadata, convertDateToTimestamps } from '.';
 import {
     BookAppointmentRequest,
     BookAppointmentResponse,
@@ -113,7 +113,7 @@ export class AppointmentServiceHandlers {
                 appointment: convertToAppointmentProto(appointment),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Book appointment handler error:', error);
             const err = handleGrpcError(error);
@@ -189,7 +189,7 @@ export class AppointmentServiceHandlers {
                 appointment: convertToAppointmentProto(updatedAppointment),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Update appointment handler error:', error);
             const err = handleGrpcError(error);
@@ -255,7 +255,7 @@ export class AppointmentServiceHandlers {
                 appointment: convertToAppointmentProto(acceptedAppointment),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Accept appointment handler error:', error);
             const err = handleGrpcError(error);
@@ -321,7 +321,7 @@ export class AppointmentServiceHandlers {
                 appointment: convertToAppointmentProto(cancelledAppointment),
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Cancel appointment handler error:', error);
             const err = handleGrpcError(error);
@@ -369,7 +369,7 @@ export class AppointmentServiceHandlers {
                 }
             });
 
-            callback(null, response);
+            callback(null, convertDateToTimestamps(response));
         } catch (error) {
             logger.error('Get my appointments handler error:', error);
             const err = handleGrpcError(error);

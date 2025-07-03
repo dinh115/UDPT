@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ContextPathMap } from '../config/settings.js';
+import { GrpcClientMap } from '../config/settings.js';
 
 export class AuthenticationError extends Error {
     constructor(code, message) {
@@ -18,7 +18,7 @@ export const authenticate = async (req, next) => {
         if (!jwtToken) throw new AuthenticationError('MISSING_TOKEN', "Invalid token format");
         console.log('JWT Token:', jwtToken);
 
-        const authenticationUrl = `http://${ContextPathMap.get('id')}/authenticate`;
+        const authenticationUrl = `http://${GrpcClientMap.get('id')}/authenticate`;
         console.log('---------------------');
         console.log('Authentication URL:', authenticationUrl);
         try {

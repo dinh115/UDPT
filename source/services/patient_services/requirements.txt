@@ -6,3 +6,4 @@ python-dotenv
 pydantic-settings
 grpcio
 grpcio-tools
+protobuf

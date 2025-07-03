@@ -10,6 +10,9 @@ export interface IUser extends Document {
     _id: string;
     email: string;
     username: string;
+    phone: string;
+    address: string;
+    dateOfBirth: Date;
     password: string;
     firstName: string;
     lastName: string;
@@ -23,6 +26,9 @@ export interface JWTPayload {
     userId: string;
     email: string;
     username: string;
+    phone: string;
+    address: string;
+    dateOfBirth: Date;
     role: string;
     status: string;
 }
@@ -42,6 +48,9 @@ export interface RegisterRequest {
     password: string;
     firstName: string;
     lastName: string;
+    phone: string;
+    address: string;
+    dateOfBirth: Date;
 }
 
 export interface CreateUserRequest {
@@ -52,6 +61,9 @@ export interface CreateUserRequest {
     password?: string;
     role?: Role;
     status?: Status;
+    phone?: string;
+    address?: string;
+    dateOfBirth?: Date;
 }
 
 export interface UpdateUserRequest {
@@ -61,6 +73,9 @@ export interface UpdateUserRequest {
     password?: string;
     role?: Role;
     status?: Status;
+    phone?: string;
+    address?: string;
+    dateOfBirth?: Date;
 }
 
 export interface ApiResponse<T = any> {
