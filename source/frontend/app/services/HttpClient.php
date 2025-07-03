@@ -27,6 +27,8 @@ class HttpClient {
                 'Accept' => 'application/json'
             ]
         ];
+
+        // return throw new Error('API configuration file not found.');
     }
     
     public function get($endpoint, $params = [], $headers = []) {
