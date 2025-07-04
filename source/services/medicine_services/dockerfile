@@ -23,7 +23,7 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests
 
 # Expose port 3004 (as defined in docker-compose.yml)
-EXPOSE 3004
+EXPOSE 9090
 
 # Run the application
-CMD ["java", "-jar", "target/medicine-service-*.jar"]
+CMD ["java", "-jar", "target/MedicineService-0.0.1-SNAPSHOT.jar"]
