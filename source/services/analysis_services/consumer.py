@@ -3,6 +3,7 @@ import json
 import mysql.connector
 from mysql.connector import Error
 from datetime import datetime
+import os
 ## it should be activated, when the appointment is approved
 EXCHANGE_NAME = "streaming_exchange"
 QUEUE_NAME = "appointment_queue"
@@ -17,10 +18,11 @@ def init_db_connection():
     try:
         if conn is None or not conn.is_connected():
             conn = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="root",
-                database="appointment_db"
+                #host="localhost",
+                host=os.getenv("MYSQL_HOST", "localhost"),
+                user=os.getenv("MYSQL_USER", "root"),
+                password=os.getenv("MYSQL_PASSWORD", "root"),
+                database=os.getenv("MYSQL_DATABASE", "appointment_db")
             )
             cursor = conn.cursor()
     except Error as e:
@@ -40,7 +42,7 @@ def callback(ch, method, properties, body):
 
     try:
         query = """
-        INSERT INTO appointments_tab (
+        INSERT INTO appointment_db.appointments_tab (
             appointment_id, patient_id, doctor_id, appointment_date, start_time, end_time,
             status, notes, created_at, updated_at
         ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -64,7 +66,7 @@ def callback(ch, method, properties, body):
     except Error as e:
         print("Failed to insert data:", e)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
+connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "localhost")))
 channel = connection.channel()
 
 channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type="direct", durable=True)

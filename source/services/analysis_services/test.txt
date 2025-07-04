@@ -53,21 +53,28 @@ GetPrescriptionStatistics
 
 AcceptAppointment
 SET @doctor1_id = 'doc-uuid-1111-1111-1111-111111111111';
+SET @doctor2_id = 'doc-uuid-1111-1111-1111-111111111112';
 SET @patient1_id = 'pat-uuid-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
 SET @patient2_id = 'pat-uuid-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
 SET @patient3_id = 'pat-uuid-cccc-cccc-cccc-cccccccccccc';
+SET @patient4_id = 'pat-uuid-dddd-dddd-dddd-dddddddddddd';
 
-SET @appt1_id = 'appt-uuid-0001-0001-0001-000000000001';
-SET @appt2_id = 'appt-uuid-0002-0002-0002-000000000002';
-SET @appt3_id = 'appt-uuid-0003-0003-0003-000000000003';
-SET @appt4_id = 'appt-uuid-0004-0004-0004-000000000004';
+SET @appt1_id = 'ppt-uuid-0001-0001-0001-000000000001';
+SET @appt2_id = 'ppt-uuid-0002-0002-0002-000000000002';
+SET @appt3_id = 'ppt-uuid-0003-0003-0003-000000000003';
+SET @appt4_id = 'ppt-uuid-0004-0004-0004-000000000004';
 
 INSERT INTO appointments_tab (appointment_id, patient_id, doctor_id, appointment_date, start_time, end_time, status, notes, created_at, updated_at) VALUES
 (@appt1_id, @patient1_id, @doctor1_id, '2025-08-15', '10:00:00', '10:30:00', 'pending', 'Patient 1 booking', NOW(), NOW()),
 (@appt2_id, @patient2_id, @doctor1_id, '2025-08-15', '10:00:00', '10:30:00', 'pending', 'Patient 2 booking', NOW(), NOW()),
 (@appt3_id, @patient3_id, @doctor1_id, '2025-08-15', '10:00:00', '10:30:00', 'pending', 'Patient 2 booking', NOW(), NOW()),
+(@appt4_id, @patient4_id, @doctor2_id, '2025-08-15', '10:00:00', '10:30:00', 'pending', 'Patient 2 booking', NOW(), NOW()),
 
 
 {
     "appointmentId": "ppt-uuid-0001-0001-0001-000000000001"
+}
+
+{
+    "appointmentId": "ppt-uuid-0004-0004-0004-000000000004"
 }

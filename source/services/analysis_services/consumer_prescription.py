@@ -2,7 +2,7 @@ import pika
 import json
 import mysql.connector
 from mysql.connector import Error
-
+import os
 EXCHANGE_NAME = "streaming_exchange"
 QUEUE_NAME = "prescription_queue"
 ROUTING_KEY_PRESCRIPTION = "prescription"
@@ -16,10 +16,10 @@ def init_db_connection():
     try:
         if conn is None or not conn.is_connected():
             conn = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="root",
-                database="appointment_db"
+                host=os.getenv("MYSQL_HOST", "localhost"),
+                user=os.getenv("MYSQL_USER", "root"),
+                password=os.getenv("MYSQL_PASSWORD", "root"),
+                database=os.getenv("MYSQL_DATABASE", "appointment_db")
             )
             cursor = conn.cursor()
     except Error as e:
@@ -38,7 +38,7 @@ def callback(ch, method, properties, body):
 
     try:
         query = """
-        INSERT INTO prescription (
+        INSERT INTO appointment_db.prescription (
             prescription_id, medical_record_id, total_cost, status,
             is_paid, created_at, updated_at
         ) VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -60,7 +60,7 @@ def callback(ch, method, properties, body):
         print("Failed to insert prescription:", e)
 
 # Set up RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
+connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "localhost")))
 channel = connection.channel()
 
 channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type="direct", durable=True)

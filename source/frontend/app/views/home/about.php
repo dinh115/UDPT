@@ -23,7 +23,7 @@
     </div>
     <?php require_once(__DIR__ . '/../template/footer.php'); ?>
     <?php require_once(__DIR__ . '/../template/scripts.php'); ?>
-    <script src='/js/home.js'></script>
+    <script src='<?= $baseUrl ?>/js/home.js'></script>
 
 </body>
 

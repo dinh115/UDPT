@@ -1,4 +1,4 @@
-/* Enhanced Medical Application CSS */
+/* Medical Application CSS */
 :root {
     --primary-color: #2c5aa0;
     --secondary-color: #00b4d8;
@@ -53,7 +53,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Enhanced Typography */
+/* Typography */
 h1,
 h2,
 h3,
@@ -89,7 +89,7 @@ h6 {
     font-size: 1rem;
 }
 
-/* Enhanced Navigation */
+/* Navigation */
 .navbar {
     background: var(--gradient-primary) !important;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
@@ -117,6 +117,10 @@ h6 {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+.navbar-toggler {
+    background-color: #ffffff;
 }
 
 .nav-link {
@@ -152,6 +156,7 @@ h6 {
     border-radius: var(--border-radius-lg);
     padding: 0.75rem 0;
     margin-top: 0.5rem;
+    background-color: var(--card-bg);
 }
 
 .dropdown-item {
@@ -166,7 +171,7 @@ h6 {
     color: var(--primary-color);
 }
 
-/* Enhanced Hero Section */
+/* Hero Section */
 .hero-section {
     background: var(--gradient-primary);
     padding: 4rem 0;
@@ -222,7 +227,7 @@ h6 {
     animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
-/* Enhanced Statistics Cards */
+/* Statistics Cards */
 .stats-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -281,7 +286,6 @@ h6 {
     letter-spacing: 0.5px;
 }
 
-/* Enhanced Dashboard Grid */
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
@@ -289,7 +293,6 @@ h6 {
     margin: 4rem 0;
 }
 
-/* Enhanced Dashboard Cards */
 .dashboard-card {
     background: var(--card-bg);
     border-radius: var(--border-radius-2xl);
@@ -323,7 +326,6 @@ h6 {
     transform: scaleX(1);
 }
 
-/* Enhanced Card Headers */
 .card-header {
     display: flex;
     align-items: center;
@@ -382,7 +384,6 @@ h6 {
     font-weight: 500;
 }
 
-/* Enhanced User and Post Cards */
 .user-card,
 .post-card {
     background: var(--light-bg);
@@ -447,7 +448,6 @@ h6 {
     margin-bottom: 0.75rem;
 }
 
-/* Enhanced Buttons */
 .view-all-btn {
     background: var(--gradient-primary);
     color: white;
@@ -492,7 +492,6 @@ h6 {
     font-size: 1.1rem;
 }
 
-/* Enhanced Appointments */
 .appointment-item {
     background: var(--light-bg);
     border-radius: var(--border-radius-lg);
@@ -518,7 +517,6 @@ h6 {
     font-size: 0.9rem;
 }
 
-/* Enhanced Statistics List */
 .stat-item {
     padding: 1rem 0;
     border-bottom: 1px solid var(--border-color);
@@ -536,7 +534,6 @@ h6 {
     border-radius: var(--border-radius-md);
 }
 
-/* Enhanced Quick Actions */
 .quick-actions {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -601,7 +598,6 @@ h6 {
     transform: scale(1.1);
 }
 
-/* Enhanced Badges */
 .badge {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
@@ -631,7 +627,6 @@ h6 {
     background: var(--gradient-secondary) !important;
 }
 
-/* Enhanced Error Messages */
 .error-message {
     background: var(--gradient-danger);
     color: white;
@@ -654,7 +649,6 @@ h6 {
     animation: pulse 2s infinite;
 }
 
-/* Enhanced Loading Animation */
 .loading {
     display: inline-block;
     width: 24px;
@@ -665,7 +659,6 @@ h6 {
     animation: spin 1s linear infinite;
 }
 
-/* Enhanced Footer */
 footer {
     background: var(--dark-text);
     color: white;
@@ -693,7 +686,6 @@ footer .text-muted {
     color: #94a3b8 !important;
 }
 
-/* Enhanced Animations */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -761,7 +753,6 @@ footer .text-muted {
     animation: pulse 2s infinite;
 }
 
-/* Enhanced Responsive Design */
 @media (max-width: 1200px) {
     .dashboard-grid {
         grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -886,7 +877,6 @@ footer .text-muted {
     }
 }
 
-/* Enhanced Accessibility */
 @media (prefers-reduced-motion: reduce) {
 
     *,
@@ -898,7 +888,6 @@ footer .text-muted {
     }
 }
 
-/* Enhanced Focus States */
 .btn:focus,
 .nav-link:focus,
 .dropdown-item:focus,
@@ -908,7 +897,7 @@ footer .text-muted {
     outline-offset: 2px;
 }
 
-/* Enhanced Print Styles */
+/* Print Styles */
 @media print {
 
     .navbar,
@@ -930,7 +919,6 @@ footer .text-muted {
     }
 }
 
-/* Enhanced Dark Mode Support */
 @media (prefers-color-scheme: dark) {
     :root {
         --light-bg: #0f172a;
@@ -957,7 +945,7 @@ footer .text-muted {
     }
 }
 
-/* Enhanced Utility Classes */
+/* Utility Classes */
 .text-gradient {
     background: var(--gradient-primary);
     -webkit-background-clip: text;
@@ -993,7 +981,7 @@ footer .text-muted {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Enhanced Scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -1009,4 +997,12 @@ footer .text-muted {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--gradient-secondary);
+}
+
+#paginationControls {
+    display: flex !important;
+}
+
+#paginationControls.hidden {
+    display: none !important;
 }

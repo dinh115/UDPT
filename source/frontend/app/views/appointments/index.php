@@ -11,8 +11,8 @@
     <section class="hero-section">
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">MedPortal - Trang chủ</h1>
-                <p class="hero-description">Hệ thống quản lý bệnh viện toàn diện, giúp bác sĩ và bệnh nhân kết nối hiệu quả.</p>
+                <h1 class="hero-title">MedPortal - Lịch hẹn</h1>
+                <p class="hero-description">Quản lý lịch hẹn một cách hiệu quả.</p>
             </div>
         </div>
     </section>
@@ -22,23 +22,15 @@
         <div class="dashboard-grid">
 
             <!-- Quick Actions -->
-            <!-- Phân quyền lại -->
             <div class="quick-actions">
-                <a href="/patients/new" class="action-btn">
-                    <i class="fas fa-user-plus"></i>
-                    <span>Hồ sơ bệnh nhân</span>
-                </a>
+
                 <a href="/appointments/schedule" class="action-btn">
                     <i class="fas fa-calendar-plus"></i>
                     <span>Đặt lịch hẹn</span>
                 </a>
-                <a href="/prescriptions/new" class="action-btn">
-                    <i class="fas fa-prescription"></i>
-                    <span>Quản lý thuốc</span>
-                </a>
-                <a href="/reports/generate" class="action-btn">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Thống kê</span>
+                <a href="/appointments/my" class="action-btn">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <span>Lịch hẹn của tôi</span>
                 </a>
             </div>
         </div>
