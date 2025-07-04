@@ -9,6 +9,10 @@ return [
     'endpoints' => [
         'users' => '/users',
         'posts' => '/posts',
-        'albums' => '/albums'
+        'doctors' => '/doctors',
+        'create_doctor' => '/doctors/Create',
+        'update_doctor' => '/doctors/update',
+        'update_doctor_availability' => '/doctors/updateAvailability',
+        'appointment_get_id' => 'Appointments'
     ]
 ];
