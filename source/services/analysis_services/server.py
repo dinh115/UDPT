@@ -117,7 +117,7 @@ class AnalysisServiceServicer(analysis_pb2_grpc.AnalysisService):
 
 
 def serve():
-    connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
+    connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq-analysis"))
     channel = connection.channel()
     channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type="direct", durable=True)
 

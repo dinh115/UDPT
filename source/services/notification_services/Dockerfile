@@ -31,7 +31,7 @@ COPY . .
 ENV PYTHONUNBUFFERED=1
 
 # Expose gRPC port
-EXPOSE 50055
+EXPOSE 3006
 
 # Copy supervisor config
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

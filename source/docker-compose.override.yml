@@ -16,6 +16,21 @@ services:
     ports:
       - "3004:3004"
 
+  analysis-services:
+    ports:
+      - "3005:3005"
+  
+  notification-services:
+    ports:
+      - "3006:3006"
+
+  medicine-services:
+    ports:
+      - "9090:9090"
+  
+
+
+
   # Expose databases if needed for dev tools (Compass, Studio 3T, etc.)
   patient-mongo:
     ports:
@@ -42,6 +57,20 @@ services:
     ports:
       - "5433:5432" 
 
-  medicine-services:
+  mysql-analysis:
     ports:
-      - "9090:9090"
+      - "3310:3306"
+  
+  rabbitmq-analysis:
+    ports:
+      - "15673:15672" # Management UI
+      - "5673:5672"   # AMQP protocol
+
+  mysql-notification:
+    ports:
+      - "3308:3306"
+
+  rabbitmq-notification:
+    ports:
+      - "15674:15672" # Management UI
+      - "5674:5672"   # AMQP protocol

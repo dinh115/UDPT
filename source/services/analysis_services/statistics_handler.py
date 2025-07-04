@@ -4,7 +4,7 @@ import os
 def get_patient_statistics(start_date, end_date, group_type):
   try:
     conn = mysql.connector.connect(
-      host=os.getenv("MYSQL_HOST", "mysql"),
+      host=os.getenv("MYSQL_HOST", "mysql-analysis"),
       user=os.getenv("MYSQL_USER", "root"),
       password=os.getenv("MYSQL_USER", "root"),
       database=os.getenv("MYSQL_DATABASE", "appointment_db")
@@ -49,7 +49,7 @@ def get_patient_statistics(start_date, end_date, group_type):
 def get_prescription_statistics(start_date, end_date, group_type):
   try:
     conn = mysql.connector.connect(
-      host=os.getenv("MYSQL_HOST", "mysql"),
+      host=os.getenv("MYSQL_HOST", "mysql-analysis"),
       user=os.getenv("MYSQL_USER", "root"),
       password=os.getenv("MYSQL_USER", "root"),
       database=os.getenv("MYSQL_DATABASE", "appointment_db")

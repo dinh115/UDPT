@@ -87,11 +87,11 @@ services:
       retries: 5
       start_period: 40s
 
-  rabbitmq:
+  rabbitmq-analysis:
     image: rabbitmq:3-management
     ports:
-      - "5672:5672"     # RabbitMQ main port
-      - "15672:15672"   # RabbitMQ management UI
+      - "5673:5672"     # RabbitMQ main port
+      - "15673:15672"   # RabbitMQ management UI
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -99,13 +99,39 @@ services:
       - internal
 
 
-  mysql:
+  mysql-analysis:
     image: mysql:8.0
     ports:
-      - "3307:3306"
+      - "3310:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: appointment_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d # Mount the initialization scripts
+    networks:
+      - internal
+
+
+  rabbitmq-notification:
+    image: rabbitmq:3-management
+    ports:
+      - "5674:5672"     # RabbitMQ main port
+      - "15674:15672"   # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - internal
+
+  mysql-notification:
+    image: mysql:8.0
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: logs
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     volumes:
@@ -144,7 +170,7 @@ services:
       - appointment-services
       - analysis-services
       - medicine-services
-      # - notification-services
+      - notification-services
     networks:
       - internal
     volumes:
@@ -156,6 +182,7 @@ services:
       - ./services/doctor_services/src/proto:/app/shared_proto/doctor
       - ./services/appointment_services/src/proto:/app/shared_proto/appointment
       - ./services/analysis_services/analysis.proto:/app/shared_proto/analysis/analysis.proto
+      - ./services/notification_services/notification.proto:/app/shared_proto/notification/notification.proto
     environment:
       NODE_ENV: production
       USER_SERVICE_URL: user-services:3001
@@ -271,8 +298,21 @@ services:
       - "3005"
     container_name: analysis-services
     depends_on:
-      - rabbitmq
-      - mysql
+      - rabbitmq-analysis
+      - mysql-analysis
+    networks:
+      - internal
+
+
+  notification-services:
+    build:
+      context: ./services/notification_services
+    expose:
+      - "3006"
+    container_name: notification-services
+    depends_on:
+      - rabbitmq-notification
+      - mysql-notification
     networks:
       - internal
 

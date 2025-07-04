@@ -25,7 +25,7 @@ function loadClient(protoPath, packageName, serviceName, address) {
 }
 
 // Load gRPC clients
-const serviceKeys = ['PATIENT','USER','DOCTOR','APPOINTMENT','MEDICINE','PRESCRIPTION','ANALYSIS'];
+const serviceKeys = ['PATIENT','USER','DOCTOR','APPOINTMENT','MEDICINE','PRESCRIPTION','ANALYSIS','NOTIFICATION'];
 
 // Create map
 export const GrpcClientMap = new Map();

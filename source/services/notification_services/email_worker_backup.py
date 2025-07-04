@@ -9,13 +9,13 @@ import aio_pika
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS", "pdai.congviec@gmail.com")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "ixouorzcsxgrsdeu")
 MYSQL_CONFIG = {
-    "host": "localhost",
+    "host": "mysql-notification",
     "user": "root",
     "password": "root",
     "database": "logs"
 }
 
-RABBITMQ_URL = "amqp://guest:guest@localhost/"
+RABBITMQ_URL = "amqp://guest:guest@rabbitmq-notification/"
 EMAIL_EXCHANGE = "email_exchange"
 EMAIL_QUEUE = "data_email_queue"
 

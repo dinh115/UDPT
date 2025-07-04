@@ -8,7 +8,7 @@
 # import notification_pb2
 # import notification_pb2_grpc
 
-# RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://guest:guest@localhost/")
+# RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://guest:guest@rabbitmq-notification/")
 # EMAIL_EXCHANGE = "email_exchange"
 # EMAIL_QUEUE = "data_email_queue"
 
@@ -66,7 +66,7 @@
 #     server = grpc.aio.server()
 #     servicer = AppointmentServiceServicer(channel)
 #     notification_pb2_grpc.add_AppointmentServiceServicer_to_server(servicer, server)
-#     server.add_insecure_port("[::]:50051")
+#     server.add_insecure_port("[::]:3006")
 
 #     await server.start()
 #     print("gRPC server running with RabbitMQ integration.")
@@ -91,7 +91,7 @@ import json
 import notification_pb2
 import notification_pb2_grpc
 
-RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://guest:guest@localhost/")
+RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://guest:guest@rabbitmq-notification/")
 EMAIL_EXCHANGE =os.getenv("EMAIL_EXCHANGE", "email_exchange") 
 EMAIL_QUEUE = os.getenv("EMAIL_QUEUE", "data_email_queue")
 
@@ -149,7 +149,7 @@ async def main():
     notification_pb2_grpc.add_AppointmentServiceServicer_to_server(servicer, server)
 
     grpc_host = os.getenv("GRPC_HOST", "0.0.0.0")
-    grpc_port = os.getenv("GRPC_PORT", "50055")
+    grpc_port = os.getenv("GRPC_PORT", "3006")
     server.add_insecure_port(f"{grpc_host}:{grpc_port}")
 
 

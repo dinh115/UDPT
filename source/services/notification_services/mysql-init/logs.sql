@@ -2,7 +2,7 @@
 -- version 4.9.5
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
+-- Host: mysql-notification:3306
 -- Generation Time: Jul 04, 2025 at 02:01 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.4.1

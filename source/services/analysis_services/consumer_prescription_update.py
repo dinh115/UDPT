@@ -16,8 +16,8 @@ def init_db_connection():
     try:
         if conn is None or not conn.is_connected():
             conn = mysql.connector.connect(
-                host=os.getenv("MYSQL_HOST", "mysql"),
-                port=int(os.getenv("MYSQL_PORT", 3306)),  
+                host=os.getenv("MYSQL_HOST", "mysql-analysis"),
+                port=int(os.getenv("MYSQL_PORT", 3310)),  
                 user=os.getenv("MYSQL_USER", "root"),
                 password=os.getenv("MYSQL_PASSWORD", "root"),
                 database=os.getenv("MYSQL_DATABASE", "appointment_db")
@@ -66,7 +66,7 @@ def callback(ch, method, properties, body):
     except Error as e:
         print("Failed to update prescription:", e)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "rabbitmq")))
+connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "rabbitmq-analysis")))
 channel = connection.channel()
 
 channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type="direct", durable=True)
