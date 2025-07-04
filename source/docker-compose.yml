@@ -34,7 +34,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: adminpassword
-      MONGO_INITDB_DATABASE: user-services
+      MONGO_INITDB_DATABASE: user-management
     volumes:
       - user_mongodb_data:/data/db
       - ./services/user_services/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
@@ -141,7 +141,7 @@ services:
       - appointment-services
       # - analysis-services
       - medicine-services
-      # - notification-services
+    # - notification-services
     networks:
       - internal
     volumes:
