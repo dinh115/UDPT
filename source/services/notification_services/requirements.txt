@@ -1,3 +1,6 @@
 grpcio 
 grpcio-tools
 aiosmtplib
+aio-pika
+aiomysql
+cryptography>=41.0.0

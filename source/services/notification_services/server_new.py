@@ -92,8 +92,8 @@ import notification_pb2
 import notification_pb2_grpc
 
 RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://guest:guest@localhost/")
-EMAIL_EXCHANGE = "email_exchange"
-EMAIL_QUEUE = "data_email_queue"
+EMAIL_EXCHANGE =os.getenv("EMAIL_EXCHANGE", "email_exchange") 
+EMAIL_QUEUE = os.getenv("EMAIL_QUEUE", "data_email_queue")
 
 class AppointmentServiceServicer(notification_pb2_grpc.AppointmentServiceServicer):
     def __init__(self, channel: aio_pika.RobustChannel):
@@ -147,10 +147,14 @@ async def main():
     server = grpc.aio.server()
     servicer = AppointmentServiceServicer(channel)
     notification_pb2_grpc.add_AppointmentServiceServicer_to_server(servicer, server)
-    server.add_insecure_port("[::]:50051")
+
+    grpc_host = os.getenv("GRPC_HOST", "0.0.0.0")
+    grpc_port = os.getenv("GRPC_PORT", "50055")
+    server.add_insecure_port(f"{grpc_host}:{grpc_port}")
+
 
     await server.start()
-    print("gRPC server running with RabbitMQ fanout exchange.")
+    print(f"gRPC server running on {grpc_host}:{grpc_port} with RabbitMQ fanout exchange.")
 
     try:
         await server.wait_for_termination()
@@ -163,6 +167,7 @@ async def main():
         print("RabbitMQ connection closed.")
 
 if __name__ == "__main__":
+    print("Server script starting...")
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:

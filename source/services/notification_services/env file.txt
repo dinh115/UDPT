@@ -1,0 +1,19 @@
+# RabbitMQ configuration
+RABBITMQ_URL=amqp://guest:guest@rabbitmq/
+EMAIL_EXCHANGE = "email_exchange"
+EMAIL_QUEUE = "data_email_queue"
+
+# Email configuration
+EMAIL_ADDRESS=pdai.congviec@gmail.com
+EMAIL_PASSWORD=ixouorzcsxgrsdeu
+
+# MySQL configuration
+MYSQL_HOST=mysql
+MYSQL_PORT=3306
+MYSQL_USER=admin
+MYSQL_PASSWORD=admin
+MYSQL_DATABASE=logs
+
+# gRPC server configuration
+GRPC_HOST=0.0.0.0
+GRPC_PORT=50055
