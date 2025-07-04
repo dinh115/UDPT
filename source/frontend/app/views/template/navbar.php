@@ -45,10 +45,10 @@
                   </li>
               </ul>
               <ul class="navbar-nav">
-                  <?php if (isset($_SESSION['user'])): ?>
+                  <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['logged_in']): ?>
                       <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                              <i class="fas fa-user-circle me-1"></i><?= htmlspecialchars($_SESSION['user']['name']) ?>
+                              <i class="fas fa-user-circle me-1"></i><?= htmlspecialchars($_SESSION['user_session']['user']['username']) ?>
                           </a>
                           <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="/profile"><i class="fas fa-user me-2"></i>Hồ sơ của tôi</a></li>
@@ -56,12 +56,12 @@
                               <li>
                                   <hr class="dropdown-divider">
                               </li>
-                              <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
+                              <li><a class="dropdown-item" href="/auth/logout"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
                           </ul>
                       </li>
                   <?php else: ?>
                       <li class="nav-item">
-                          <a class="nav-link <?= isActive('/login') ?>" href="/login">
+                          <a class="nav-link <?= isActive('/auth/login') ?>" href="/login">
                               <i class="fas fa-sign-in-alt me-1"></i>Đăng nhập
                           </a>
                       </li>

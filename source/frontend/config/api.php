@@ -1,13 +1,15 @@
 <?php
 return [
-    'base_url' => 'https://jsonplaceholder.typicode.com',
+    'base_url' => getenv('API_BASE_URL') ?: 'http://localhost:3000',
     'timeout' => 30,
     'headers' => [
         'Content-Type' => 'application/json',
         'Accept' => 'application/json'
     ],
     'endpoints' => [
-        'users' => '/users',
+        'login' => '/api/user/login',
+        'logout' => 'api/user/logout',
+        'users' => '/api/users',
         'posts' => '/posts',
         'doctors' => '/doctors',
         'create_doctor' => '/doctors/Create',
