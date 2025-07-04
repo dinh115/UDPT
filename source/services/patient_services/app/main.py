@@ -7,10 +7,10 @@ from app.grpc import patient_pb2_grpc
 async def serve():
     server = grpc.aio.server()
     patient_pb2_grpc.add_PatientServiceServicer_to_server(PatientServiceHandler(), server)
-    listen_addr = '[::]:3001'
+    listen_addr = '[::]:3003'
     server.add_insecure_port(listen_addr)
     await server.start()
-    print("gRPC server running at 3001")
+    print("gRPC server running at 3003")
 
     # Wait for shutdown signal
     stop_event = asyncio.Event()

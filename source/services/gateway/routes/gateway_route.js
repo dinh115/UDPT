@@ -15,17 +15,19 @@ export async function setupRoutes(app) {
 
   const router = express.Router();
 
-  for (const [serviceKey, methodGroup] of Object.entries(serviceMethods)) {
-    const grpcClient = GrpcClientMap.get(serviceKey);
-    if (!grpcClient) continue;
+  for (const [key, services] of Object.entries(serviceMethods)) {
+    const grpcServiceGroup = GrpcClientMap.get(key.toUpperCase());
+    if (!grpcServiceGroup) continue;
 
-    for (const [httpMethodRaw, methods] of Object.entries(methodGroup)) {
-      const httpMethod = httpMethodRaw.toLowerCase();
-      for (const [routeKey, config] of Object.entries(methods)) {
-        const grpcMethod = config.grpcMethod || routeKey;
+    for (const [serviceName, methods] of Object.entries(services)) {
+      const grpcClient = grpcServiceGroup[serviceName];
+      if (!grpcClient) continue;
+
+      for (const [grpcMethod, config] of Object.entries(methods)) {
+        const httpMethod = (config.method || "GET").toLowerCase();
         const paramKeys = config.params || [];
 
-        let routePath = `/api/${serviceKey}/${routeKey}`;
+        let routePath = `/api/${key}/${grpcMethod}`;
         if (paramKeys.length > 0) {
           routePath += "/" + paramKeys.map(p => `:${p}`).join("/");
         }

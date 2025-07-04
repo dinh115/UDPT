@@ -1,85 +1,93 @@
 {
   "patient": {
-    "GET": {
-      "GetVisit": {
-        "grpcMethod": "GetVisit",
-        "params": ["id"]
-      },
-      "ListVisits": {
-        "grpcMethod": "ListVisits",
-        "params": ["userId"]
-      },
-      "Check": {
-        "grpcMethod": "Check"
-      }
-    },
-    "POST": {
-      "CreateVisit": {
-        "grpcMethod": "CreateVisit"
-      }
-    },
-    "PUT": {
-      "UpdateVisit": {
-        "grpcMethod": "UpdateVisit",
-        "params": ["id"]
-      }
+    "PatientService": {
+      "GetVisit": { "method": "GET", "params": ["id"] },
+      "ListVisits": { "method": "GET", "params": ["userId"] },
+      "CreateVisit": { "method": "POST" },
+      "UpdateVisit": { "method": "PUT", "params": ["id"] },
+      "Check": { "method": "GET" }
     }
   },
   "doctor": {
-    "method": "GetDoctor",
-    "requestKey": "doctor_id"
+    "DoctorService": {
+      "CreateDoctorProfile": { "method": "POST" },
+      "findDoctors": { "method": "GET" },
+      "GetDoctorById": { "method": "GET", "params": ["doctorId"] },
+      "GetDoctorByUserId": { "method": "GET", "params": ["userId"] },
+      "UpdateDoctorProfile": { "method": "PUT" },
+      "UpdateDoctorAvailability": { "method": "PUT" },
+      "DeleteDoctors": { "method": "DELETE" }
+    },
+    "InternalService": {
+      "GetDoctorByIdInternal": { "method": "GET", "params": ["doctorId"] },
+      "GetDoctorByUserIdInternal": { "method": "GET", "params": ["userId"] },
+      "GetDoctorsInternal": { "method": "GET" },
+      "BatchGetDoctors": { "method": "POST" },
+      "GetAvailableTimeSlots": { "method": "GET", "params": ["doctorId", "date"] },
+      "GenerateTimeSlots": { "method": "POST" },
+      "GetDoctorSlotStatistics": { "method": "GET", "params": ["doctorId"] },
+      "UpdateBooking": { "method": "PUT" }
+    },
+    "HealthService": {
+      "Check": { "method": "GET" }
+    }
   },
-  "medicine": {
-    "GetAllMedicines": {},
-    "GetMedicineById": {
-      "id": "string"
+  "user": {
+    "AuthService": {
+      "Login": { "method": "POST" },
+      "Register": { "method": "POST" },
+      "Logout": { "method": "DELETE" },
+      "VerifyToken": { "method": "POST" },
+      "GetProfile": { "method": "GET" },
+      "UpdateProfile": { "method": "PUT" }
     },
-    "CreateMedicine": {
-      "name": "string",
-      "description": "string",
-      "price": "number",
-      "quantity": "number",
-      "manufacturer": "string",
-      "expiryDate": "string"
+    "UserService": {
+      "GetUser": { "method": "GET", "params": ["id"] },
+      "GetUsers": { "method": "GET" },
+      "CreateUser": { "method": "POST" },
+      "UpdateUser": { "method": "PUT", "params": ["id"] },
+      "DeleteUsers": { "method": "DELETE" }
     },
-    "UpdateMedicine": {
-      "id": "string",
-      "name": "string",
-      "description": "string",
-      "price": "number",
-      "quantity": "number",
-      "manufacturer": "string",
-      "expiryDate": "string"
+    "InternalService": {
+      "GetUserInternal": { "method": "GET", "params": ["id"] },
+      "GetUsersInternal": { "method": "GET" },
+      "BatchGetUsers": { "method": "POST" },
+      "CheckUserStatus": { "method": "POST" },
+      "VerifyUsers": { "method": "POST" }
     },
-    "DeleteMedicine": {
-      "id": "string"
+    "HealthService": {
+      "Check": { "method": "GET" }
+    }
+  },
+  "appointment": {
+    "AppointmentService": {
+      "BookAppointment": { "method": "POST" },
+      "UpdateAppointment": { "method": "PUT", "params": ["appointmentId"] },
+      "AcceptAppointment": { "method": "PUT", "params": ["appointmentId"] },
+      "CancelAppointment": { "method": "DELETE", "params": ["appointmentId"] },
+      "GetMyAppointments": { "method": "GET" }
     },
-    "RestoreMedicine": {
-      "id": "string"
+    "HealthService": {
+      "Check": { "method": "GET" }
     }
   },
   "prescription": {
-    "GetAllPrescriptions": {},
-    "GetPrescriptionById": {
-      "id": "string"
-    },
-    "CreatePrescription": {
-      "patientId": "string",
-      "doctorId": "string",
-      "medicines": "array",
-      "notes": "string",
-      "prescriptionDate": "string"
-    },
-    "UpdatePrescription": {
-      "id": "string",
-      "patientId": "string",
-      "doctorId": "string",
-      "medicines": "array",
-      "notes": "string",
-      "prescriptionDate": "string"
-    },
-    "DeletePrescription": {
-      "id": "string"
+    "PrescriptionService": {
+      "GetAllPrescriptions": { "method": "GET" },
+      "GetPrescriptionById": { "method": "GET", "params": ["prescription_id"] },
+      "CreatePrescription": { "method": "POST" },
+      "UpdatePrescription": { "method": "PUT", "params": ["prescription_id"] },
+      "DeletePrescription": { "method": "DELETE", "params": ["prescription_id"] }
+    }
+  },
+  "medicine": {
+    "MedicineService": {
+      "GetAllMedicines": { "method": "GET" },
+      "GetMedicineById": { "method": "GET", "params": ["medicine_id"] },
+      "CreateMedicine": { "method": "POST" },
+      "UpdateMedicine": { "method": "PUT", "params": ["medicine_id"] },
+      "DeleteMedicine": { "method": "DELETE", "params": ["medicine_id"] },
+      "RestoreMedicine": { "method": "PUT", "params": ["medicine_id"] }
     }
   }
 }

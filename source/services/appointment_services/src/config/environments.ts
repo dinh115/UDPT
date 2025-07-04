@@ -4,7 +4,7 @@ dotenv.config();
 
 export const config = {
   // Server
-  GRPC_PORT: process.env.PORT || 50053,
+  GRPC_PORT: process.env.PORT || 3004,
   GRPC_HOST: process.env.GRPC_HOST || '0.0.0.0',
   NODE_ENV: process.env.NODE_ENV || 'development',
 
@@ -12,14 +12,14 @@ export const config = {
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
 
   // Doctor Service
-  DOCTOR_SERVICE_GRPC_URL: process.env.DOCTOR_SERVICE_GRPC_URL || 'localhost:50052',
-  DOCTOR_GRPC_HOST: process.env.GRPC_HOST || 'localhost',
-  DOCTOR_GRPC_PORT: process.env.GRPC_HOST || '50052',
+  DOCTOR_SERVICE_GRPC_URL: process.env.DOCTOR_SERVICE_GRPC_URL || 'doctor-service:3002',
+  DOCTOR_GRPC_HOST: process.env.GRPC_HOST || 'doctor-service',
+  DOCTOR_GRPC_PORT: process.env.GRPC_HOST || '3002',
   // Service Token
   SERVICE_TOKEN: process.env.SERVICE_TOKEN || 'service-secret-token-123',
 
   // MongoDB
-  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/appointment-management',
+  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://appointment-mongodb:27019/appointment-management',
 
 };
 

@@ -4,7 +4,7 @@ dotenv.config();
 
 export const config = {
   // Server
-  GRPC_PORT: process.env.PORT || 50051,
+  GRPC_PORT: process.env.PORT || 3001,
   GRPC_HOST: process.env.GRPC_HOST || '0.0.0.0',
   NODE_ENV: process.env.NODE_ENV || 'development',
 
@@ -18,7 +18,7 @@ export const config = {
   SERVICE_TOKEN: process.env.SERVICE_TOKEN || 'service-secret-token-123',
 
   // MongoDB
-  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/user-management',
+  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://user-mongodb:27017/user-management',
 
   // Redis
   REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',

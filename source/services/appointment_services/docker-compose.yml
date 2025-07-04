@@ -36,10 +36,10 @@ services:
       appointment-mongodb:
         condition: service_healthy
     ports:
-      - "50053:50053"
+      - "3004:3004"
     environment:
       # Server Configuration
-      GRPC_PORT: 50053
+      GRPC_PORT: 3004
       GRPC_HOST: 0.0.0.0
       NODE_ENV: production
       
@@ -48,9 +48,9 @@ services:
       MONGODB_TEST_URI: mongodb://admin:adminpassword@appointment-mongodb:27017/appointment-management-test?authSource=admin
       
       # Doctor Service Configuration (expects doctor service to be running externally)
-      DOCTOR_SERVICE_GRPC_URL: host.docker.internal:50052
+      DOCTOR_SERVICE_GRPC_URL: host.docker.internal:3002
       DOCTOR_GRPC_HOST: host.docker.internal
-      DOCTOR_GRPC_PORT: 50052
+      DOCTOR_GRPC_PORT: 3002
       
       # Service Token for Internal APIs
       SERVICE_TOKEN: ${SERVICE_TOKEN:-service-secret-token-123}
@@ -63,7 +63,7 @@ services:
       # Optional: Mount logs directory
       - ./logs:/usr/src/app/logs
     healthcheck:
-      test: ["CMD", "node", "-e", "const grpc = require('@grpc/grpc-js'); const client = new grpc.Client('localhost:50053', grpc.credentials.createInsecure()); client.waitForReady(Date.now() + 1000, (err) => process.exit(err ? 1 : 0));"]
+      test: ["CMD", "node", "-e", "const grpc = require('@grpc/grpc-js'); const client = new grpc.Client('localhost:3004', grpc.credentials.createInsecure()); client.waitForReady(Date.now() + 1000, (err) => process.exit(err ? 1 : 0));"]
       interval: 30s
       timeout: 10s
       retries: 5

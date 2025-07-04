@@ -33,10 +33,10 @@ services:
       mongodb:
         condition: service_healthy
     ports:
-      - "50052:50052"
+      - "3002:3002"
     environment:
       # Server Configuration
-      GRPC_PORT: 50052
+      GRPC_PORT: 3002
       GRPC_HOST: 0.0.0.0
       NODE_ENV: production
       
@@ -58,7 +58,7 @@ services:
       # Optional: Mount logs directory
       - ./logs:/usr/src/app/logs
     healthcheck:
-      test: ["CMD", "node", "-e", "const grpc = require('@grpc/grpc-js'); const client = new grpc.Client('localhost:50052', grpc.credentials.createInsecure()); client.waitForReady(Date.now() + 1000, (err) => process.exit(err ? 1 : 0));"]
+      test: ["CMD", "node", "-e", "const grpc = require('@grpc/grpc-js'); const client = new grpc.Client('localhost:3002', grpc.credentials.createInsecure()); client.waitForReady(Date.now() + 1000, (err) => process.exit(err ? 1 : 0));"]
       interval: 30s
       timeout: 10s
       retries: 5
