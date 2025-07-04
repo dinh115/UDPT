@@ -2,27 +2,27 @@ services:
   analysis_services:
     build: .
     ports:
-      - "50056:50056"
+      - "3005:3005"
     env_file:
       - ./.env
     container_name: analysis-services
     depends_on:
-      - rabbitmq
-      - mysql
+      - rabbitmq-analysis
+      - mysql-analysis
 
-  rabbitmq:
+  rabbitmq-analysis:
     image: rabbitmq:3-management
     ports:
-      - "5672:5672"     # RabbitMQ main port
-      - "15672:15672"   # RabbitMQ management UI
+      - "5673:5672"     # RabbitMQ main port
+      - "15673:15672"   # RabbitMQ management UI
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
 
-  mysql:
+  mysql-analysis:
     image: mysql:8.0
     ports:
-      - "3306:3306"
+      - "3310:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: appointment_db

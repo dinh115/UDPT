@@ -2,27 +2,27 @@ services:
   notification_services:
     build: .
     ports:
-      - "50055:50055"
+      - "3006:3006"
     env_file:
       - ./.env
     container_name: notification-services
     depends_on:
-      - rabbitmq
-      - mysql
+      - rabbitmq-notification
+      - mysql-notification
 
-  rabbitmq:
+  rabbitmq-notification:
     image: rabbitmq:3-management
     ports:
-      - "5672:5672"     # RabbitMQ main port
-      - "15672:15672"   # RabbitMQ management UI
+      - "5674:5672"     # RabbitMQ main port
+      - "15674:15672"   # RabbitMQ management UI
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
 
-  mysql:
+  mysql-notification:
     image: mysql:8.0
     ports:
-      - "3306:3306"
+      - "3308:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: logs

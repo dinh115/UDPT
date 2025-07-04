@@ -10,7 +10,7 @@ ROUTING_KEY = "appointment_update"
 def init_db_connection():
     try:
         conn = mysql.connector.connect(
-            host=os.getenv("MYSQL_HOST", "localhost"),
+            host=os.getenv("MYSQL_HOST", "mysql-analysis"),
             user=os.getenv("MYSQL_USER", "root"),
             password=os.getenv("MYSQL_PASSWORD", "root"),
             database=os.getenv("MYSQL_DATABASE", "appointment_db")
@@ -47,7 +47,7 @@ def callback(ch, method, properties, body):
         conn.close()
 
 # Setup RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "localhost")))
+connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "rabbitmq-analysis")))
 channel = connection.channel()
 
 channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type="direct", durable=True)

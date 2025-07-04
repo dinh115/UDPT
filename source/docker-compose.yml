@@ -87,29 +87,57 @@ services:
       retries: 5
       start_period: 40s
 
-  # mysql:
-  #   image: mysql:8
-  #   container_name: mysql_service
-  #   ports:
-  #     - "3306:3306"
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_DATABASE: appointment_db
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql
-  #   networks:
-  #     - backend
-  #   restart: unless-stopped
+  rabbitmq-analysis:
+    image: rabbitmq:3-management
+    ports:
+      - "5673:5672"     # RabbitMQ main port
+      - "15673:15672"   # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - internal
 
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   container_name: rabbitmq_service
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
-  #   networks:
-  #     - backend
-  #   restart: unless-stopped
+
+  mysql-analysis:
+    image: mysql:8.0
+    ports:
+      - "3310:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: appointment_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d # Mount the initialization scripts
+    networks:
+      - internal
+
+
+  rabbitmq-notification:
+    image: rabbitmq:3-management
+    ports:
+      - "5674:5672"     # RabbitMQ main port
+      - "15674:15672"   # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - internal
+
+  mysql-notification:
+    image: mysql:8.0
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: logs
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d # Mount the initialization scripts
+    networks:
+      - internal
 
   # ========================== Cache ==========================
   redis:
@@ -132,6 +160,7 @@ services:
   gateway:
     build:
       context: ./services/gateway
+    container_name: gateway
     ports:
       - "3000:3000"
     depends_on:
@@ -139,19 +168,21 @@ services:
       - user-services
       - doctor-services
       - appointment-services
-      # - analysis-services
+      - analysis-services
       - medicine-services
-    # - notification-services
+      - notification-services
     networks:
       - internal
     volumes:
+      - /app/node_modules
       - ./services/gateway:/app
       - ./services/patient_services/app/grpc:/app/shared_proto/patient
       - ./services/medicine_services/src/main/proto:/app/shared_proto/medicine
       - ./services/user_services/src/proto:/app/shared_proto/user
       - ./services/doctor_services/src/proto:/app/shared_proto/doctor
       - ./services/appointment_services/src/proto:/app/shared_proto/appointment
-      - ./services/analysis_services/analysis.proto:/app/shared_proto/analysis
+      - ./services/analysis_services/analysis.proto:/app/shared_proto/analysis/analysis.proto
+      - ./services/notification_services/notification.proto:/app/shared_proto/notification/notification.proto
     environment:
       NODE_ENV: production
       USER_SERVICE_URL: user-services:3001
@@ -259,6 +290,31 @@ services:
       - internal
     volumes:
       - ./logs/appointment-services:/usr/src/app/logs
+
+  analysis-services:
+    build:
+      context: ./services/analysis_services
+    expose:
+      - "3005"
+    container_name: analysis-services
+    depends_on:
+      - rabbitmq-analysis
+      - mysql-analysis
+    networks:
+      - internal
+
+
+  notification-services:
+    build:
+      context: ./services/notification_services
+    expose:
+      - "3006"
+    container_name: notification-services
+    depends_on:
+      - rabbitmq-notification
+      - mysql-notification
+    networks:
+      - internal
 
 
 # ========================== Network & Volumes ==========================

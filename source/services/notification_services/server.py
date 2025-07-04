@@ -99,10 +99,10 @@ async def serve():
     server = grpc.aio.server()
     servicer = AppointmentServiceServicer(smtp_client)
     notification_pb2_grpc.add_AppointmentServiceServicer_to_server(servicer, server)
-    server.add_insecure_port("[::]:50051")
+    server.add_insecure_port("[::]:3006")
 
     await server.start()
-    print("gRPC server is running on port 50051 with SMTP connection pooled.")
+    print("gRPC server is running on port 3006 with SMTP connection pooled.")
     await server.wait_for_termination()
 
 

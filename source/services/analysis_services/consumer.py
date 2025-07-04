@@ -18,8 +18,8 @@ def init_db_connection():
     try:
         if conn is None or not conn.is_connected():
             conn = mysql.connector.connect(
-                #host="localhost",
-                host=os.getenv("MYSQL_HOST", "localhost"),
+                #host="mysql-analysis",
+                host=os.getenv("MYSQL_HOST", "mysql-analysis"),
                 user=os.getenv("MYSQL_USER", "root"),
                 password=os.getenv("MYSQL_PASSWORD", "root"),
                 database=os.getenv("MYSQL_DATABASE", "appointment_db")
@@ -66,7 +66,7 @@ def callback(ch, method, properties, body):
     except Error as e:
         print("Failed to insert data:", e)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "localhost")))
+connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "rabbitmq-analysis")))
 channel = connection.channel()
 
 channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type="direct", durable=True)

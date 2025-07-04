@@ -100,5 +100,15 @@
       "GetPrescriptionStatistics": { "method": "GET" },
       "AcceptAppointment": { "method": "PUT", "params": ["appointmentId"] }
     }
+  },
+  "notification": {
+    "AppointmentService": {
+      "SendReminder": {
+        "method": "POST"
+      },
+      "SendPrescriptionReady": {
+        "method": "POST"
+      }
+    }
   }
 }
