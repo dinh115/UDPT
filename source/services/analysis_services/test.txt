@@ -1,0 +1,73 @@
+cd source/services/analysis_services
+python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. analysis.proto
+
+Chay cac file
+grpc_server.py
+consumer.py
+consumer_update.py
+consumer_prescription.py
+consumer_prescription_update.py
+
+du lieu test:
+BookAppointment
+{
+    "patient": "6dcfd5ce-2443-4f5d-94fe-02d29ce61fd6",
+    "doctor": "ca68c385-8eec-4df8-8e12-cf328550eabd",
+    "appointmentDate": "2025-07-03T09:41:26.188885",
+    "timeSlot": {
+        "startTime": "09:00",
+        "endTime": "09:30"
+    },
+    "status": "pending",
+    "notes": "proident voluptate sunt quis",
+    "createdAt": "2025-06-28T12:44:41.837Z",
+    "updatedAt": "2024-06-01T10:00:00Z"
+}
+
+BookPrescription
+{
+    "prescriptionId": "f8e88123-1eab-4822-9c4b-4e0f092a3965",
+    "medicalRecordId": "9e20a82e-e2d8-4cf0-86ac-4a3bdbe749b8",
+    "totalCost": -92173591.71449134,
+    "status": "PENDING",
+    "isPaid": false,
+    "createdAt": "2025-07-01T21:50:21.536Z",
+    "updatedAt": "2025-08-02"
+}
+MarkPrescriptionPaid
+{
+    "prescriptionId": "f8e88123-1eab-4822-9c4b-4e0f092a3965"
+}
+UpdatePrescriptionStatus
+{
+    "prescriptionId": "f8e88123-1eab-4822-9c4b-4e0f092a3965",
+    "newStatus": "APPROVED"
+}
+GetPatientStatistics
+GetPrescriptionStatistics
+{
+    "startDate": "2025-06-25",
+    "endDate": "2025-07-31",
+    "groupType": "BY_DAY" //BY_MONTH BY_YEAR
+}
+
+AcceptAppointment
+SET @doctor1_id = 'doc-uuid-1111-1111-1111-111111111111';
+SET @patient1_id = 'pat-uuid-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+SET @patient2_id = 'pat-uuid-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
+SET @patient3_id = 'pat-uuid-cccc-cccc-cccc-cccccccccccc';
+
+SET @appt1_id = 'appt-uuid-0001-0001-0001-000000000001';
+SET @appt2_id = 'appt-uuid-0002-0002-0002-000000000002';
+SET @appt3_id = 'appt-uuid-0003-0003-0003-000000000003';
+SET @appt4_id = 'appt-uuid-0004-0004-0004-000000000004';
+
+INSERT INTO appointments_tab (appointment_id, patient_id, doctor_id, appointment_date, start_time, end_time, status, notes, created_at, updated_at) VALUES
+(@appt1_id, @patient1_id, @doctor1_id, '2025-08-15', '10:00:00', '10:30:00', 'pending', 'Patient 1 booking', NOW(), NOW()),
+(@appt2_id, @patient2_id, @doctor1_id, '2025-08-15', '10:00:00', '10:30:00', 'pending', 'Patient 2 booking', NOW(), NOW()),
+(@appt3_id, @patient3_id, @doctor1_id, '2025-08-15', '10:00:00', '10:30:00', 'pending', 'Patient 2 booking', NOW(), NOW()),
+
+
+{
+    "appointmentId": "ppt-uuid-0001-0001-0001-000000000001"
+}

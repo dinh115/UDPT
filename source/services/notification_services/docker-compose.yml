@@ -1,0 +1,32 @@
+services:
+  notification_services:
+    build: .
+    ports:
+      - "50055:50055"
+    env_file:
+      - ./.env
+    container_name: notification-services
+    depends_on:
+      - rabbitmq
+      - mysql
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"     # RabbitMQ main port
+      - "15672:15672"   # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: logs
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d # Mount the initialization scripts

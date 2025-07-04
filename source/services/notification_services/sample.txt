@@ -10,5 +10,27 @@
 
 python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. notification.proto
 cd source/services/notification_services
+cd source/services/analysis_services
+python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. analysis.proto
 EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS", "pdai.congviec@gmail.com")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD", "ixouorzcsxgrsdeu")
+
+
+Docker:
+Build docker image
+docker build -t notification_services .
+khoi dong he thong
+docker-compose up --build
+
+run one by one:
+docker run -it --rm notification_services /bin/bash
+# Once inside the container:
+ls -l /app
+cat /app/requirements.txt
+python server.py   # or whatever your supervisor config runs
+python email_worker.py  # or whatever your worker is
+
+docker-compose build
+docker-compose up --build
+
+docker-compose exec notification_services /bin/sh

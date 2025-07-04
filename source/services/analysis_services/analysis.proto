@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package analysis;
+
+service AnalysisService {
+  rpc BookAppointment(AnalysisAppointmentRequest) returns (AnalysisAppointmentResponse);
+  rpc BookPrescription(PrescriptionRequest) returns (PrescriptionResponse);
+  rpc UpdatePrescriptionStatus(UpdateStatusRequest) returns (GenericResponse);
+  rpc MarkPrescriptionPaid(UpdatePaidRequest) returns (GenericResponse);
+  rpc GetPatientStatistics(PatientStatisticsRequest) returns (PatientStatisticsResponse);
+  rpc GetPrescriptionStatistics(PrescriptionStatisticsRequest) returns (PrescriptionStatisticsResponse);
+  rpc AcceptAppointment(AcceptAppointmentRequest) returns (GenericResponse);
+}
+
+message TimeSlot {
+  string startTime = 1;
+  string endTime = 2;
+}
+
+message AnalysisAppointmentRequest {
+  string appointmentId = 1;
+  string patient = 2;
+  string doctor = 3;
+  string appointmentDate = 4;
+  TimeSlot timeSlot = 5;
+  string status = 6;
+  string notes = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+}
+
+message AnalysisAppointmentResponse {
+  string message = 1;
+}
+
+message PrescriptionRequest {
+  string prescriptionId = 1;
+  string medicalRecordId = 2;
+  double totalCost = 3;
+  string status = 4;
+  bool isPaid = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+}
+
+message PrescriptionResponse {
+  string message = 1;
+}
+
+message UpdateStatusRequest {
+  string prescriptionId = 1;
+  string newStatus = 2;
+}
+
+message UpdatePaidRequest {
+  string prescriptionId = 1;
+}
+
+message GenericResponse {
+  string message = 1;
+}
+
+message PatientStatisticsRequest {
+  string startDate = 1; // yyyy-MM-dd
+  string endDate = 2;   // yyyy-MM-dd
+  enum GroupType {
+    BY_DATE = 0;
+    BY_MONTH = 1;
+    BY_YEAR = 2;
+  }
+  GroupType groupType = 3;
+}
+
+message PatientStatisticsResponse {
+  message Stat {
+    string label = 1; // date, month, or year
+    int32 patientCount = 2;
+  }
+  repeated Stat stats = 1;
+}
+
+
+message PrescriptionStatisticsRequest {
+  string startDate = 1; // yyyy-MM-dd
+  string endDate = 2;   // yyyy-MM-dd
+  enum GroupType {
+    BY_DATE = 0;
+    BY_MONTH = 1;
+    BY_YEAR = 2;
+  }
+  GroupType groupType = 3;
+}
+message PrescriptionStatisticsResponse {
+  message Stat {
+    string label = 1; // date, month, or year
+    int32 prescriptionCount = 2;
+  }
+  repeated Stat stats = 1;
+}
+
+message AcceptAppointmentRequest {
+  string appointmentId = 1;
+}
+
+
