@@ -161,6 +161,10 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <!-- Plugin nhận diện hệ điều hành -->
             <plugin>
                 <groupId>kr.motd.maven</groupId>

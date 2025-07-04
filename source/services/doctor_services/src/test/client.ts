@@ -18,7 +18,7 @@ const doctorProto = grpc.loadPackageDefinition(packageDefinition) as any;
 
 // Configuration
 const GRPC_HOST = 'localhost';
-const GRPC_PORT = '50052'; // Assuming doctor service runs on different port
+const GRPC_PORT = '3002'; // Assuming doctor service runs on different port
 const SERVICE_TOKEN = 'service-secret-token-123';
 
 // Create clients

@@ -66,11 +66,11 @@ RUN chown -R nodeuser:nodejs /usr/src/app
 USER nodeuser
 
 # Expose the gRPC port
-EXPOSE 50052
+EXPOSE 3002
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "const grpc = require('@grpc/grpc-js'); const client = new grpc.Client('localhost:50052', grpc.credentials.createInsecure()); client.waitForReady(Date.now() + 1000, (err) => process.exit(err ? 1 : 0));" || exit 1
+    CMD node -e "const grpc = require('@grpc/grpc-js'); const client = new grpc.Client('localhost:3002', grpc.credentials.createInsecure()); client.waitForReady(Date.now() + 1000, (err) => process.exit(err ? 1 : 0));" || exit 1
 
 # Start the application
 CMD ["node", "dist/server.js"]

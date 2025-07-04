@@ -1,0 +1,20 @@
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY . .
+
+RUN pip install --no-cache-dir --upgrade pip \
+ && pip install --no-cache-dir grpcio grpcio-tools aiosmtplib pika aio-pika
+
+EXPOSE 3005
+
+CMD ["python", "grpc_server.py"]

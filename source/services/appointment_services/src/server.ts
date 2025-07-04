@@ -113,7 +113,7 @@ const startServer = async () => {
         // Start gRPC server
         const grpcServer = createGrpcServer();
 
-        const grpcPort = config.GRPC_PORT || process.env.GRPC_PORT || 50051;
+        const grpcPort = config.GRPC_PORT || process.env.GRPC_PORT || 3004;
         const grpcHost = config.GRPC_HOST || process.env.GRPC_HOST || '0.0.0.0';
 
         grpcServer.bindAsync(

@@ -1,0 +1,47 @@
+services:
+  # Expose all gRPC services to host
+  user-services:
+    ports:
+      - "3001:3001"
+
+  doctor-services:
+    ports:
+      - "3002:3002"
+
+  patient-services:
+    ports:
+      - "3003:3003"
+
+  appointment-services:
+    ports:
+      - "3004:3004"
+
+  # Expose databases if needed for dev tools (Compass, Studio 3T, etc.)
+  patient-mongo:
+    ports:
+      - "27016:27017"
+
+  user-mongodb:
+    ports:
+      - "27017:27017" # Avoid conflict with above
+
+  doctor-mongodb:
+    ports:
+      - "27018:27017"
+
+  appointment-mongodb:
+    ports:
+      - "27019:27017"
+
+  # Redis UI or direct redis-cli testing
+  redis:
+    ports:
+      - "6378:6379"
+
+  medicine-postgres:
+    ports:
+      - "5433:5432" 
+
+  medicine-services:
+    ports:
+      - "9090:9090"

@@ -4,7 +4,7 @@ dotenv.config();
 
 export const config = {
   // Server
-  GRPC_PORT: process.env.PORT || 50052,
+  GRPC_PORT: process.env.PORT || 3002,
   GRPC_HOST: process.env.GRPC_HOST || '0.0.0.0',
   NODE_ENV: process.env.NODE_ENV || 'development',
 
@@ -15,7 +15,7 @@ export const config = {
   SERVICE_TOKEN: process.env.SERVICE_TOKEN || 'service-secret-token-123',
 
   // MongoDB
-  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/doctor-management',
+  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://doctor-mongodb:27018/doctor-management',
 
 };
 

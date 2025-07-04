@@ -20,7 +20,7 @@ const userProto = grpc.loadPackageDefinition(packageDefinition) as any;
 
 // Configuration
 const GRPC_HOST = 'localhost';
-const GRPC_PORT = '50051';
+const GRPC_PORT = '3001';
 const SERVICE_TOKEN = 'service-secret-token-123'; // Replace with your actual service token
 
 // Create clients

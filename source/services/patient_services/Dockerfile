@@ -10,5 +10,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+EXPOSE 3003
 # CMD ["python", "-m", "app.main"]
 CMD ["sleep", "infinity"]
