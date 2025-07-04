@@ -1,0 +1,40 @@
+# Use an official Python image
+FROM python:3.11-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    build-essential \
+    git \
+    supervisor \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy dependency file first for better caching
+COPY requirements.txt .
+RUN ls -l /app && cat /app/requirements.txt
+# Copy the .proto file early, before you compile it
+COPY analysis.proto .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install grpcio-tools to compile .proto file
+RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. analysis.proto
+
+# Copy the rest of your code
+COPY . .
+
+# Environment variables can be overridden at runtime
+ENV PYTHONUNBUFFERED=1
+
+# Expose gRPC port
+EXPOSE 50056
+
+# Copy supervisor config
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Start both processes using supervisor
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

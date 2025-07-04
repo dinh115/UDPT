@@ -2,7 +2,7 @@ import pika
 import json
 import mysql.connector
 from mysql.connector import Error
-
+import os
 EXCHANGE_NAME = "streaming_exchange"
 QUEUE_NAME = "appointment_update_queue"
 ROUTING_KEY = "appointment_update"
@@ -10,10 +10,10 @@ ROUTING_KEY = "appointment_update"
 def init_db_connection():
     try:
         conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="root",
-            database="appointment_db"
+            host=os.getenv("MYSQL_HOST", "localhost"),
+            user=os.getenv("MYSQL_USER", "root"),
+            password=os.getenv("MYSQL_PASSWORD", "root"),
+            database=os.getenv("MYSQL_DATABASE", "appointment_db")
         )
         return conn
     except Error as e:
@@ -47,7 +47,7 @@ def callback(ch, method, properties, body):
         conn.close()
 
 # Setup RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
+connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "localhost")))
 channel = connection.channel()
 
 channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type="direct", durable=True)

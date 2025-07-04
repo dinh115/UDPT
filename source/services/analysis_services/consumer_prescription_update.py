@@ -2,7 +2,7 @@ import pika
 import json
 import mysql.connector
 from mysql.connector import Error
-
+import os
 EXCHANGE_NAME = "streaming_exchange"
 QUEUE_NAME = "prescription_updated_queue"
 ROUTING_KEY_PRESCRIPTION_UPDATE = "prescription_update"
@@ -16,10 +16,10 @@ def init_db_connection():
     try:
         if conn is None or not conn.is_connected():
             conn = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="root",
-                database="appointment_db"
+                host=os.getenv("MYSQL_HOST", "localhost"),
+                user=os.getenv("MYSQL_USER", "root"),
+                password=os.getenv("MYSQL_PASSWORD", "root"),
+                database=os.getenv("MYSQL_DATABASE", "appointment_db")
             )
             cursor = conn.cursor()
     except Error as e:
@@ -42,7 +42,7 @@ def callback(ch, method, properties, body):
     try:
         if command == "updateStatus":
             query = """
-            UPDATE prescription
+            UPDATE appointment_db.prescription
             SET status = %s, updated_at = %s
             WHERE prescription_id = %s
             """
@@ -51,7 +51,7 @@ def callback(ch, method, properties, body):
 
         elif command == "updatePaidStatus":
             query = """
-            UPDATE prescription
+            UPDATE appointment_db.prescription
             SET is_paid = %s, updated_at = %s
             WHERE prescription_id = %s
             """
@@ -65,7 +65,7 @@ def callback(ch, method, properties, body):
     except Error as e:
         print("Failed to update prescription:", e)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
+connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "localhost")))
 channel = connection.channel()
 
 channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type="direct", durable=True)

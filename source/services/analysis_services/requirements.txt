@@ -3,3 +3,5 @@ grpcio-tools
 aiosmtplib
 pika
 aio-pika
+mysql-connector-python
+cryptography>=41.0.0
