@@ -4,29 +4,29 @@
 package uni.hcmus.medicineservice.grpc;
 
 public interface PrescriptionListResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:PrescriptionListResponse)
+    // @@protoc_insertion_point(interface_extends:prescriptionPackage.PrescriptionListResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>repeated .PrescriptionResponse prescriptions = 1;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionResponse prescriptions = 1;</code>
    */
   java.util.List<uni.hcmus.medicineservice.grpc.PrescriptionResponse> 
       getPrescriptionsList();
   /**
-   * <code>repeated .PrescriptionResponse prescriptions = 1;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionResponse prescriptions = 1;</code>
    */
   uni.hcmus.medicineservice.grpc.PrescriptionResponse getPrescriptions(int index);
   /**
-   * <code>repeated .PrescriptionResponse prescriptions = 1;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionResponse prescriptions = 1;</code>
    */
   int getPrescriptionsCount();
   /**
-   * <code>repeated .PrescriptionResponse prescriptions = 1;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionResponse prescriptions = 1;</code>
    */
   java.util.List<? extends uni.hcmus.medicineservice.grpc.PrescriptionResponseOrBuilder> 
       getPrescriptionsOrBuilderList();
   /**
-   * <code>repeated .PrescriptionResponse prescriptions = 1;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionResponse prescriptions = 1;</code>
    */
   uni.hcmus.medicineservice.grpc.PrescriptionResponseOrBuilder getPrescriptionsOrBuilder(
       int index);

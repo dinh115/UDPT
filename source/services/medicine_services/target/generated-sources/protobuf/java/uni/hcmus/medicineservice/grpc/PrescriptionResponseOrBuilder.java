@@ -4,7 +4,7 @@
 package uni.hcmus.medicineservice.grpc;
 
 public interface PrescriptionResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:PrescriptionResponse)
+    // @@protoc_insertion_point(interface_extends:prescriptionPackage.PrescriptionResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -80,25 +80,25 @@ public interface PrescriptionResponseOrBuilder extends
       getUpdatedAtBytes();
 
   /**
-   * <code>repeated .PrescriptionItemResponse items = 8;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
    */
   java.util.List<uni.hcmus.medicineservice.grpc.PrescriptionItemResponse> 
       getItemsList();
   /**
-   * <code>repeated .PrescriptionItemResponse items = 8;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
    */
   uni.hcmus.medicineservice.grpc.PrescriptionItemResponse getItems(int index);
   /**
-   * <code>repeated .PrescriptionItemResponse items = 8;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
    */
   int getItemsCount();
   /**
-   * <code>repeated .PrescriptionItemResponse items = 8;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
    */
   java.util.List<? extends uni.hcmus.medicineservice.grpc.PrescriptionItemResponseOrBuilder> 
       getItemsOrBuilderList();
   /**
-   * <code>repeated .PrescriptionItemResponse items = 8;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
    */
   uni.hcmus.medicineservice.grpc.PrescriptionItemResponseOrBuilder getItemsOrBuilder(
       int index);

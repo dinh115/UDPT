@@ -4,11 +4,11 @@
 package uni.hcmus.medicineservice.grpc;
 
 /**
- * Protobuf type {@code UpdatePrescriptionItemRequest}
+ * Protobuf type {@code prescriptionPackage.UpdatePrescriptionItemRequest}
  */
 public final class UpdatePrescriptionItemRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:UpdatePrescriptionItemRequest)
+    // @@protoc_insertion_point(message_implements:prescriptionPackage.UpdatePrescriptionItemRequest)
     UpdatePrescriptionItemRequestOrBuilder {
 private static final long serialVersionUID = 0L;
   // Use UpdatePrescriptionItemRequest.newBuilder() to construct.
@@ -35,13 +35,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_UpdatePrescriptionItemRequest_descriptor;
+    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_UpdatePrescriptionItemRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_UpdatePrescriptionItemRequest_fieldAccessorTable
+    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_UpdatePrescriptionItemRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequest.class, uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequest.Builder.class);
   }
@@ -360,21 +360,21 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code UpdatePrescriptionItemRequest}
+   * Protobuf type {@code prescriptionPackage.UpdatePrescriptionItemRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:UpdatePrescriptionItemRequest)
+      // @@protoc_insertion_point(builder_implements:prescriptionPackage.UpdatePrescriptionItemRequest)
       uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_UpdatePrescriptionItemRequest_descriptor;
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_UpdatePrescriptionItemRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_UpdatePrescriptionItemRequest_fieldAccessorTable
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_UpdatePrescriptionItemRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequest.class, uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequest.Builder.class);
     }
@@ -403,7 +403,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_UpdatePrescriptionItemRequest_descriptor;
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_UpdatePrescriptionItemRequest_descriptor;
     }
 
     @java.lang.Override
@@ -829,10 +829,10 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:UpdatePrescriptionItemRequest)
+    // @@protoc_insertion_point(builder_scope:prescriptionPackage.UpdatePrescriptionItemRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:UpdatePrescriptionItemRequest)
+  // @@protoc_insertion_point(class_scope:prescriptionPackage.UpdatePrescriptionItemRequest)
   private static final uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequest DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequest();

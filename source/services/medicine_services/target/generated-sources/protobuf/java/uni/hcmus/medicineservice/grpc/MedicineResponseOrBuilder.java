@@ -4,7 +4,7 @@
 package uni.hcmus.medicineservice.grpc;
 
 public interface MedicineResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:MedicineResponse)
+    // @@protoc_insertion_point(interface_extends:medicinePackage.MedicineResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**

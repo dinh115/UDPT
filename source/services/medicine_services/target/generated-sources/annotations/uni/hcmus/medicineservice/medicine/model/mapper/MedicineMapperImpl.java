@@ -9,8 +9,8 @@ import uni.hcmus.medicineservice.medicine.model.entity.Medicine;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-07-04T15:34:25+0700",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.14 (Amazon.com Inc.)"
+    date = "2025-07-04T16:57:25+0700",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.42.50.v20250628-1110, environment: Java 21.0.7 (Eclipse Adoptium)"
 )
 @Component
 public class MedicineMapperImpl implements MedicineMapper {
@@ -23,13 +23,13 @@ public class MedicineMapperImpl implements MedicineMapper {
 
         MedicineResponse.MedicineResponseBuilder medicineResponse = MedicineResponse.builder();
 
+        medicineResponse.createdAt( medicine.getCreatedAt() );
         medicineResponse.medicineId( medicine.getMedicineId() );
         medicineResponse.name( medicine.getName() );
-        medicineResponse.unit( medicine.getUnit() );
-        medicineResponse.supplier( medicine.getSupplier() );
         medicineResponse.price( medicine.getPrice() );
         medicineResponse.stockQuantity( medicine.getStockQuantity() );
-        medicineResponse.createdAt( medicine.getCreatedAt() );
+        medicineResponse.supplier( medicine.getSupplier() );
+        medicineResponse.unit( medicine.getUnit() );
         medicineResponse.updatedAt( medicine.getUpdatedAt() );
 
         return medicineResponse.build();
@@ -44,14 +44,14 @@ public class MedicineMapperImpl implements MedicineMapper {
         Medicine.MedicineBuilder<?, ?> medicine = Medicine.builder();
 
         medicine.name( request.getName() );
-        medicine.unit( request.getUnit() );
-        medicine.supplier( request.getSupplier() );
         if ( request.getPrice() != null ) {
             medicine.price( request.getPrice() );
         }
         if ( request.getStockQuantity() != null ) {
             medicine.stockQuantity( request.getStockQuantity() );
         }
+        medicine.supplier( request.getSupplier() );
+        medicine.unit( request.getUnit() );
 
         return medicine.build();
     }
@@ -63,13 +63,13 @@ public class MedicineMapperImpl implements MedicineMapper {
         }
 
         medicine.setName( request.getName() );
-        medicine.setUnit( request.getUnit() );
-        medicine.setSupplier( request.getSupplier() );
         if ( request.getPrice() != null ) {
             medicine.setPrice( request.getPrice() );
         }
         if ( request.getStockQuantity() != null ) {
             medicine.setStockQuantity( request.getStockQuantity() );
         }
+        medicine.setSupplier( request.getSupplier() );
+        medicine.setUnit( request.getUnit() );
     }
 }

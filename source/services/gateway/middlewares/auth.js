@@ -1,8 +1,8 @@
 import { authenticate } from "../authentication/authentication.js";
 
 // first skippoint is all paths that start with /api
-const skipPoint = ['/api',
-    '/api/user/login',];
+const skipPoint = ['/api/user/Login',
+    '/api/user/Register',];
 
 export const auth = async (req, res, next) => {
     try {

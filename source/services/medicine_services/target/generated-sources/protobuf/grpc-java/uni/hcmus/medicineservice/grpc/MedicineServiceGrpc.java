@@ -12,7 +12,7 @@ public final class MedicineServiceGrpc {
 
   private MedicineServiceGrpc() {}
 
-  public static final java.lang.String SERVICE_NAME = "MedicineService";
+  public static final java.lang.String SERVICE_NAME = "medicinePackage.MedicineService";
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<uni.hcmus.medicineservice.grpc.Empty,

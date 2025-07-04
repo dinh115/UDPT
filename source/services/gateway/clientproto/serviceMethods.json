@@ -89,5 +89,16 @@
       "DeleteMedicine": { "method": "DELETE", "params": ["medicine_id"] },
       "RestoreMedicine": { "method": "PUT", "params": ["medicine_id"] }
     }
+  },
+  "analysis": {
+    "AnalysisService": {
+      "BookAppointment": { "method": "POST" },
+      "BookPrescription": { "method": "POST" },
+      "UpdatePrescriptionStatus": { "method": "PUT", "params": ["prescriptionId", "newStatus"] },
+      "MarkPrescriptionPaid": { "method": "PUT", "params": ["prescriptionId"] },
+      "GetPatientStatistics": { "method": "GET" },
+      "GetPrescriptionStatistics": { "method": "GET" },
+      "AcceptAppointment": { "method": "PUT", "params": ["appointmentId"] }
+    }
   }
 }

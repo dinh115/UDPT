@@ -4,11 +4,11 @@
 package uni.hcmus.medicineservice.grpc;
 
 /**
- * Protobuf type {@code UpdateMedicineRequest}
+ * Protobuf type {@code medicinePackage.UpdateMedicineRequest}
  */
 public final class UpdateMedicineRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:UpdateMedicineRequest)
+    // @@protoc_insertion_point(message_implements:medicinePackage.UpdateMedicineRequest)
     UpdateMedicineRequestOrBuilder {
 private static final long serialVersionUID = 0L;
   // Use UpdateMedicineRequest.newBuilder() to construct.
@@ -36,13 +36,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_UpdateMedicineRequest_descriptor;
+    return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_medicinePackage_UpdateMedicineRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_UpdateMedicineRequest_fieldAccessorTable
+    return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_medicinePackage_UpdateMedicineRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             uni.hcmus.medicineservice.grpc.UpdateMedicineRequest.class, uni.hcmus.medicineservice.grpc.UpdateMedicineRequest.Builder.class);
   }
@@ -434,21 +434,21 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code UpdateMedicineRequest}
+   * Protobuf type {@code medicinePackage.UpdateMedicineRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:UpdateMedicineRequest)
+      // @@protoc_insertion_point(builder_implements:medicinePackage.UpdateMedicineRequest)
       uni.hcmus.medicineservice.grpc.UpdateMedicineRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_UpdateMedicineRequest_descriptor;
+      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_medicinePackage_UpdateMedicineRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_UpdateMedicineRequest_fieldAccessorTable
+      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_medicinePackage_UpdateMedicineRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               uni.hcmus.medicineservice.grpc.UpdateMedicineRequest.class, uni.hcmus.medicineservice.grpc.UpdateMedicineRequest.Builder.class);
     }
@@ -479,7 +479,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_UpdateMedicineRequest_descriptor;
+      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_medicinePackage_UpdateMedicineRequest_descriptor;
     }
 
     @java.lang.Override
@@ -1033,10 +1033,10 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:UpdateMedicineRequest)
+    // @@protoc_insertion_point(builder_scope:medicinePackage.UpdateMedicineRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:UpdateMedicineRequest)
+  // @@protoc_insertion_point(class_scope:medicinePackage.UpdateMedicineRequest)
   private static final uni.hcmus.medicineservice.grpc.UpdateMedicineRequest DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new uni.hcmus.medicineservice.grpc.UpdateMedicineRequest();

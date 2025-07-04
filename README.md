@@ -26,6 +26,13 @@
 ---
 
 ## ⚙️ Cấu hình cần chuẩn bị
+### REMEMBER SERVICES PORT
+gateway = 3000
+user = 3001
+doctor = 3002
+patient = 3003
+appointment = 3004
+
 
 ### 1. `.env` trong thư mục `gateway`
 ```env

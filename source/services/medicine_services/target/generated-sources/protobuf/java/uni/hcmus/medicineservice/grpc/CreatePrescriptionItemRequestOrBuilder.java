@@ -4,7 +4,7 @@
 package uni.hcmus.medicineservice.grpc;
 
 public interface CreatePrescriptionItemRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:CreatePrescriptionItemRequest)
+    // @@protoc_insertion_point(interface_extends:prescriptionPackage.CreatePrescriptionItemRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**

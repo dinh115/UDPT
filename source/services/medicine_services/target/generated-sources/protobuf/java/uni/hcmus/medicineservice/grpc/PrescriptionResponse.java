@@ -4,11 +4,11 @@
 package uni.hcmus.medicineservice.grpc;
 
 /**
- * Protobuf type {@code PrescriptionResponse}
+ * Protobuf type {@code prescriptionPackage.PrescriptionResponse}
  */
 public final class PrescriptionResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:PrescriptionResponse)
+    // @@protoc_insertion_point(message_implements:prescriptionPackage.PrescriptionResponse)
     PrescriptionResponseOrBuilder {
 private static final long serialVersionUID = 0L;
   // Use PrescriptionResponse.newBuilder() to construct.
@@ -38,13 +38,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionResponse_descriptor;
+    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionResponse_fieldAccessorTable
+    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             uni.hcmus.medicineservice.grpc.PrescriptionResponse.class, uni.hcmus.medicineservice.grpc.PrescriptionResponse.Builder.class);
   }
@@ -270,14 +270,14 @@ private static final long serialVersionUID = 0L;
   @SuppressWarnings("serial")
   private java.util.List<uni.hcmus.medicineservice.grpc.PrescriptionItemResponse> items_;
   /**
-   * <code>repeated .PrescriptionItemResponse items = 8;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
    */
   @java.lang.Override
   public java.util.List<uni.hcmus.medicineservice.grpc.PrescriptionItemResponse> getItemsList() {
     return items_;
   }
   /**
-   * <code>repeated .PrescriptionItemResponse items = 8;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
    */
   @java.lang.Override
   public java.util.List<? extends uni.hcmus.medicineservice.grpc.PrescriptionItemResponseOrBuilder> 
@@ -285,21 +285,21 @@ private static final long serialVersionUID = 0L;
     return items_;
   }
   /**
-   * <code>repeated .PrescriptionItemResponse items = 8;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
    */
   @java.lang.Override
   public int getItemsCount() {
     return items_.size();
   }
   /**
-   * <code>repeated .PrescriptionItemResponse items = 8;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
    */
   @java.lang.Override
   public uni.hcmus.medicineservice.grpc.PrescriptionItemResponse getItems(int index) {
     return items_.get(index);
   }
   /**
-   * <code>repeated .PrescriptionItemResponse items = 8;</code>
+   * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
    */
   @java.lang.Override
   public uni.hcmus.medicineservice.grpc.PrescriptionItemResponseOrBuilder getItemsOrBuilder(
@@ -540,21 +540,21 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code PrescriptionResponse}
+   * Protobuf type {@code prescriptionPackage.PrescriptionResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:PrescriptionResponse)
+      // @@protoc_insertion_point(builder_implements:prescriptionPackage.PrescriptionResponse)
       uni.hcmus.medicineservice.grpc.PrescriptionResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionResponse_descriptor;
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionResponse_fieldAccessorTable
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               uni.hcmus.medicineservice.grpc.PrescriptionResponse.class, uni.hcmus.medicineservice.grpc.PrescriptionResponse.Builder.class);
     }
@@ -593,7 +593,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionResponse_descriptor;
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionResponse_descriptor;
     }
 
     @java.lang.Override
@@ -1285,7 +1285,7 @@ private static final long serialVersionUID = 0L;
         uni.hcmus.medicineservice.grpc.PrescriptionItemResponse, uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.Builder, uni.hcmus.medicineservice.grpc.PrescriptionItemResponseOrBuilder> itemsBuilder_;
 
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public java.util.List<uni.hcmus.medicineservice.grpc.PrescriptionItemResponse> getItemsList() {
       if (itemsBuilder_ == null) {
@@ -1295,7 +1295,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public int getItemsCount() {
       if (itemsBuilder_ == null) {
@@ -1305,7 +1305,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public uni.hcmus.medicineservice.grpc.PrescriptionItemResponse getItems(int index) {
       if (itemsBuilder_ == null) {
@@ -1315,7 +1315,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public Builder setItems(
         int index, uni.hcmus.medicineservice.grpc.PrescriptionItemResponse value) {
@@ -1332,7 +1332,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public Builder setItems(
         int index, uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.Builder builderForValue) {
@@ -1346,7 +1346,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public Builder addItems(uni.hcmus.medicineservice.grpc.PrescriptionItemResponse value) {
       if (itemsBuilder_ == null) {
@@ -1362,7 +1362,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public Builder addItems(
         int index, uni.hcmus.medicineservice.grpc.PrescriptionItemResponse value) {
@@ -1379,7 +1379,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public Builder addItems(
         uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.Builder builderForValue) {
@@ -1393,7 +1393,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public Builder addItems(
         int index, uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.Builder builderForValue) {
@@ -1407,7 +1407,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public Builder addAllItems(
         java.lang.Iterable<? extends uni.hcmus.medicineservice.grpc.PrescriptionItemResponse> values) {
@@ -1422,7 +1422,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public Builder clearItems() {
       if (itemsBuilder_ == null) {
@@ -1435,7 +1435,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public Builder removeItems(int index) {
       if (itemsBuilder_ == null) {
@@ -1448,14 +1448,14 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.Builder getItemsBuilder(
         int index) {
       return getItemsFieldBuilder().getBuilder(index);
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public uni.hcmus.medicineservice.grpc.PrescriptionItemResponseOrBuilder getItemsOrBuilder(
         int index) {
@@ -1465,7 +1465,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public java.util.List<? extends uni.hcmus.medicineservice.grpc.PrescriptionItemResponseOrBuilder> 
          getItemsOrBuilderList() {
@@ -1476,14 +1476,14 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.Builder addItemsBuilder() {
       return getItemsFieldBuilder().addBuilder(
           uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.getDefaultInstance());
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.Builder addItemsBuilder(
         int index) {
@@ -1491,7 +1491,7 @@ private static final long serialVersionUID = 0L;
           index, uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.getDefaultInstance());
     }
     /**
-     * <code>repeated .PrescriptionItemResponse items = 8;</code>
+     * <code>repeated .prescriptionPackage.PrescriptionItemResponse items = 8;</code>
      */
     public java.util.List<uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.Builder> 
          getItemsBuilderList() {
@@ -1524,10 +1524,10 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:PrescriptionResponse)
+    // @@protoc_insertion_point(builder_scope:prescriptionPackage.PrescriptionResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:PrescriptionResponse)
+  // @@protoc_insertion_point(class_scope:prescriptionPackage.PrescriptionResponse)
   private static final uni.hcmus.medicineservice.grpc.PrescriptionResponse DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new uni.hcmus.medicineservice.grpc.PrescriptionResponse();

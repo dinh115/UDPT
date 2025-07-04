@@ -4,11 +4,11 @@
 package uni.hcmus.medicineservice.grpc;
 
 /**
- * Protobuf type {@code PrescriptionIdRequest}
+ * Protobuf type {@code prescriptionPackage.PrescriptionIdRequest}
  */
 public final class PrescriptionIdRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:PrescriptionIdRequest)
+    // @@protoc_insertion_point(message_implements:prescriptionPackage.PrescriptionIdRequest)
     PrescriptionIdRequestOrBuilder {
 private static final long serialVersionUID = 0L;
   // Use PrescriptionIdRequest.newBuilder() to construct.
@@ -33,13 +33,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionIdRequest_descriptor;
+    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionIdRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionIdRequest_fieldAccessorTable
+    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionIdRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             uni.hcmus.medicineservice.grpc.PrescriptionIdRequest.class, uni.hcmus.medicineservice.grpc.PrescriptionIdRequest.Builder.class);
   }
@@ -238,21 +238,21 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code PrescriptionIdRequest}
+   * Protobuf type {@code prescriptionPackage.PrescriptionIdRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:PrescriptionIdRequest)
+      // @@protoc_insertion_point(builder_implements:prescriptionPackage.PrescriptionIdRequest)
       uni.hcmus.medicineservice.grpc.PrescriptionIdRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionIdRequest_descriptor;
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionIdRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionIdRequest_fieldAccessorTable
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionIdRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               uni.hcmus.medicineservice.grpc.PrescriptionIdRequest.class, uni.hcmus.medicineservice.grpc.PrescriptionIdRequest.Builder.class);
     }
@@ -278,7 +278,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionIdRequest_descriptor;
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionIdRequest_descriptor;
     }
 
     @java.lang.Override
@@ -491,10 +491,10 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:PrescriptionIdRequest)
+    // @@protoc_insertion_point(builder_scope:prescriptionPackage.PrescriptionIdRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:PrescriptionIdRequest)
+  // @@protoc_insertion_point(class_scope:prescriptionPackage.PrescriptionIdRequest)
   private static final uni.hcmus.medicineservice.grpc.PrescriptionIdRequest DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new uni.hcmus.medicineservice.grpc.PrescriptionIdRequest();

@@ -4,11 +4,11 @@
 package uni.hcmus.medicineservice.grpc;
 
 /**
- * Protobuf type {@code Empty}
+ * Protobuf type {@code medicinePackage.Empty}
  */
 public final class Empty extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:Empty)
+    // @@protoc_insertion_point(message_implements:medicinePackage.Empty)
     EmptyOrBuilder {
 private static final long serialVersionUID = 0L;
   // Use Empty.newBuilder() to construct.
@@ -32,13 +32,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_Empty_descriptor;
+    return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_medicinePackage_Empty_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_Empty_fieldAccessorTable
+    return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_medicinePackage_Empty_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             uni.hcmus.medicineservice.grpc.Empty.class, uni.hcmus.medicineservice.grpc.Empty.Builder.class);
   }
@@ -188,21 +188,21 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code Empty}
+   * Protobuf type {@code medicinePackage.Empty}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:Empty)
+      // @@protoc_insertion_point(builder_implements:medicinePackage.Empty)
       uni.hcmus.medicineservice.grpc.EmptyOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_Empty_descriptor;
+      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_medicinePackage_Empty_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_Empty_fieldAccessorTable
+      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_medicinePackage_Empty_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               uni.hcmus.medicineservice.grpc.Empty.class, uni.hcmus.medicineservice.grpc.Empty.Builder.class);
     }
@@ -226,7 +226,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_Empty_descriptor;
+      return uni.hcmus.medicineservice.grpc.MedicineServiceProto.internal_static_medicinePackage_Empty_descriptor;
     }
 
     @java.lang.Override
@@ -348,10 +348,10 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:Empty)
+    // @@protoc_insertion_point(builder_scope:medicinePackage.Empty)
   }
 
-  // @@protoc_insertion_point(class_scope:Empty)
+  // @@protoc_insertion_point(class_scope:medicinePackage.Empty)
   private static final uni.hcmus.medicineservice.grpc.Empty DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new uni.hcmus.medicineservice.grpc.Empty();

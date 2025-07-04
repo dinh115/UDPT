@@ -7,14 +7,13 @@ option java_package = "uni.hcmus.medicineservice.grpc";
 option java_outer_classname = "PrescriptionServiceProto";
 
 import "MedicineService.proto";
-import "google/protobuf/empty.proto";
 
 service PrescriptionService {
-  rpc GetAllPrescriptions (Empty) returns (PrescriptionListResponse);
+  rpc GetAllPrescriptions (medicinePackage.Empty) returns (PrescriptionListResponse);
   rpc GetPrescriptionById (PrescriptionIdRequest) returns (PrescriptionResponse);
   rpc CreatePrescription (CreatePrescriptionRequest) returns (PrescriptionResponse);
   rpc UpdatePrescription (UpdatePrescriptionRequest) returns (PrescriptionResponse);
-  rpc DeletePrescription (PrescriptionIdRequest) returns (Empty);
+  rpc DeletePrescription (PrescriptionIdRequest) returns (medicinePackage.Empty);
 }
 
 message PrescriptionIdRequest {
@@ -34,7 +33,7 @@ message PrescriptionResponse {
 
 message PrescriptionItemResponse {
   string prescription_item_id = 1;
-  MedicineResponse medicine = 2;
+  medicinePackage.MedicineResponse medicine = 2;
   int32 quantity = 3;
   string dosage_instruction = 4;
   double total_cost = 5;

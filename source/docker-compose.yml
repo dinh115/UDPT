@@ -13,11 +13,11 @@ services:
     container_name: medicine-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgrespassword
-      POSTGRES_DB: medicine_db
+      - POSTGRES_DB=medicine
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
     volumes:
-      - medicine_postgres_data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     networks:
       - internal
     healthcheck:
@@ -87,6 +87,30 @@ services:
       retries: 5
       start_period: 40s
 
+  # mysql:
+  #   image: mysql:8
+  #   container_name: mysql_service
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: appointment_db
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   networks:
+  #     - backend
+  #   restart: unless-stopped
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: rabbitmq_service
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   networks:
+  #     - backend
+  #   restart: unless-stopped
+
   # ========================== Cache ==========================
   redis:
     image: redis:7-alpine
@@ -115,6 +139,9 @@ services:
       - user-services
       - doctor-services
       - appointment-services
+      # - analysis-services
+      - medicine-services
+      # - notification-services
     networks:
       - internal
     volumes:
@@ -124,6 +151,7 @@ services:
       - ./services/user_services/src/proto:/app/shared_proto/user
       - ./services/doctor_services/src/proto:/app/shared_proto/doctor
       - ./services/appointment_services/src/proto:/app/shared_proto/appointment
+      - ./services/analysis_services/analysis.proto:/app/shared_proto/analysis
     environment:
       NODE_ENV: production
       USER_SERVICE_URL: user-services:3001
@@ -134,35 +162,24 @@ services:
     env_file:
       - ./services/gateway/.env
 
-  # medicine-services:
-  #   build:
-  #     context: ./services/medicine_services
-  #   container_name: medicine-service
-  #   restart: unless-stopped
-  #   depends_on:
-  #     medicine-postgres:
-  #       condition: service_healthy
-  #   expose:
-  #     - "3004"
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:postgresql://medicine-postgres:5432/medicine_db
-  #     SPRING_DATASOURCE_USERNAME: postgres
-  #     SPRING_DATASOURCE_PASSWORD: postgrespassword
-  #     SERVICE_TOKEN: ${SERVICE_TOKEN:-service-secret-token-123}
-  #   networks:
-  #     - internal
-  #   volumes:
-  #     - ./logs/medicine-services:/usr/src/app/logs
+  medicine-services:
+    build:
+      context: ./services/medicine_services
+    container_name: medicine-service
+    restart: unless-stopped
+    depends_on:
+      medicine-postgres:
+        condition: service_healthy
+    expose:
+      - "9090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://medicine-postgres:5432/medicine
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123456
+    networks:
+      - internal
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #   ports:
-  #     - "8080:80"
-  #   depends_on:
-  #     - gateway
-  #   networks:
-  #     - internal
 
   user-services:
     build:
@@ -243,6 +260,7 @@ services:
     volumes:
       - ./logs/appointment-services:/usr/src/app/logs
 
+
 # ========================== Network & Volumes ==========================
 
 networks:
@@ -255,4 +273,4 @@ volumes:
   doctor_mongodb_data:
   appointment_mongodb_data:
   redis_data:
-  medicine_postgres_data: {}
+  pgdata:

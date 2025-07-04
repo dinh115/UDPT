@@ -4,11 +4,11 @@
 package uni.hcmus.medicineservice.grpc;
 
 /**
- * Protobuf type {@code PrescriptionItemResponse}
+ * Protobuf type {@code prescriptionPackage.PrescriptionItemResponse}
  */
 public final class PrescriptionItemResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:PrescriptionItemResponse)
+    // @@protoc_insertion_point(message_implements:prescriptionPackage.PrescriptionItemResponse)
     PrescriptionItemResponseOrBuilder {
 private static final long serialVersionUID = 0L;
   // Use PrescriptionItemResponse.newBuilder() to construct.
@@ -34,13 +34,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionItemResponse_descriptor;
+    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionItemResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionItemResponse_fieldAccessorTable
+    return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionItemResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.class, uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.Builder.class);
   }
@@ -87,7 +87,7 @@ private static final long serialVersionUID = 0L;
   public static final int MEDICINE_FIELD_NUMBER = 2;
   private uni.hcmus.medicineservice.grpc.MedicineResponse medicine_;
   /**
-   * <code>.MedicineResponse medicine = 2;</code>
+   * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
    * @return Whether the medicine field is set.
    */
   @java.lang.Override
@@ -95,7 +95,7 @@ private static final long serialVersionUID = 0L;
     return medicine_ != null;
   }
   /**
-   * <code>.MedicineResponse medicine = 2;</code>
+   * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
    * @return The medicine.
    */
   @java.lang.Override
@@ -103,7 +103,7 @@ private static final long serialVersionUID = 0L;
     return medicine_ == null ? uni.hcmus.medicineservice.grpc.MedicineResponse.getDefaultInstance() : medicine_;
   }
   /**
-   * <code>.MedicineResponse medicine = 2;</code>
+   * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
    */
   @java.lang.Override
   public uni.hcmus.medicineservice.grpc.MedicineResponseOrBuilder getMedicineOrBuilder() {
@@ -376,21 +376,21 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code PrescriptionItemResponse}
+   * Protobuf type {@code prescriptionPackage.PrescriptionItemResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:PrescriptionItemResponse)
+      // @@protoc_insertion_point(builder_implements:prescriptionPackage.PrescriptionItemResponse)
       uni.hcmus.medicineservice.grpc.PrescriptionItemResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionItemResponse_descriptor;
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionItemResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionItemResponse_fieldAccessorTable
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionItemResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.class, uni.hcmus.medicineservice.grpc.PrescriptionItemResponse.Builder.class);
     }
@@ -424,7 +424,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_PrescriptionItemResponse_descriptor;
+      return uni.hcmus.medicineservice.grpc.PrescriptionServiceProto.internal_static_prescriptionPackage_PrescriptionItemResponse_descriptor;
     }
 
     @java.lang.Override
@@ -679,14 +679,14 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilderV3<
         uni.hcmus.medicineservice.grpc.MedicineResponse, uni.hcmus.medicineservice.grpc.MedicineResponse.Builder, uni.hcmus.medicineservice.grpc.MedicineResponseOrBuilder> medicineBuilder_;
     /**
-     * <code>.MedicineResponse medicine = 2;</code>
+     * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
      * @return Whether the medicine field is set.
      */
     public boolean hasMedicine() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.MedicineResponse medicine = 2;</code>
+     * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
      * @return The medicine.
      */
     public uni.hcmus.medicineservice.grpc.MedicineResponse getMedicine() {
@@ -697,7 +697,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.MedicineResponse medicine = 2;</code>
+     * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
      */
     public Builder setMedicine(uni.hcmus.medicineservice.grpc.MedicineResponse value) {
       if (medicineBuilder_ == null) {
@@ -713,7 +713,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.MedicineResponse medicine = 2;</code>
+     * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
      */
     public Builder setMedicine(
         uni.hcmus.medicineservice.grpc.MedicineResponse.Builder builderForValue) {
@@ -727,7 +727,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.MedicineResponse medicine = 2;</code>
+     * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
      */
     public Builder mergeMedicine(uni.hcmus.medicineservice.grpc.MedicineResponse value) {
       if (medicineBuilder_ == null) {
@@ -746,7 +746,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.MedicineResponse medicine = 2;</code>
+     * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
      */
     public Builder clearMedicine() {
       bitField0_ = (bitField0_ & ~0x00000002);
@@ -759,7 +759,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.MedicineResponse medicine = 2;</code>
+     * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
      */
     public uni.hcmus.medicineservice.grpc.MedicineResponse.Builder getMedicineBuilder() {
       bitField0_ |= 0x00000002;
@@ -767,7 +767,7 @@ private static final long serialVersionUID = 0L;
       return getMedicineFieldBuilder().getBuilder();
     }
     /**
-     * <code>.MedicineResponse medicine = 2;</code>
+     * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
      */
     public uni.hcmus.medicineservice.grpc.MedicineResponseOrBuilder getMedicineOrBuilder() {
       if (medicineBuilder_ != null) {
@@ -778,7 +778,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.MedicineResponse medicine = 2;</code>
+     * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         uni.hcmus.medicineservice.grpc.MedicineResponse, uni.hcmus.medicineservice.grpc.MedicineResponse.Builder, uni.hcmus.medicineservice.grpc.MedicineResponseOrBuilder> 
@@ -942,10 +942,10 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:PrescriptionItemResponse)
+    // @@protoc_insertion_point(builder_scope:prescriptionPackage.PrescriptionItemResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:PrescriptionItemResponse)
+  // @@protoc_insertion_point(class_scope:prescriptionPackage.PrescriptionItemResponse)
   private static final uni.hcmus.medicineservice.grpc.PrescriptionItemResponse DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new uni.hcmus.medicineservice.grpc.PrescriptionItemResponse();

@@ -22,7 +22,7 @@ export async function setupRoutes(app) {
     for (const [serviceName, methods] of Object.entries(services)) {
       const grpcClient = grpcServiceGroup[serviceName];
       if (!grpcClient) continue;
-
+      console.log(serviceName,methods);
       for (const [grpcMethod, config] of Object.entries(methods)) {
         const httpMethod = (config.method || "GET").toLowerCase();
         const paramKeys = config.params || [];

@@ -15,45 +15,45 @@ public final class PrescriptionServiceProto {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_PrescriptionIdRequest_descriptor;
+    internal_static_prescriptionPackage_PrescriptionIdRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_PrescriptionIdRequest_fieldAccessorTable;
+      internal_static_prescriptionPackage_PrescriptionIdRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_PrescriptionResponse_descriptor;
+    internal_static_prescriptionPackage_PrescriptionResponse_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_PrescriptionResponse_fieldAccessorTable;
+      internal_static_prescriptionPackage_PrescriptionResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_PrescriptionItemResponse_descriptor;
+    internal_static_prescriptionPackage_PrescriptionItemResponse_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_PrescriptionItemResponse_fieldAccessorTable;
+      internal_static_prescriptionPackage_PrescriptionItemResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_PrescriptionListResponse_descriptor;
+    internal_static_prescriptionPackage_PrescriptionListResponse_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_PrescriptionListResponse_fieldAccessorTable;
+      internal_static_prescriptionPackage_PrescriptionListResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_CreatePrescriptionRequest_descriptor;
+    internal_static_prescriptionPackage_CreatePrescriptionRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_CreatePrescriptionRequest_fieldAccessorTable;
+      internal_static_prescriptionPackage_CreatePrescriptionRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_CreatePrescriptionItemRequest_descriptor;
+    internal_static_prescriptionPackage_CreatePrescriptionItemRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_CreatePrescriptionItemRequest_fieldAccessorTable;
+      internal_static_prescriptionPackage_CreatePrescriptionItemRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_UpdatePrescriptionRequest_descriptor;
+    internal_static_prescriptionPackage_UpdatePrescriptionRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_UpdatePrescriptionRequest_fieldAccessorTable;
+      internal_static_prescriptionPackage_UpdatePrescriptionRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_UpdatePrescriptionItemRequest_descriptor;
+    internal_static_prescriptionPackage_UpdatePrescriptionItemRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_UpdatePrescriptionItemRequest_fieldAccessorTable;
+      internal_static_prescriptionPackage_UpdatePrescriptionItemRequest_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -63,95 +63,103 @@ public final class PrescriptionServiceProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\031PrescriptionService.proto\032\025MedicineSer" +
-      "vice.proto\"0\n\025PrescriptionIdRequest\022\027\n\017p" +
-      "rescription_id\030\001 \001(\t\"\321\001\n\024PrescriptionRes" +
-      "ponse\022\027\n\017prescription_id\030\001 \001(\t\022\031\n\021medica" +
-      "l_record_id\030\002 \001(\t\022\022\n\ntotal_cost\030\003 \001(\001\022\016\n" +
-      "\006status\030\004 \001(\t\022\017\n\007is_paid\030\005 \001(\010\022\022\n\ncreate" +
-      "d_at\030\006 \001(\t\022\022\n\nupdated_at\030\007 \001(\t\022(\n\005items\030" +
-      "\010 \003(\0132\031.PrescriptionItemResponse\"\237\001\n\030Pre" +
-      "scriptionItemResponse\022\034\n\024prescription_it" +
-      "em_id\030\001 \001(\t\022#\n\010medicine\030\002 \001(\0132\021.Medicine" +
-      "Response\022\020\n\010quantity\030\003 \001(\005\022\032\n\022dosage_ins" +
-      "truction\030\004 \001(\t\022\022\n\ntotal_cost\030\005 \001(\001\"H\n\030Pr" +
-      "escriptionListResponse\022,\n\rprescriptions\030" +
-      "\001 \003(\0132\025.PrescriptionResponse\"e\n\031CreatePr" +
-      "escriptionRequest\022\031\n\021medical_record_id\030\001" +
-      " \001(\t\022-\n\005items\030\002 \003(\0132\036.CreatePrescription" +
-      "ItemRequest\"b\n\035CreatePrescriptionItemReq" +
-      "uest\022\023\n\013medicine_id\030\001 \001(\t\022\020\n\010quantity\030\002 " +
-      "\001(\005\022\032\n\022dosage_instruction\030\003 \001(\t\"~\n\031Updat" +
-      "ePrescriptionRequest\022\027\n\017prescription_id\030" +
-      "\001 \001(\t\022\031\n\021medical_record_id\030\002 \001(\t\022-\n\005item" +
-      "s\030\003 \003(\0132\036.UpdatePrescriptionItemRequest\"" +
-      "\200\001\n\035UpdatePrescriptionItemRequest\022\034\n\024pre" +
-      "scription_item_id\030\001 \001(\t\022\023\n\013medicine_id\030\002" +
-      " \001(\t\022\020\n\010quantity\030\003 \001(\005\022\032\n\022dosage_instruc" +
-      "tion\030\004 \001(\t2\335\002\n\023PrescriptionService\0228\n\023Ge" +
-      "tAllPrescriptions\022\006.Empty\032\031.Prescription" +
-      "ListResponse\022D\n\023GetPrescriptionById\022\026.Pr" +
-      "escriptionIdRequest\032\025.PrescriptionRespon" +
-      "se\022G\n\022CreatePrescription\022\032.CreatePrescri" +
-      "ptionRequest\032\025.PrescriptionResponse\022G\n\022U" +
-      "pdatePrescription\022\032.UpdatePrescriptionRe" +
-      "quest\032\025.PrescriptionResponse\0224\n\022DeletePr" +
-      "escription\022\026.PrescriptionIdRequest\032\006.Emp" +
-      "tyB<\n\036uni.hcmus.medicineservice.grpcB\030Pr" +
-      "escriptionServiceProtoP\001b\006proto3"
+      "\n\031PrescriptionService.proto\022\023prescriptio" +
+      "nPackage\032\025MedicineService.proto\"0\n\025Presc" +
+      "riptionIdRequest\022\027\n\017prescription_id\030\001 \001(" +
+      "\t\"\345\001\n\024PrescriptionResponse\022\027\n\017prescripti" +
+      "on_id\030\001 \001(\t\022\031\n\021medical_record_id\030\002 \001(\t\022\022" +
+      "\n\ntotal_cost\030\003 \001(\001\022\016\n\006status\030\004 \001(\t\022\017\n\007is" +
+      "_paid\030\005 \001(\010\022\022\n\ncreated_at\030\006 \001(\t\022\022\n\nupdat" +
+      "ed_at\030\007 \001(\t\022<\n\005items\030\010 \003(\0132-.prescriptio" +
+      "nPackage.PrescriptionItemResponse\"\257\001\n\030Pr" +
+      "escriptionItemResponse\022\034\n\024prescription_i" +
+      "tem_id\030\001 \001(\t\0223\n\010medicine\030\002 \001(\0132!.medicin" +
+      "ePackage.MedicineResponse\022\020\n\010quantity\030\003 " +
+      "\001(\005\022\032\n\022dosage_instruction\030\004 \001(\t\022\022\n\ntotal" +
+      "_cost\030\005 \001(\001\"\\\n\030PrescriptionListResponse\022" +
+      "@\n\rprescriptions\030\001 \003(\0132).prescriptionPac" +
+      "kage.PrescriptionResponse\"y\n\031CreatePresc" +
+      "riptionRequest\022\031\n\021medical_record_id\030\001 \001(" +
+      "\t\022A\n\005items\030\002 \003(\01322.prescriptionPackage.C" +
+      "reatePrescriptionItemRequest\"b\n\035CreatePr" +
+      "escriptionItemRequest\022\023\n\013medicine_id\030\001 \001" +
+      "(\t\022\020\n\010quantity\030\002 \001(\005\022\032\n\022dosage_instructi" +
+      "on\030\003 \001(\t\"\222\001\n\031UpdatePrescriptionRequest\022\027" +
+      "\n\017prescription_id\030\001 \001(\t\022\031\n\021medical_recor" +
+      "d_id\030\002 \001(\t\022A\n\005items\030\003 \003(\01322.prescription" +
+      "Package.UpdatePrescriptionItemRequest\"\200\001" +
+      "\n\035UpdatePrescriptionItemRequest\022\034\n\024presc" +
+      "ription_item_id\030\001 \001(\t\022\023\n\013medicine_id\030\002 \001" +
+      "(\t\022\020\n\010quantity\030\003 \001(\005\022\032\n\022dosage_instructi" +
+      "on\030\004 \001(\t2\235\004\n\023PrescriptionService\022\\\n\023GetA" +
+      "llPrescriptions\022\026.medicinePackage.Empty\032" +
+      "-.prescriptionPackage.PrescriptionListRe" +
+      "sponse\022l\n\023GetPrescriptionById\022*.prescrip" +
+      "tionPackage.PrescriptionIdRequest\032).pres" +
+      "criptionPackage.PrescriptionResponse\022o\n\022" +
+      "CreatePrescription\022..prescriptionPackage" +
+      ".CreatePrescriptionRequest\032).prescriptio" +
+      "nPackage.PrescriptionResponse\022o\n\022UpdateP" +
+      "rescription\022..prescriptionPackage.Update" +
+      "PrescriptionRequest\032).prescriptionPackag" +
+      "e.PrescriptionResponse\022X\n\022DeletePrescrip" +
+      "tion\022*.prescriptionPackage.PrescriptionI" +
+      "dRequest\032\026.medicinePackage.EmptyB<\n\036uni." +
+      "hcmus.medicineservice.grpcB\030Prescription" +
+      "ServiceProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           uni.hcmus.medicineservice.grpc.MedicineServiceProto.getDescriptor(),
         });
-    internal_static_PrescriptionIdRequest_descriptor =
+    internal_static_prescriptionPackage_PrescriptionIdRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_PrescriptionIdRequest_fieldAccessorTable = new
+    internal_static_prescriptionPackage_PrescriptionIdRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_PrescriptionIdRequest_descriptor,
+        internal_static_prescriptionPackage_PrescriptionIdRequest_descriptor,
         new java.lang.String[] { "PrescriptionId", });
-    internal_static_PrescriptionResponse_descriptor =
+    internal_static_prescriptionPackage_PrescriptionResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_PrescriptionResponse_fieldAccessorTable = new
+    internal_static_prescriptionPackage_PrescriptionResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_PrescriptionResponse_descriptor,
+        internal_static_prescriptionPackage_PrescriptionResponse_descriptor,
         new java.lang.String[] { "PrescriptionId", "MedicalRecordId", "TotalCost", "Status", "IsPaid", "CreatedAt", "UpdatedAt", "Items", });
-    internal_static_PrescriptionItemResponse_descriptor =
+    internal_static_prescriptionPackage_PrescriptionItemResponse_descriptor =
       getDescriptor().getMessageTypes().get(2);
-    internal_static_PrescriptionItemResponse_fieldAccessorTable = new
+    internal_static_prescriptionPackage_PrescriptionItemResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_PrescriptionItemResponse_descriptor,
+        internal_static_prescriptionPackage_PrescriptionItemResponse_descriptor,
         new java.lang.String[] { "PrescriptionItemId", "Medicine", "Quantity", "DosageInstruction", "TotalCost", });
-    internal_static_PrescriptionListResponse_descriptor =
+    internal_static_prescriptionPackage_PrescriptionListResponse_descriptor =
       getDescriptor().getMessageTypes().get(3);
-    internal_static_PrescriptionListResponse_fieldAccessorTable = new
+    internal_static_prescriptionPackage_PrescriptionListResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_PrescriptionListResponse_descriptor,
+        internal_static_prescriptionPackage_PrescriptionListResponse_descriptor,
         new java.lang.String[] { "Prescriptions", });
-    internal_static_CreatePrescriptionRequest_descriptor =
+    internal_static_prescriptionPackage_CreatePrescriptionRequest_descriptor =
       getDescriptor().getMessageTypes().get(4);
-    internal_static_CreatePrescriptionRequest_fieldAccessorTable = new
+    internal_static_prescriptionPackage_CreatePrescriptionRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_CreatePrescriptionRequest_descriptor,
+        internal_static_prescriptionPackage_CreatePrescriptionRequest_descriptor,
         new java.lang.String[] { "MedicalRecordId", "Items", });
-    internal_static_CreatePrescriptionItemRequest_descriptor =
+    internal_static_prescriptionPackage_CreatePrescriptionItemRequest_descriptor =
       getDescriptor().getMessageTypes().get(5);
-    internal_static_CreatePrescriptionItemRequest_fieldAccessorTable = new
+    internal_static_prescriptionPackage_CreatePrescriptionItemRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_CreatePrescriptionItemRequest_descriptor,
+        internal_static_prescriptionPackage_CreatePrescriptionItemRequest_descriptor,
         new java.lang.String[] { "MedicineId", "Quantity", "DosageInstruction", });
-    internal_static_UpdatePrescriptionRequest_descriptor =
+    internal_static_prescriptionPackage_UpdatePrescriptionRequest_descriptor =
       getDescriptor().getMessageTypes().get(6);
-    internal_static_UpdatePrescriptionRequest_fieldAccessorTable = new
+    internal_static_prescriptionPackage_UpdatePrescriptionRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_UpdatePrescriptionRequest_descriptor,
+        internal_static_prescriptionPackage_UpdatePrescriptionRequest_descriptor,
         new java.lang.String[] { "PrescriptionId", "MedicalRecordId", "Items", });
-    internal_static_UpdatePrescriptionItemRequest_descriptor =
+    internal_static_prescriptionPackage_UpdatePrescriptionItemRequest_descriptor =
       getDescriptor().getMessageTypes().get(7);
-    internal_static_UpdatePrescriptionItemRequest_fieldAccessorTable = new
+    internal_static_prescriptionPackage_UpdatePrescriptionItemRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_UpdatePrescriptionItemRequest_descriptor,
+        internal_static_prescriptionPackage_UpdatePrescriptionItemRequest_descriptor,
         new java.lang.String[] { "PrescriptionItemId", "MedicineId", "Quantity", "DosageInstruction", });
     uni.hcmus.medicineservice.grpc.MedicineServiceProto.getDescriptor();
   }

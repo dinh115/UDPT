@@ -4,7 +4,7 @@
 package uni.hcmus.medicineservice.grpc;
 
 public interface UpdatePrescriptionRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:UpdatePrescriptionRequest)
+    // @@protoc_insertion_point(interface_extends:prescriptionPackage.UpdatePrescriptionRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -32,25 +32,25 @@ public interface UpdatePrescriptionRequestOrBuilder extends
       getMedicalRecordIdBytes();
 
   /**
-   * <code>repeated .UpdatePrescriptionItemRequest items = 3;</code>
+   * <code>repeated .prescriptionPackage.UpdatePrescriptionItemRequest items = 3;</code>
    */
   java.util.List<uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequest> 
       getItemsList();
   /**
-   * <code>repeated .UpdatePrescriptionItemRequest items = 3;</code>
+   * <code>repeated .prescriptionPackage.UpdatePrescriptionItemRequest items = 3;</code>
    */
   uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequest getItems(int index);
   /**
-   * <code>repeated .UpdatePrescriptionItemRequest items = 3;</code>
+   * <code>repeated .prescriptionPackage.UpdatePrescriptionItemRequest items = 3;</code>
    */
   int getItemsCount();
   /**
-   * <code>repeated .UpdatePrescriptionItemRequest items = 3;</code>
+   * <code>repeated .prescriptionPackage.UpdatePrescriptionItemRequest items = 3;</code>
    */
   java.util.List<? extends uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequestOrBuilder> 
       getItemsOrBuilderList();
   /**
-   * <code>repeated .UpdatePrescriptionItemRequest items = 3;</code>
+   * <code>repeated .prescriptionPackage.UpdatePrescriptionItemRequest items = 3;</code>
    */
   uni.hcmus.medicineservice.grpc.UpdatePrescriptionItemRequestOrBuilder getItemsOrBuilder(
       int index);

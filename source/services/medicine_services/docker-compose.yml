@@ -9,7 +9,7 @@ services:
       - "9090:9090"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/medicine
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://medicine-postgres:5432/medicine
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=123456
     depends_on:

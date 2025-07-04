@@ -16,8 +16,6 @@ services:
     ports:
       - "3004:3004"
 
-
-
   # Expose databases if needed for dev tools (Compass, Studio 3T, etc.)
   patient-mongo:
     ports:
@@ -39,3 +37,11 @@ services:
   redis:
     ports:
       - "6378:6379"
+
+  medicine-postgres:
+    ports:
+      - "5433:5432" 
+
+  medicine-services:
+    ports:
+      - "9090:9090"

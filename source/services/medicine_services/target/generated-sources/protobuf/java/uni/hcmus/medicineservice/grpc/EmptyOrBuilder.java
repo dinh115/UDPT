@@ -4,6 +4,6 @@
 package uni.hcmus.medicineservice.grpc;
 
 public interface EmptyOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:Empty)
+    // @@protoc_insertion_point(interface_extends:medicinePackage.Empty)
     com.google.protobuf.MessageOrBuilder {
 }

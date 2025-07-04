@@ -4,7 +4,7 @@
 package uni.hcmus.medicineservice.grpc;
 
 public interface UpdateMedicineRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:UpdateMedicineRequest)
+    // @@protoc_insertion_point(interface_extends:medicinePackage.UpdateMedicineRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**

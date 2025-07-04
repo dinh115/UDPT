@@ -4,7 +4,7 @@
 package uni.hcmus.medicineservice.grpc;
 
 public interface PrescriptionItemResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:PrescriptionItemResponse)
+    // @@protoc_insertion_point(interface_extends:prescriptionPackage.PrescriptionItemResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -20,17 +20,17 @@ public interface PrescriptionItemResponseOrBuilder extends
       getPrescriptionItemIdBytes();
 
   /**
-   * <code>.MedicineResponse medicine = 2;</code>
+   * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
    * @return Whether the medicine field is set.
    */
   boolean hasMedicine();
   /**
-   * <code>.MedicineResponse medicine = 2;</code>
+   * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
    * @return The medicine.
    */
   uni.hcmus.medicineservice.grpc.MedicineResponse getMedicine();
   /**
-   * <code>.MedicineResponse medicine = 2;</code>
+   * <code>.medicinePackage.MedicineResponse medicine = 2;</code>
    */
   uni.hcmus.medicineservice.grpc.MedicineResponseOrBuilder getMedicineOrBuilder();
 
