@@ -197,7 +197,7 @@ services:
       GRPC_PORT: 3001
       GRPC_HOST: 0.0.0.0
       NODE_ENV: production
-      MONGODB_URI: mongodb://admin:adminpassword@user-mongodb:27017/user-services?authSource=admin
+      MONGODB_URI: mongodb://admin:adminpassword@user-mongodb:27017/user-management?authSource=admin
       REDIS_URL: redis://redis:6379
       SERVICE_TOKEN: ${SERVICE_TOKEN:-service-secret-token-123}
     networks:

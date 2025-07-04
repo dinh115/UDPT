@@ -4,6 +4,7 @@ import { GrpcClientMap } from "../config/settings.js";
 import { readFile } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
+import { getGrpcMetadata } from "../middlewares/jwtTokenParser.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,7 +23,9 @@ export async function setupRoutes(app) {
     for (const [serviceName, methods] of Object.entries(services)) {
       const grpcClient = grpcServiceGroup[serviceName];
       if (!grpcClient) continue;
-      console.log(serviceName,methods);
+
+      console.log(serviceName, methods);
+
       for (const [grpcMethod, config] of Object.entries(methods)) {
         const httpMethod = (config.method || "GET").toLowerCase();
         const paramKeys = config.params || [];
@@ -35,6 +38,10 @@ export async function setupRoutes(app) {
         router[httpMethod](routePath, async (req, res) => {
           const request = {};
 
+          // Get gRPC metadata from the JWT token parser middleware
+          const metadata = getGrpcMetadata(req);
+
+          // Build request object based on HTTP method
           if (["post", "put"].includes(httpMethod)) {
             Object.assign(request, req.body);
           } else {
@@ -43,8 +50,25 @@ export async function setupRoutes(app) {
             }
           }
 
-          grpcClient[grpcMethod](request, (err, response) => {
-            if (err) return res.status(500).json({ error: err.message });
+          // Log the gRPC call with user context
+          console.log(`Making gRPC call: ${serviceName}.${grpcMethod}`, {
+            request,
+            user: req.user?.username || 'anonymous',
+            metadata: metadata.getMap()
+          });
+
+          // Make gRPC call with metadata
+          grpcClient[grpcMethod](request, metadata, (err, response) => {
+            if (err) {
+              console.error(`gRPC call failed for ${serviceName}.${grpcMethod}:`, err);
+              return res.status(500).json({
+                error: true,
+                code: 'GRPC_CALL_FAILED',
+                message: err.message
+              });
+            }
+
+            console.log(`gRPC call successful: ${serviceName}.${grpcMethod}`);
             res.json(response);
           });
         });

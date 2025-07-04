@@ -20,7 +20,6 @@ interface UserMetadata {
 }
 
 
-
 export function protoTimestampToDate(timestamp: { seconds: number | string; nanos: number }) {
     const millis = Number(timestamp.seconds) * 1000 + Math.floor(timestamp.nanos / 1e6);
     return new Date(millis);
