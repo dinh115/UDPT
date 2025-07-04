@@ -145,6 +145,7 @@ services:
     networks:
       - internal
     volumes:
+      - /app/node_modules
       - ./services/gateway:/app
       - ./services/patient_services/app/grpc:/app/shared_proto/patient
       - ./services/medicine_services/src/main/proto:/app/shared_proto/medicine

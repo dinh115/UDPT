@@ -155,3 +155,4 @@
 [2025-07-04T10:27:52.227Z] INFO: GET /api/prescription/GetAllPrescriptions
 [2025-07-04T10:28:05.342Z] INFO: GET /api/medicine/GetAllPrescriptions
 [2025-07-04T10:37:43.430Z] INFO: GET /api/prescription/GetAllPrescriptions
+[2025-07-04T13:06:39.408Z] INFO: GET /api/prescription/GetAllPrescriptions
