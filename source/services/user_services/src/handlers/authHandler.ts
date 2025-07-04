@@ -174,7 +174,10 @@ export class AuthServiceHandlers {
                 email: decoded.email,
                 username: decoded.username,
                 role: decoded.role,
-                status: decoded.status
+                status: decoded.status,
+                address: decoded.address,
+                phone: decoded.phone,
+                dateOfBirth: decoded.dateOfBirth ? new Date(decoded.dateOfBirth).toISOString() : undefined
             });
 
             callback(null, convertDateToTimestamps(response));
