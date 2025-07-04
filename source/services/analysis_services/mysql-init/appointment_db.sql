@@ -2,7 +2,7 @@
 -- version 4.9.5
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
+-- Host: mysql:3307
 -- Generation Time: Jul 04, 2025 at 10:21 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.4.1
@@ -26,7 +26,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AcceptAppointment` (IN `p_appointment_id` CHAR(36))  BEGIN
+CREATE DEFINER=`root`@`mysql` PROCEDURE `AcceptAppointment` (IN `p_appointment_id` CHAR(36))  BEGIN
     -- Declare variables to hold appointment details
     DECLARE v_doctor_id CHAR(36);
     DECLARE v_appointment_date DATE;

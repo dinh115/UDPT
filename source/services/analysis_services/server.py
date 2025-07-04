@@ -117,15 +117,15 @@ class AnalysisServiceServicer(analysis_pb2_grpc.AnalysisService):
 
 
 def serve():
-    connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
+    connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
     channel = connection.channel()
     channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type="direct", durable=True)
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     analysis_pb2_grpc.add_AnalysisServiceServicer_to_server(AnalysisServiceServicer(channel), server)
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port('[::]:3005')
     server.start()
-    print("gRPC server is running on port 50051...")
+    print("gRPC server is running on port 3005...")
     try:
         server.wait_for_termination()
     finally:

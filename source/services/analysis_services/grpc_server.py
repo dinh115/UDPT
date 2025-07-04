@@ -108,7 +108,7 @@ class AnalysisServiceServicer(analysis_pb2_grpc.AnalysisService):
         )
         return analysis_pb2.GenericResponse(message="AcceptAppointment command sent")
 def serve():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "localhost")))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "rabbitmq")))
     channel = connection.channel()
     # channel.exchange_declare(exchange="data_exchange", exchange_type="fanout", durable=True)
     # channel.exchange_declare(exchange="analysis_exchange", exchange_type="fanout", durable=True)
@@ -117,12 +117,12 @@ def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     analysis_pb2_grpc.add_AnalysisServiceServicer_to_server(AnalysisServiceServicer(channel), server)
     grpc_host = os.getenv("GRPC_HOST", "0.0.0.0")
-    grpc_port = os.getenv("GRPC_PORT", "50056")
+    grpc_port = os.getenv("GRPC_PORT", "3005")
     server.add_insecure_port(f"{grpc_host}:{grpc_port}")
     #server.add_insecure_port('[::]:50051')
     server.start()
     # print(f"gRPC server is running on port 50051...") 
-    print(f"RabbitMQ connection established on {os.getenv('RABBITMQ_HOST', 'localhost')}")
+    print(f"RabbitMQ connection established on {os.getenv('RABBITMQ_HOST', 'rabbitmq')}")
     print(f"gRPC server running on {grpc_host}:{grpc_port} with RabbitMQ direct exchange.")
     try:
         server.wait_for_termination()

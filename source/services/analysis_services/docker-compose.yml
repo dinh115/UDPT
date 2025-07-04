@@ -2,7 +2,7 @@ services:
   analysis_services:
     build: .
     ports:
-      - "50056:50056"
+      - "3005:3005"
     env_file:
       - ./.env
     container_name: analysis-services
@@ -22,7 +22,7 @@ services:
   mysql:
     image: mysql:8.0
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: appointment_db

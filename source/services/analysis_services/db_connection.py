@@ -5,7 +5,7 @@ def get_db_connection():
     """Establishes and returns a new MySQL database connection."""
     try:
         conn = mysql.connector.connect(
-            host="localhost",
+            host="mysql",
             user="root",
             password="root",
             database="appointment_db"
