@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { validate as uuidValidate } from 'uuid';
 
 export const tokenVerifySchema = Joi.object({
     token: Joi.string().required().messages({
@@ -34,7 +34,7 @@ export const availabilitySchema = Joi.object({
 export const validateUserIdSchema = Joi.object({
     userId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUIDv5(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -42,7 +42,7 @@ export const validateUserIdSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'User ID is required',
-            'any.invalid': 'User ID must be a valid UUID v4'
+            'any.invalid': 'User ID must be a valid UUID'
         }),
 }
 )
@@ -50,7 +50,7 @@ export const validateUserIdSchema = Joi.object({
 export const validateDoctorIdSchema = Joi.object({
     doctorId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUIDv5(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -58,7 +58,7 @@ export const validateDoctorIdSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'Doctor ID is required',
-            'any.invalid': 'Doctor ID must be a valid UUID v4'
+            'any.invalid': 'Doctor ID must be a valid UUID'
         }),
 }
 )
@@ -66,7 +66,7 @@ export const validateDoctorIdSchema = Joi.object({
 export const createDoctorProfileSchema = Joi.object({
     userId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUIDv5(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -74,7 +74,7 @@ export const createDoctorProfileSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'User ID is required',
-            'any.invalid': 'User ID must be a valid UUID v4'
+            'any.invalid': 'User ID must be a valid UUID'
         }),
 
     specialization: Joi.string().required().messages({
@@ -100,7 +100,7 @@ export const createDoctorProfileSchema = Joi.object({
 export const updateDoctorAvailabilitySchema = Joi.object({
     userId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUIDv5(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -108,7 +108,7 @@ export const updateDoctorAvailabilitySchema = Joi.object({
         .required()
         .messages({
             'any.required': 'User ID is required',
-            'any.invalid': 'User ID must be a valid UUID v4'
+            'any.invalid': 'User ID must be a valid UUID'
         }),
 
     availability: Joi.array().items(availabilitySchema).min(1).optional()
@@ -117,7 +117,7 @@ export const updateDoctorAvailabilitySchema = Joi.object({
 export const updateDoctorProfileSchema = Joi.object({
     userId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUIDv5(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -125,7 +125,7 @@ export const updateDoctorProfileSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'User ID is required',
-            'any.invalid': 'User ID must be a valid UUID v4'
+            'any.invalid': 'User ID must be a valid UUID'
         }),
     specialization: Joi.string().optional(),
 
@@ -172,12 +172,12 @@ export const doctorQuerySchema = Joi.object({
 export const batchDoctorProfileSchema = Joi.object({
     doctorIds: Joi.array()
         .items(Joi.string().custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUIDv5(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
         }).messages({
-            'any.invalid': 'Each user ID must be a valid UUID v4'
+            'any.invalid': 'Each user ID must be a valid UUID'
         }))
         .min(1)
         .max(100)
@@ -209,7 +209,7 @@ const validateDateNotInPast = (value: string, helpers: any) => {
 export const getAvailableTimeSlotsSchema = Joi.object({
     doctorId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUIDv5(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -217,7 +217,7 @@ export const getAvailableTimeSlotsSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'Doctor ID is required',
-            'any.invalid': 'Doctor ID must be a valid UUID v4'
+            'any.invalid': 'Doctor ID must be a valid UUID'
         }),
 
     date: Joi.string()
@@ -235,7 +235,7 @@ export const getAvailableTimeSlotsSchema = Joi.object({
 export const getDoctorTimeSlotsStatisticsSchema = Joi.object({
     doctorId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUIDv5(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -243,7 +243,7 @@ export const getDoctorTimeSlotsStatisticsSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'Doctor ID is required',
-            'any.invalid': 'Doctor ID must be a valid UUID v4'
+            'any.invalid': 'Doctor ID must be a valid UUID'
         }),
 
     date: Joi.string()
@@ -305,7 +305,7 @@ export const generateTimeSlotsSchema = Joi.object({
 export const updateBookingSchema = Joi.object({
     doctorId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUIDv5(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -313,7 +313,7 @@ export const updateBookingSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'Doctor ID is required',
-            'any.invalid': 'Doctor ID must be a valid UUID v4'
+            'any.invalid': 'Doctor ID must be a valid UUID'
         }),
 
     appointmentDate: Joi.string()
@@ -332,8 +332,8 @@ export const updateBookingSchema = Joi.object({
 });
 
 /**
- * Check if a string is a valid UUID v4
+ * Check if a string is a valid UUID
  */
-export const isValidUUIDv4 = (uuid: string): boolean => {
-    return uuidValidate(uuid) && uuidVersion(uuid) === 4;
+export const isValidUUIDv5 = (uuid: string): boolean => {
+    return uuidValidate(uuid);
 };
