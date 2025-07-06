@@ -31,11 +31,10 @@ COPY . .
 ENV PYTHONUNBUFFERED=1
 
 # Expose gRPC port
-EXPOSE 3005
+EXPOSE 50056
 
 # Copy supervisor config
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Start both processes using supervisor
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-# supervisord -c /etc/supervisor/conf.d/supervisord.conf
