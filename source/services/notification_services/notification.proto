@@ -5,6 +5,31 @@ package appointment;
 service AppointmentService {
   rpc SendReminder (AppointmentRequest) returns (AppointmentResponse);
   rpc SendPrescriptionReady (PrescriptionReadyRequest) returns (AppointmentResponse);
+  rpc AcceptAppointment(AcceptAppointmentRequest) returns (GenericResponse);
+  rpc AddUser(AddUserRequest) returns (GenericResponse);
+  rpc BookAppointment(AnalysisAppointmentRequest) returns (AnalysisAppointmentResponse);
+  rpc GetUpcomingConfirmedAppointments(Empty) returns (GetUpcomingConfirmedAppointmentsResponse);
+}
+
+message TimeSlot {
+  string startTime = 1;
+  string endTime = 2;
+}
+
+message AnalysisAppointmentRequest {
+  string appointmentId = 1;
+  string patient = 2;
+  string doctor = 3;
+  string appointmentDate = 4;
+  TimeSlot timeSlot = 5;
+  string status = 6;
+  string notes = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+}
+
+message AnalysisAppointmentResponse {
+  string message = 1;
 }
 
 message AppointmentRequest {
@@ -25,4 +50,35 @@ message PrescriptionReadyRequest {
 message AppointmentResponse {
   bool success = 1;
   string message = 2;
+}
+
+message AcceptAppointmentRequest {
+  string appointmentId = 1;
+}
+
+message AddUserRequest {
+  string userid = 1;
+  string email = 2;
+  string firstname = 3;
+  string lastname = 4;
+}
+
+message GenericResponse {
+  string message = 1;
+}
+
+message Empty {}
+
+message AppointmentInfo {
+  string patientName = 1;
+  string patientEmail = 2;
+  string date = 3;
+  string startTime = 4;
+  string endTime = 5;
+  string doctorName = 6;
+  int32 consultationFee = 7;
+}
+
+message GetUpcomingConfirmedAppointmentsResponse {
+  repeated AppointmentInfo appointments = 1;
 }
