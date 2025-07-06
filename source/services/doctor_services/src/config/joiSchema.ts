@@ -34,7 +34,7 @@ export const availabilitySchema = Joi.object({
 export const validateUserIdSchema = Joi.object({
     userId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv5(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -50,7 +50,7 @@ export const validateUserIdSchema = Joi.object({
 export const validateDoctorIdSchema = Joi.object({
     doctorId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv5(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -66,7 +66,7 @@ export const validateDoctorIdSchema = Joi.object({
 export const createDoctorProfileSchema = Joi.object({
     userId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv5(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -100,7 +100,7 @@ export const createDoctorProfileSchema = Joi.object({
 export const updateDoctorAvailabilitySchema = Joi.object({
     userId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv5(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -117,7 +117,7 @@ export const updateDoctorAvailabilitySchema = Joi.object({
 export const updateDoctorProfileSchema = Joi.object({
     userId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv5(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -172,7 +172,7 @@ export const doctorQuerySchema = Joi.object({
 export const batchDoctorProfileSchema = Joi.object({
     doctorIds: Joi.array()
         .items(Joi.string().custom((value, helpers) => {
-            if (!isValidUUIDv5(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -209,7 +209,7 @@ const validateDateNotInPast = (value: string, helpers: any) => {
 export const getAvailableTimeSlotsSchema = Joi.object({
     doctorId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv5(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -235,7 +235,7 @@ export const getAvailableTimeSlotsSchema = Joi.object({
 export const getDoctorTimeSlotsStatisticsSchema = Joi.object({
     doctorId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv5(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -305,7 +305,7 @@ export const generateTimeSlotsSchema = Joi.object({
 export const updateBookingSchema = Joi.object({
     doctorId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv5(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -334,6 +334,6 @@ export const updateBookingSchema = Joi.object({
 /**
  * Check if a string is a valid UUID
  */
-export const isValidUUIDv5 = (uuid: string): boolean => {
+export const isValidUUID = (uuid: string): boolean => {
     return uuidValidate(uuid);
 };

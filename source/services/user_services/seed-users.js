@@ -138,7 +138,7 @@ async function generateUser(num) {
 async function seedUsers() {
     try {
         // Connect to MongoDB
-        const mongoUri = process.env.MONGODB_URI || 'mongodb://admin:adminpassword@localhost:27017/user-management?authSource=admin';
+        const mongoUri = 'mongodb://admin:adminpassword@localhost:27017/user-management?authSource=admin';
         await mongoose.connect(mongoUri);
         console.log('Connected to MongoDB');
 

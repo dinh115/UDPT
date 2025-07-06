@@ -68,7 +68,7 @@ export const validateAppointmentIdSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'Appointment ID is required',
-            'any.invalid': 'Appointment ID must be a valid UUID v4'
+            'any.invalid': 'Appointment ID must be a valid UUID'
         }),
 });
 
@@ -84,7 +84,7 @@ export const bookAppointmentSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'Doctor ID is required',
-            'any.invalid': 'Doctor ID must be a valid UUID v4'
+            'any.invalid': 'Doctor ID must be a valid UUID'
         }),
     appointmentDate: Joi.string()
         .pattern(/^\d{4}-\d{2}-\d{2}$/)
@@ -111,7 +111,7 @@ export const bookAppointmentSchema = Joi.object({
         })
         .optional()
         .messages({
-            'any.invalid': 'Patient ID must be a valid UUID v4'
+            'any.invalid': 'Patient ID must be a valid UUID'
         }),
 });
 
@@ -127,7 +127,7 @@ export const updateAppointmentSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'Appointment ID is required',
-            'any.invalid': 'Appointment ID must be a valid UUID v4'
+            'any.invalid': 'Appointment ID must be a valid UUID'
         }),
     appointmentDate: Joi.string()
         .pattern(/^\d{4}-\d{2}-\d{2}$/)
@@ -156,7 +156,7 @@ export const acceptAppointmentSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'Appointment ID is required',
-            'any.invalid': 'Appointment ID must be a valid UUID v4'
+            'any.invalid': 'Appointment ID must be a valid UUID'
         })
 });
 
@@ -172,7 +172,7 @@ export const cancelAppointmentSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'Appointment ID is required',
-            'any.invalid': 'Appointment ID must be a valid UUID v4'
+            'any.invalid': 'Appointment ID must be a valid UUID'
         })
 });
 
@@ -205,7 +205,7 @@ export const userSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'User ID is required',
-            'any.invalid': 'User ID must be a valid UUID v4'
+            'any.invalid': 'User ID must be a valid UUID'
         }),
     name: Joi.string().min(1).max(100).required().messages({
         'any.required': 'Name is required',
@@ -237,7 +237,7 @@ export const doctorSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'Doctor ID is required',
-            'any.invalid': 'Doctor ID must be a valid UUID v4'
+            'any.invalid': 'Doctor ID must be a valid UUID'
         }),
     user: userSchema.required().messages({
         'any.required': 'User information is required'
@@ -256,7 +256,7 @@ export const authContextSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'User ID is required',
-            'any.invalid': 'User ID must be a valid UUID v4'
+            'any.invalid': 'User ID must be a valid UUID'
         }),
     role: Joi.string()
         .valid('PATIENT', 'DOCTOR', 'EMPLOYEE', 'ADMIN')
@@ -306,7 +306,7 @@ export const batchAppointmentSchema = Joi.object({
             }
             return value;
         }).messages({
-            'any.invalid': 'Each appointment ID must be a valid UUID v4'
+            'any.invalid': 'Each appointment ID must be a valid UUID'
         }))
         .min(1)
         .max(100)
@@ -321,7 +321,7 @@ export const batchAppointmentSchema = Joi.object({
 
 
 /**
- * Check if a string is a valid UUID v4
+ * Check if a string is a valid UUID
  */
 export const isValidUUIDv4 = (uuid: string): boolean => {
     return uuidValidate(uuid) && uuidVersion(uuid) === 4;
