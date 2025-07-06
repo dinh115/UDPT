@@ -1,3 +1,7 @@
+/***
+ * TO RUN THIS FILE: node seed-users.js
+ */
+
 const mongoose = require('mongoose');
 const { v5: uuidv5 } = require('uuid');
 const bcrypt = require('bcryptjs');
@@ -96,9 +100,9 @@ function randomElement(array) {
 // Determine role based on user number
 function getRoleByNumber(num) {
     if (num >= 1 && num <= 10) return 'admin';
-    if (num >= 11 && num <= 100) return 'doctor';
-    if (num >= 201 && num <= 300) return 'employee';
-    if (num >= 301 && num <= 1000) return 'patient';
+    if (num >= 11 && num <= 310) return 'doctor';
+    if (num >= 311 && num <= 510) return 'employee';
+    if (num >= 511 && num <= 1010) return 'patient';
     return 'patient'; // fallback
 }
 
@@ -153,17 +157,17 @@ async function seedUsers() {
         }
 
         // 11-100: doctor
-        for (let i = 11; i <= 100; i++) {
+        for (let i = 11; i <= 310; i++) {
             userNumbers.push(i);
         }
 
         // 201-300: employee
-        for (let i = 101; i <= 300; i++) {
+        for (let i = 311; i <= 510; i++) {
             userNumbers.push(i);
         }
 
         // 301-1000: patient
-        for (let i = 301; i <= 1000; i++) {
+        for (let i = 511; i <= 1010; i++) {
             userNumbers.push(i);
         }
 
