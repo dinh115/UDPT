@@ -1,4 +1,4 @@
-/***
+/**
  * TO RUN THIS FILE: node seed-users.js
  */
 
@@ -11,7 +11,7 @@ const UUID_NAMESPACE = '3f96061a-3a25-4f89-9ae9-abc012345678';
 
 // User roles and statuses from your types
 const roles = ['admin', 'doctor', 'employee', 'patient'];
-const statuses = ['active', 'inactive', 'suspended'];
+const statuses = ['active', 'inactive'];
 
 // User schema (simplified version of your model)
 const userSchema = new mongoose.Schema({
@@ -71,9 +71,11 @@ const addresses = [
     '15 Bạch Đằng, Hải Châu, Đà Nẵng'
 ];
 
+// Pre-hash password once (optimization)
+let hashedPassword;
+
 // Generate random Vietnamese phone number
 function generatePhone() {
-    // Format: +84xxxxxxxxx (Vietnamese mobile numbers)
     const prefixes = ['+8490', '+8491', '+8493', '+8496', '+8497', '+8498', '+8483', '+8484', '+8485', '+8481', '+8482'];
     const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
     const number = Math.floor(1000000 + Math.random() * 9000000);
@@ -88,7 +90,7 @@ function generateDateOfBirth() {
     const age = Math.floor(Math.random() * (maxAge - minAge + 1)) + minAge;
     const birthYear = now.getFullYear() - age;
     const birthMonth = Math.floor(Math.random() * 12);
-    const birthDay = Math.floor(Math.random() * 28) + 1; // Safe day range
+    const birthDay = Math.floor(Math.random() * 28) + 1;
     return new Date(birthYear, birthMonth, birthDay);
 }
 
@@ -106,8 +108,8 @@ function getRoleByNumber(num) {
     return 'patient'; // fallback
 }
 
-// Generate user data
-async function generateUser(num) {
+// Generate user data (optimized - no await for password hashing)
+function generateUser(num) {
     const firstName = randomElement(firstNames);
     const lastName = randomElement(lastNames);
     const username = `user_${num.toString()}`;
@@ -116,9 +118,6 @@ async function generateUser(num) {
     // Generate UUIDv5 based on username
     const userId = uuidv5(username, UUID_NAMESPACE);
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash('password', 12);
-
     return {
         _id: userId,
         email: `${username}@example.com`,
@@ -126,7 +125,7 @@ async function generateUser(num) {
         phone: generatePhone(),
         address: randomElement(addresses),
         dateOfBirth: generateDateOfBirth(),
-        password: hashedPassword,
+        password: hashedPassword, // Use pre-hashed password
         firstName: firstName,
         lastName: lastName,
         role: role,
@@ -136,50 +135,48 @@ async function generateUser(num) {
 
 // Main seeding function
 async function seedUsers() {
+    const startTime = Date.now();
+
     try {
-        // Connect to MongoDB
+        // Connect to MongoDB with optimized options
         const mongoUri = 'mongodb://admin:adminpassword@localhost:27017/user-management?authSource=admin';
-        await mongoose.connect(mongoUri);
+        await mongoose.connect(mongoUri, {
+            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
+        });
         console.log('Connected to MongoDB');
+
+        // Pre-hash password once (major optimization)
+        console.log('Hashing password...');
+        hashedPassword = await bcrypt.hash('password', 12);
+        console.log('Password hashed successfully');
 
         // Clear existing users
         await User.deleteMany({});
         console.log('Cleared existing users');
 
-        // Generate users in batches
-        const batchSize = 50;
-        const userNumbers = [];
-
-        // Add user numbers based on role distribution
-        // 1-10: admin
-        for (let i = 1; i <= 10; i++) {
-            userNumbers.push(i);
-        }
-
-        // 11-100: doctor
-        for (let i = 11; i <= 310; i++) {
-            userNumbers.push(i);
-        }
-
-        // 201-300: employee
-        for (let i = 311; i <= 510; i++) {
-            userNumbers.push(i);
-        }
-
-        // 301-1000: patient
-        for (let i = 511; i <= 1010; i++) {
-            userNumbers.push(i);
-        }
-
-        console.log(`Generating ${userNumbers.length} users...`);
+        // Increased batch size for better performance
+        const batchSize = 100;
+        const totalUsers = 1010;
+        console.log(`Generating ${totalUsers} users...`);
 
         // Process in batches
-        for (let i = 0; i < userNumbers.length; i += batchSize) {
-            const batch = userNumbers.slice(i, i + batchSize);
-            const users = await Promise.all(batch.map(generateUser));
+        for (let i = 0; i < totalUsers; i += batchSize) {
+            const batchStart = i + 1;
+            const batchEnd = Math.min(i + batchSize, totalUsers);
 
-            await User.insertMany(users);
-            console.log(`Inserted batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(userNumbers.length / batchSize)} (${users.length} users)`);
+            // Generate batch synchronously (no await needed)
+            const users = [];
+            for (let j = batchStart; j <= batchEnd; j++) {
+                users.push(generateUser(j));
+            }
+
+            // Insert batch with ordered: false for better performance
+            await User.insertMany(users, { ordered: false });
+
+            const progress = ((batchEnd / totalUsers) * 100).toFixed(1);
+            console.log(`Inserted batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(totalUsers / batchSize)} (${users.length} users) - ${progress}%`);
         }
 
         // Display statistics
@@ -195,49 +192,33 @@ async function seedUsers() {
             }
         ]);
 
+        const endTime = Date.now();
+        const duration = ((endTime - startTime) / 1000).toFixed(2);
+
         console.log('\n=== Seeding Complete ===');
+        console.log(`Total time: ${duration} seconds`);
         console.log('User distribution by role:');
         stats.forEach(stat => {
             console.log(`${stat._id}: ${stat.count} users`);
         });
 
-        const totalUsers = await User.countDocuments();
-        console.log(`\nTotal users created: ${totalUsers}`);
+        const totalUsersCreated = await User.countDocuments();
+        console.log(`\nTotal users created: ${totalUsersCreated}`);
 
         // Sample users for verification
         console.log('\n=== Sample Users ===');
-        const sampleAdmin = await User.findOne({ role: 'admin' });
-        const sampleDoctor = await User.findOne({ role: 'doctor' });
-        const sampleEmployee = await User.findOne({ role: 'employee' });
-        const samplePatient = await User.findOne({ role: 'patient' });
-
-        console.log('Sample Admin:', {
-            id: sampleAdmin._id,
-            username: sampleAdmin.username,
-            email: sampleAdmin.email,
-            role: sampleAdmin.role
-        });
-
-        console.log('Sample Doctor:', {
-            id: sampleDoctor._id,
-            username: sampleDoctor.username,
-            email: sampleDoctor.email,
-            role: sampleDoctor.role
-        });
-
-        console.log('Sample Employee:', {
-            id: sampleEmployee._id,
-            username: sampleEmployee.username,
-            email: sampleEmployee.email,
-            role: sampleEmployee.role
-        });
-
-        console.log('Sample Patient:', {
-            id: samplePatient._id,
-            username: samplePatient.username,
-            email: samplePatient.email,
-            role: samplePatient.role
-        });
+        const sampleUsers = await User.find({}).limit(1).lean();
+        if (sampleUsers.length > 0) {
+            const sample = sampleUsers[0];
+            console.log('Sample User:', {
+                id: sample._id,
+                username: sample.username,
+                email: sample.email,
+                role: sample.role,
+                firstName: sample.firstName,
+                lastName: sample.lastName
+            });
+        }
 
     } catch (error) {
         console.error('Error seeding users:', error);
