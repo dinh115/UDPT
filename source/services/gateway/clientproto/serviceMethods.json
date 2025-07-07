@@ -96,8 +96,8 @@
       "BookPrescription": { "method": "POST" },
       "UpdatePrescriptionStatus": { "method": "PUT", "params": ["prescriptionId", "newStatus"] },
       "MarkPrescriptionPaid": { "method": "PUT", "params": ["prescriptionId"] },
-      "GetPatientStatistics": { "method": "GET" },
-      "GetPrescriptionStatistics": { "method": "GET" },
+      "GetPatientStatistics": { "method": "POST" },
+      "GetPrescriptionStatistics": { "method": "POST" },
       "AcceptAppointment": { "method": "PUT", "params": ["appointmentId"] }
     }
   },
@@ -108,7 +108,11 @@
       },
       "SendPrescriptionReady": {
         "method": "POST"
-      }
+      },
+    "AcceptAppointment": { "method": "POST" },
+    "AddUser": { "method": "POST" },
+    "BookAppointment": { "method": "POST" },
+    "GetUpcomingConfirmedAppointments": {"method": "GET"}
     }
   }
 }

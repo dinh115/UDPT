@@ -1,0 +1,10 @@
+--root
+GRANT ALL PRIVILEGES ON logs.* TO 'admin'@'%';
+FLUSH PRIVILEGES;
+GRANT SUPER, SET_USER_ID ON *.* TO 'admin'@'%';
+FLUSH PRIVILEGES;
+GRANT ALL PRIVILEGES ON appointment_db.* TO 'admin'@'%';
+FLUSH PRIVILEGES;
+
+
+CREATE SCHEMA `abc` ;

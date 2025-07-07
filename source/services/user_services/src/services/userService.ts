@@ -132,15 +132,19 @@ export class UserService {
     try {
       // Generate default password if not provided somehow
       const password = userData.password || 'defaultPassword123';
+      const hashedPassword = await bcrypt.hash(password, 12);
 
       const user = new User({
         email: userData.email.toLowerCase(),
         username: userData.username,
-        password: password,
+        password: hashedPassword,
         firstName: userData.firstName.trim(),
         lastName: userData.lastName.trim(),
-        role: userData.role || 'customer',
-        status: userData.status || 'active'
+        role: userData.role || 'patient',
+        status: userData.status || 'active',
+        phone: userData.phone.trim() || '',
+        dateOfBirth: userData.dateOfBirth || '',
+        address: userData.address.trim() || ''
       });
 
       await user.save();

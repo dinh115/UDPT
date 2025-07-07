@@ -10,7 +10,7 @@ EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS", "pdai.congviec@gmail.com")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "ixouorzcsxgrsdeu")
 MYSQL_CONFIG = {
     "host": os.getenv("MYSQL_HOST", "mysql-notification"),
-    "port": int(os.getenv("MYSQL_PORT", 3308)),
+    "port": int(os.getenv("MYSQL_PORT", 3306)),
     "user": os.getenv("MYSQL_USER", "root"),
     "password": os.getenv("MYSQL_PASSWORD", "root"),
     "db": os.getenv("MYSQL_DATABASE", "logs"),
