@@ -56,7 +56,7 @@
                     <label for="specialization" class="form-label">Chuyên khoa</label>
                     <select class="form-control" id="specialization" required>
                         <option value="">Chọn chuyên khoa</option>
-                        <option value="Cardiology">Tim mạch</option>
+                        <option value="Tim mạch">Tim mạch</option>
                         <option value="Neurology">Thần kinh</option>
                         <option value="Orthopedics">Chỉnh hình</option>
                         <option value="Pediatrics">Nhi khoa</option>

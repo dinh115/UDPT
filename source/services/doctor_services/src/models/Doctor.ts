@@ -1,6 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
+import { v5 as uuidv5, v4 as uuidv4, validate as isUUID } from 'uuid';
 import { IDoctor, DayOfWeek } from '../types';
+
+const NAMESPACE = '3f96061a-3a25-4f89-9ae9-abc012345678';
 
 const timeSlotSchema = new Schema({
     _id: {
@@ -39,7 +41,9 @@ const availabilitySchema = new Schema({
 const doctorSchema = new Schema<IDoctor>({
     _id: {
         type: String,
-        default: () => uuidv4()
+        default: function () {
+            return uuidv5(this.userId, NAMESPACE);
+        },
     },
     userId: {
         type: String,
@@ -47,11 +51,10 @@ const doctorSchema = new Schema<IDoctor>({
         unique: true,
         validate: {
             validator: function (v: string) {
-                // UUID v4 validation regex
-                return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
+                return isUUID(v); // chấp nhận v1 → v5
             },
-            message: 'User ID must be a valid UUID v4'
-        }
+            message: 'User ID must be a valid UUID',
+        },
     },
     specialization: {
         type: String,

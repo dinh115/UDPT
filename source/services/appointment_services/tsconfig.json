@@ -24,7 +24,8 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "seed_appointments.js"
   ],
   "exclude": [
     "node_modules",

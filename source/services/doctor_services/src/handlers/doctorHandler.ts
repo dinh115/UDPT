@@ -4,7 +4,7 @@ import logger from '../config/logger';
 import { handleGrpcError } from './errorHandler';
 import {
     doctorQuerySchema,
-    isValidUUIDv4,
+    isValidUUID,
     validateDoctorIdSchema,
     createDoctorProfileSchema,
     updateDoctorProfileSchema,
@@ -238,7 +238,7 @@ export class UserServiceHandlers {
             // Check for authenticated user
             const { userId } = call.request;
 
-            if (!userId || !isValidUUIDv4(userId)) {
+            if (!userId || !isValidUUID(userId)) {
                 const response = UpdateDoctorProfileResponse.create({
                     success: false,
                     error: 'User Id is required when update user and must be in in UUIDv4 format.',
