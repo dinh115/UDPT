@@ -1,4 +1,8 @@
-<?php require_once(__DIR__ . '/../template/header.php'); ?>
+<?php
+$title = 'MedPortal - Trang chủ';
+$description = 'Hệ thống quản lý bệnh viện toàn diện, giúp bác sĩ và bệnh nhân kết nối hiệu quả.';
+require_once(__DIR__ . '/../template/header.php');
+?>
 
 <body>
     <!-- <div class="header">
@@ -11,8 +15,8 @@
     <section class="hero-section">
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">MedPortal - Trang chủ</h1>
-                <p class="hero-description">Hệ thống quản lý bệnh viện toàn diện, giúp bác sĩ và bệnh nhân kết nối hiệu quả.</p>
+                <h1 class="hero-title"><?php echo $title ?></h1>
+                <p class="hero-description"><?php echo $description ?></p>
             </div>
         </div>
     </section>

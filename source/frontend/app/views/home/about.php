@@ -1,4 +1,7 @@
-<?php require_once(__DIR__ . '/../template/header.php'); ?>
+<?php
+$title = 'MedPortal - Giới thiệu';
+$description = 'Đây là hệ thống quản lý bệnh viên được nhóm UPDT-03 thực hiện trong quá trình học môn Ứng dụng phân tán.';
+require_once(__DIR__ . '/../template/header.php'); ?>
 
 <body>
     <!-- <div class="header">
@@ -10,14 +13,14 @@
     <div class="hero-section">
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">About this Website</h1>
-                <p class="hero-subtitle">This is a PHP MVC application that demonstrates how to build a frontend that consumes API data.</p>
+                <h1 class="hero-title"><?php echo $title ?></h1>
+                <p class="hero-subtitle"><?php echo $description ?></p>
             </div>
 
 
             <div class="hero-content">
-                <h1 class="hero-title">API Demo Source:</h1>
-                <p class="hero-subtitle">This application uses <a href="https://jsonplaceholder.typicode.com" style="color: #ffffff">JSONPlaceholder</a> as a demo API service.</p>
+                <h1 class="hero-title">Đại học Khoa học Tự nhiên</h1>
+                <p class="hero-subtitle">Học kỳ 2, Năm học 2024 - 2025</p>
             </div>
         </div>
     </div>

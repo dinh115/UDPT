@@ -1,4 +1,7 @@
-<?php require_once(__DIR__ . '/../template/header.php'); ?>
+<?php
+$title = 'MedPortal - Bác sĩ';
+$description = 'Các chức năng liên quan đến bác sĩ.';
+require_once(__DIR__ . '/../template/header.php'); ?>
 
 
 <body>
@@ -9,8 +12,8 @@
     <section class="hero-section">
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">MedPortal - Bác sĩ</h1>
-                <p class="hero-subtitle">Các chức năng liên quan đến bác sĩ</p>
+                <h1 class="hero-title"><?php echo $title ?></h1>
+                <p class="hero-subtitle"><?php echo $description ?></p>
 
             </div>
         </div>
