@@ -1,6 +1,4 @@
-  <?php
-    session_start();
-    function isActive($route)
+  <?php function isActive($route)
     {
         $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         return rtrim($currentPath, '/') === rtrim($route, '/') ? 'active' : '';
@@ -61,7 +59,7 @@
                       </li>
                   <?php else: ?>
                       <li class="nav-item">
-                          <a class="nav-link <?= isActive('/auth/login') ?>" href="/login">
+                          <a class="nav-link <?= isActive('/auth/login') ?>" href="/auth/login">
                               <i class="fas fa-sign-in-alt me-1"></i>Đăng nhập
                           </a>
                       </li>

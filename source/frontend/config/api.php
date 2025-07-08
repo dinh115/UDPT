@@ -8,7 +8,8 @@ return [
     ],
     'endpoints' => [
         'login' => '/api/user/login',
-        'logout' => 'api/user/logout',
+        'register' => '/api/user/register',
+        'logout' => '/api/user/logout',
         'users' => '/api/users',
         'posts' => '/posts',
         'doctors' => '/doctors',
