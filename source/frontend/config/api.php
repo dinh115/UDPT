@@ -1,6 +1,6 @@
 <?php
 return [
-    'base_url' => getenv('API_BASE_URL') ?: 'http://localhost:3000',
+    'base_url' => getenv('API_BASE_URL') ?: 'http://gateway:3000',
     'timeout' => 30,
     'headers' => [
         'Content-Type' => 'application/json',

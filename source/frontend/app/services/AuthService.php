@@ -17,6 +17,7 @@ class AuthService extends ApiService
         'User with this username already exists' => 'Tên người dùng đã tồn tại',
         'email already exists' => 'Email đã được sử dụng',
         'password must be at least' => 'Mật khẩu quá ngắn',
+        'Password must be at least 6 characters long' => 'Mật khẩu phải có ít nhất 6 ký tự'
     ];
 
     protected function translateError(string $message): string

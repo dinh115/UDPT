@@ -44,11 +44,22 @@
               </ul>
               <ul class="navbar-nav">
                   <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['logged_in']): ?>
+                      <?php
+                        $role = $_SESSION['user_session']['user']['role'] ?? '';
+                        $roleLabels = [
+                            'admin' => ['label' => 'Quản trị viên', 'class' => 'bg-danger'],
+                            'doctor' => ['label' => 'Bác sĩ', 'class' => 'bg-primary'],
+                            'employee' => ['label' => 'Nhân viên', 'class' => 'bg-success'],
+                            'patient' => ['label' => 'Bệnh nhân', 'class' => 'bg-warning text-dark']
+                        ];
+                        $roleLabel = $roleLabels[$role] ?? ['label' => 'Không xác định', 'class' => 'bg-secondary'];
+                        ?>
                       <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                          <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <span class="badge <?= $roleLabel['class'] ?> me-2"><?= $roleLabel['label'] ?></span>
                               <i class="fas fa-user-circle me-1"></i><?= htmlspecialchars($_SESSION['user_session']['user']['username']) ?>
                           </a>
-                          <ul class="dropdown-menu">
+                          <ul class="dropdown-menu dropdown-menu-end mt-2" style="min-width: 100%;">
                               <li><a class="dropdown-item" href="/profile"><i class="fas fa-user me-2"></i>Hồ sơ của tôi</a></li>
                               <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog me-2"></i>Cài đặt</a></li>
                               <li>

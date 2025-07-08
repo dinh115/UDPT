@@ -173,6 +173,7 @@ services:
       - gateway
     environment:
       - API_BASE_URL=http://gateway:3000
+      - API_AJAX_URL=http://localhost:3000
     networks:
       - internal
   

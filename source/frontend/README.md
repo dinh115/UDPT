@@ -3,4 +3,4 @@
 php -S localhost:8000 -t public
 ```
 
-.env đổi thành API_BASE_URL=http://gateway:3000 khi bỏ vào docker compose
+Hoặc chạy docker compose rồi truy cập vào http://localhost:8080/
