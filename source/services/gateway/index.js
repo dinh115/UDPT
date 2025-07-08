@@ -7,11 +7,14 @@ import { caching } from './middlewares/caching.js';
 import { auth } from './middlewares/auth.js';
 import { logging } from './middlewares/logging.js';
 import { jwtTokenParser } from './middlewares/jwtTokenParser.js';
+import cors from 'cors';
 
 
 dotenv.config();
 const app = express();
 const PORT = process.env.GATEWAY_PORT;
+
+app.use(cors());
 
 //midleware configuration
 const midlleware = {

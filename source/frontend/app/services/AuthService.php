@@ -37,7 +37,7 @@ class AuthService extends ApiService
 
         $response = $this->httpClient->post($this->endpoints['login'], $loginData);
         $result = $this->handleResponse($response);
-        var_dump($result);
+        //var_dump($result);
         if ($result['success']) {
             // Store user data and token in session
             $_SESSION[$this->sessionKey] = [
@@ -76,7 +76,7 @@ class AuthService extends ApiService
         ];
         $response = $this->httpClient->post($this->endpoints['register'], $registerData);
         $result = $this->handleResponse($response);
-        var_dump(json_encode($result));
+        //var_dump(json_encode($result));
 
         if ($result['success']) {
             return [

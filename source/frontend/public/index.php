@@ -15,6 +15,7 @@ if (php_sapi_name() === 'cli-server') {
         $_GET['url'] = $path;
     }
 }
+// For Apache, the .htaccess RewriteRule already sets $_GET['url']
 
 require_once '../app/core/App.php';
 require_once '../app/core/Controller.php';

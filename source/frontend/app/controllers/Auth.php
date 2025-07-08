@@ -149,7 +149,7 @@ class Auth extends Controller
                     $address,
                     $phone
                 );
-                var_dump(json_encode($result));
+                //var_dump(json_encode($result));
                 if ($result['success']) {
                     $this->redirect('/auth/login?msg=registered');
                 } else {

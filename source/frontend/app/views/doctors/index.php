@@ -26,13 +26,21 @@ require_once(__DIR__ . '/../template/header.php'); ?>
             <!-- Quick Actions -->
             <div class="quick-actions">
 
-                <a href="/appointments/schedule" class="action-btn">
+                <a href="/doctors/create" class="action-btn">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     <span>Tạo hồ sơ bác sĩ</span>
                 </a>
-                <a href="/appointments/my" class="action-btn">
+                <a href="/doctors/view" class="action-btn">
+                    <i class="fa fa-table" aria-hidden="true"></i>
+                    <span>Xem hồ sơ bác sĩ</span>
+                </a>
+                <a href="/doctors/my" class="action-btn">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                     <span>Cập nhật hồ sơ bác sĩ</span>
+                </a>
+                <a href="/doctors/my" class="action-btn">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    <span>Xóa hồ sơ bác sĩ</span>
                 </a>
             </div>
         </div>
@@ -44,7 +52,7 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                 <i class="fas fa-user-md"></i>
             </div>
             <div>
-                <h3 class="card-title">Hồ Sơ Bác Sĩ (ADMIN ONLY)</h3>
+                <h3 class="card-title">Hồ Sơ Bác Sĩ</h3>
                 <p class="card-subtitle">Tạo hoặc cập nhật thông tin bác sĩ</p>
             </div>
         </div>
@@ -195,7 +203,7 @@ require_once(__DIR__ . '/../template/header.php'); ?>
             </div>
             <div class="col-md-4">
                 <select class="form-control" id="sortBy">
-                    <option value="name">Sắp xếp theo Tên</option>
+                    <option value="createdAt">Sắp xếp theo Ngày tạo</option>
                     <option value="experience">Sắp xếp theo Kinh nghiệm (năm)</option>
                     <option value="specialization">Sắp xếp theo Chuyên khoa</option>
                     <!-- <option value="createdAt">Sắp xếp theo Ngày tạo</option> -->
@@ -211,7 +219,6 @@ require_once(__DIR__ . '/../template/header.php'); ?>
 
         <div id="doctorsList">
             <!-- Doctors will be populated by JavaScript -->
-            <!-- Gọi thẳng API Gateway -->
         </div>
         <div id="paginationControls" class="d-flex justify-content-center mt-3 hidden">
             <button id="prevPage" class="btn btn-secondary me-2">Trang trước</button>
@@ -331,7 +338,7 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                 };
 
                 try {
-                    const response = await fetch('https://your-api-gateway/findDoctors', {
+                    const response = await fetch('http://localhost:3000/api/doctor/findDoctors', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -342,11 +349,13 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                     if (!response.ok) throw new Error('Lỗi khi gọi API');
 
                     const data = await response.json();
+                    if (data.error && !data.success) throw new Error(data.error);
+
                     const doctors = data.doctors || [];
-                    const totalCount = data.total || 0;
+                    const pagination = data.pagination || {};
 
                     renderDoctors(doctors);
-                    updatePagination(totalCount);
+                    updatePagination(pagination);
                     togglePagination(doctors.length > 0);
                 } catch (error) {
                     console.error('Error fetching doctors:', error);
@@ -374,25 +383,38 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                     return;
                 }
 
-                doctorsList.innerHTML = doctors.map(doctor => `
+                doctorsList.innerHTML = doctors.map(doctor => {
+                    const name = doctor.name || doctor.fullName || `Bác sĩ #${doctor.userId.slice(0, 8)}`; // fallback
+                    const specialization = doctor.specialization || 'Không rõ';
+                    const experience = doctor.experience ?? 'N/A';
+                    const qualifications = doctor.qualifications?.join(', ') || 'Chưa cập nhật';
+
+                    return `
             <div class="card mb-2">
                 <div class="card-body">
-                    <h5 class="card-title">${doctor.name}</h5>
+                    <h5 class="card-title text-primary">${name}</h5>
                     <p class="card-text">
-                        Chuyên khoa: ${doctor.specialization}<br>
-                        Kinh nghiệm: ${doctor.experience} năm
+                        Chuyên khoa: ${specialization}<br>
+                        Kinh nghiệm: ${experience} năm<br>
+                        Bằng cấp: ${qualifications}
                     </p>
                 </div>
             </div>
-        `).join('');
+        `;
+                }).join('');
             }
 
-            function updatePagination(total) {
-                const totalPages = Math.ceil(total / limit);
-                currentPageText.textContent = `Trang ${currentPage} / ${totalPages}`;
 
-                prevPageBtn.disabled = currentPage <= 1;
-                nextPageBtn.disabled = currentPage >= totalPages;
+            function updatePagination(pagination) {
+                if (!pagination) return;
+
+                const totalPages = pagination.totalPages || 1;
+                const currentPageNumber = pagination.currentPage || 1;
+
+                currentPageText.textContent = `Trang ${currentPageNumber} / ${totalPages}`;
+
+                prevPageBtn.disabled = currentPageNumber <= 1;
+                nextPageBtn.disabled = currentPageNumber >= totalPages;
             }
 
             fetchDoctors(); // Gọi API ban đầu

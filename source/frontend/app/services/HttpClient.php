@@ -47,7 +47,7 @@ class HttpClient
     public function post($endpoint, $data = [], $headers = [])
     {
         $url = $this->baseUrl . $endpoint;
-        var_dump($url);
+        //var_dump($url);
         return $this->makeRequest('POST', $url, $data, $headers);
     }
 
