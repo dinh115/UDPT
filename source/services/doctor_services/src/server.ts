@@ -123,7 +123,7 @@ function createGrpcServer(): grpc.Server {
 // =================== SERVER STARTUP ===================
 const startServers = async () => {
     try {
-        // Connect to database and Redis
+        // Connect to database
         await connectDatabase();
         // Start gRPC server
         const grpcServer = createGrpcServer();

@@ -256,7 +256,7 @@ export class UserServiceHandlers {
             if (!userId || !isValidUUID(userId)) {
                 const response = UpdateDoctorProfileResponse.create({
                     success: false,
-                    error: 'User Id is required when update user and must be in in UUIDv4 format.',
+                    error: 'User Id is required when update user and must be in UUID format.',
                 });
                 return callback(null, response);
             }
@@ -355,7 +355,7 @@ export class UserServiceHandlers {
             if (!success) {
                 const response = BatchDeleteDoctorsResponse.create({
                     success: success,
-                    error: 'User not found',
+                    error: 'Doctor not found',
                 });
                 return callback(null, response);
 
@@ -363,7 +363,7 @@ export class UserServiceHandlers {
 
             const response = BatchDeleteDoctorsResponse.create({
                 success: true,
-                message: 'User deleted successfully',
+                message: 'Doctor deleted successfully',
             });
 
             callback(null, convertDateToTimestamps(response));
@@ -439,7 +439,7 @@ export class UserServiceHandlers {
 
             callback(null, convertDateToTimestamps(response));
         } catch (error) {
-            logger.error('Update user handler error:', error);
+            logger.error('Update doctor handler error:', error);
             const err = handleGrpcError(error);
             callback(err, null);
         }

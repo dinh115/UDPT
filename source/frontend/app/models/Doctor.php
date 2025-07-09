@@ -80,8 +80,7 @@ class Doctor extends ApiService
     public function getDoctorById($id)
     {
         try {
-            $endpoint = $this->endpoints['doctors'] ?? '/doctors'; // fallback nếu chưa config
-
+            $endpoint = $this->endpoints['doctor_get_id'] ?? '/api/doctor/GetDoctorById'; // fallback nếu chưa config
             $response = $this->httpClient->get($endpoint . '/' . $id);
             return $this->handleResponse($response);
         } catch (Exception $e) {
@@ -91,4 +90,6 @@ class Doctor extends ApiService
             ];
         }
     }
+
+
 }

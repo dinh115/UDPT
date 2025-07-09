@@ -19,7 +19,7 @@ export const timeSlotSchema = Joi.object({
 
 export const availabilitySchema = Joi.object({
     day: Joi.string()
-        .valid('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
+        .valid('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY')
         .required()
         .messages({
             'any.only': 'Day must be a valid day of the week',
@@ -127,13 +127,14 @@ export const updateDoctorProfileSchema = Joi.object({
             'any.required': 'User ID is required',
             'any.invalid': 'User ID must be a valid UUID'
         }),
+
     specialization: Joi.string().optional(),
 
     experience: Joi.number().integer().min(0).optional(),
 
-    qualifications: Joi.array().items(Joi.string()).min(1).optional(),
+    qualifications: Joi.array().items(Joi.string()).optional(),
 
-    availability: Joi.array().items(availabilitySchema).min(1).optional()
+    availability: Joi.array().items(availabilitySchema).optional() // ← đã bỏ min(1)
 });
 
 
@@ -177,15 +178,15 @@ export const batchDoctorProfileSchema = Joi.object({
             }
             return value;
         }).messages({
-            'any.invalid': 'Each user ID must be a valid UUID'
+            'any.invalid': 'Each doctor ID must be a valid UUID'
         }))
         .min(1)
         .max(100)
         .required()
         .messages({
-            'array.min': 'At least one user ID is required',
-            'array.max': 'Cannot process more than 100 user IDs at once',
-            'any.required': 'User IDs array is required'
+            'array.min': 'At least one doctor ID is required',
+            'array.max': 'Cannot process more than 100 doctor IDs at once',
+            'any.required': 'Doctor IDs array is required'
         })
 });
 

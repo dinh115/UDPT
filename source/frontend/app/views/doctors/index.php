@@ -19,204 +19,183 @@ require_once(__DIR__ . '/../template/header.php'); ?>
         </div>
     </section>
 
-    <!-- Doctor Form -->
-    <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
-        <div class="dashboard-card slide-up" id="doctorForm">
-            <div class="card-header">
-                <div class="card-icon">
-                    <i class="fas fa-user-md"></i>
-                </div>
-                <div>
-                    <h3 class="card-title">Hồ Sơ Bác Sĩ</h3>
-                    <p class="card-subtitle">Tạo hoặc cập nhật thông tin bác sĩ</p>
-                </div>
+    <div class="container">
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+
+            <!-- Quick Actions -->
+            <div class="quick-actions mt-0">
+                <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
+
+                    <a href="#doctorForm" class="action-btn">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        <span>Tạo hồ sơ bác sĩ</span>
+                    </a>
+                <?php endif ?>
+
+                <a href="#doctorList" class="action-btn">
+                    <i class="fas fa-calendar-plus"></i>
+                    <span>Đặt lịch hẹn</span>
+                </a>
             </div>
-
-            <form id="doctorFormElement">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="userId" class="form-label">User ID</label>
-                        <input type="text" class="form-control" id="userId" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="specialization" class="form-label">Chuyên khoa</label>
-                        <select class="form-control" id="specialization" required>
-                            <option value="">Chọn chuyên khoa</option>
-                            <option value="Tim mạch">Tim mạch</option>
-                            <option value="Thần kinh">Thần kinh</option>
-                            <option value="Chỉnh hình">Chỉnh hình</option>
-                            <option value="Nhi khoa">Nhi khoa</option>
-                            <option value="Da liễu">Da liễu</option>
-                            <option value="Y học tổng quát">Y học tổng quát</option>
-                            <option value="Phẫu thuật">Phẫu thuật</option>
-                            <option value="Ung thư">Ung thư</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="experience" class="form-label">Kinh nghiệm (năm)</label>
-                        <input type="number" class="form-control" id="experience" min="0" max="50" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="qualifications" class="form-label">Bằng cấp</label>
-                        <input type="text" class="form-control" id="qualifications" placeholder="MBBS, MD, PhD...">
-                    </div>
-                </div>
-                <!-- Availability Section -->
-                <div class="mb-4">
-                    <label class="form-label">Thời gian hoạt động</label>
-                    <div id="availabilityContainer">
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Ngày</label>
-                                <input type="date" class="form-control" id="availabilityDate" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Thời gian bắt đầu</label>
-                                <input type="text" class="form-control" id="startTime" placeholder="e.g. 09:00" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Thời gian kết thúc</label>
-                                <input type="text" class="form-control" id="endTime" placeholder="e.g. 17:00" required>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="d-flex gap-2">
-                    <button type="submit" name="action" value="create" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>
-                        <span>Tạo hồ sơ</span>
-                    </button>
-                    <button type="submit" name="action" value="update" class="btn btn-secondary">
-                        <i class="fas fa-save me-2"></i>
-                        <span>Cập nhật hồ sơ</span>
-                    </button>
-                </div>
-            </form>
         </div>
-    <?php endif ?>
 
 
-    <!-- Doctor Form TEMP-->
-    <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'doctor'): ?>
-        <div class="dashboard-card slide-up" id="doctorAvailabilyForm">
-            <div class="card-header">
-                <div class="card-icon">
-                    <i class="fas fa-user-md"></i>
+        <!-- Doctor Form -->
+        <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
+            <div class="dashboard-card slide-up" id="doctorForm">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title">Hồ Sơ Bác Sĩ</h3>
+                        <p class="card-subtitle">Tạo thông tin hồ sơ bác sĩ</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="card-title">Hồ Sơ Bác Sĩ</h3>
-                    <p class="card-subtitle">Cập nhật thời gian hoạt động</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3" hidden="true">
-                <label for="userId" class="form-label">User ID</label>
-                <input type="text" class="form-control" id="userId" required>
-            </div>
-            <!-- Availability Section -->
-            <div class="mb-4">
-                <label class="form-label">Thời gian hoạt động</label>
-                <div id="availabilityContainer">
+
+                <form id="doctorFormElement">
                     <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Ngày</label>
-                            <input type="date" class="form-control" id="availabilityDate" required>
+                        <div class="col-md-6 mb-3">
+                            <label for="userId" class="form-label">User ID</label>
+                            <input type="text" class="form-control" id="userId" required>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Thời gian bắt đầu</label>
-                            <input type="text" class="form-control" id="startTime" placeholder="e.g. 09:00" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Thời gian kết thúc</label>
-                            <input type="text" class="form-control" id="endTime" placeholder="e.g. 17:00" required>
+                        <div class="col-md-6 mb-3">
+                            <label for="specialization" class="form-label">Chuyên khoa</label>
+                            <select class="form-control" id="specialization" required>
+                                <option value="">Chọn chuyên khoa</option>
+                                <option value="Tim mạch">Tim mạch</option>
+                                <option value="Thần kinh">Thần kinh</option>
+                                <option value="Chỉnh hình">Chỉnh hình</option>
+                                <option value="Nhi khoa">Nhi khoa</option>
+                                <option value="Da liễu">Da liễu</option>
+                                <option value="Y học tổng quát">Y học tổng quát</option>
+                                <option value="Phẫu thuật">Phẫu thuật</option>
+                                <option value="Ung thư">Ung thư</option>
+                            </select>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="experience" class="form-label">Kinh nghiệm (năm)</label>
+                            <input type="number" class="form-control" id="experience" min="0" max="50" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="qualifications" class="form-label">Bằng cấp</label>
+                            <input type="text" class="form-control" id="qualifications" placeholder="MBBS, MD, PhD...">
+                        </div>
+                    </div>
+                    <!-- Availability Section -->
+                    <div class="mb-4">
+                        <label class="form-label">Thời gian hoạt động</label>
+                        <div id="availabilityContainer">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Ngày</label>
+                                    <select class="form-select form-control" id="availabilityDate" required>
+                                        <option value="">-- Chọn ngày --</option>
+                                        <option value="Monday">Thứ Hai</option>
+                                        <option value="Tuesday">Thứ Ba</option>
+                                        <option value="Wednesday">Thứ Tư</option>
+                                        <option value="Thursday">Thứ Năm</option>
+                                        <option value="Friday">Thứ Sáu</option>
+                                        <option value="Saturday">Thứ Bảy</option>
+                                        <option value="Sunday">Chủ Nhật</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Thời gian bắt đầu</label>
+                                    <input type="text" class="form-control" id="startTime" placeholder="e.g. 09:00" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Thời gian kết thúc</label>
+                                    <input type="text" class="form-control" id="endTime" placeholder="e.g. 17:00" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" name="action" value="create" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>
+                            <span>Tạo hồ sơ</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        <?php endif ?>
+
+        <!-- Doctor List -->
+        <div class="dashboard-card slide-up mt-5">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div id="doctorList">
+                    <h3 class="card-title">Xem hồ sơ bác sĩ</h3>
+                    <p class="card-subtitle">Hỗ trợ tìm kiếm và sắp xếp</p>
                 </div>
             </div>
 
-            <div class="d-flex gap-2">
-                <button type="submit" name="action" value="create" class="btn btn-primary">
-                    <i class="fas fa-save me-2"></i>
-                    <span>Tạo hồ sơ</span>
-                </button>
-                <button type="submit" name="action" value="update" class="btn btn-secondary">
-                    <i class="fas fa-save me-2"></i>
-                    <span>Cập nhật hồ sơ</span>
-                </button>
+            <!-- Filter -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <select class="form-control" id="specializationFilter">
+                        <option value="">Tất cả chuyên khoa</option>
+                        <option value="Tim mạch">Tim mạch</option>
+                        <option value="Thần kinh">Thần kinh</option>
+                        <option value="Chỉnh hình">Chỉnh hình</option>
+                        <option value="Nhi khoa">Nhi khoa</option>
+                        <option value="Da liễu">Da liễu</option>
+                        <option value="Y học tổng quát">Y học tổng quát</option>
+                        <option value="Phẫu thuật">Phẫu thuật</option>
+                        <option value="Ung thư">Ung thư</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-control" id="sortBy">
+                        <option value="createdAt">Sắp xếp theo Ngày tạo</option>
+                        <option value="experience">Sắp xếp theo Kinh nghiệm (năm)</option>
+                        <option value="specialization">Sắp xếp theo Chuyên khoa</option>
+                        <!-- <option value="createdAt">Sắp xếp theo Ngày tạo</option> -->
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-control" id="sortOrder">
+                        <option value="asc">Tăng dần</option>
+                        <option value="desc">Giảm dần</option>
+                    </select>
+                </div>
             </div>
-            </form>
-        </div>
-    <?php endif ?>
 
-    <!-- Doctor List -->
-    <div class="dashboard-card slide-up">
-        <div class="card-header">
-            <div class="card-icon">
-                <i class="fas fa-users"></i>
+            <div id="doctorsList">
+                <!-- Doctors will be populated by JavaScript -->
             </div>
-            <div>
-                <h3 class="card-title">Xem hồ sơ bác sĩ</h3>
-                <p class="card-subtitle">Hỗ trợ tìm kiếm và sắp xếp</p>
+            <div id="paginationControls" class="d-flex justify-content-center mt-3 hidden">
+                <button id="prevPage" class="btn btn-primary me-2">Trang trước</button>
+                <span id="currentPage" class="align-self-center"></span>
+                <button id="nextPage" class="btn btn-primary ms-2">Trang sau</button>
             </div>
-        </div>
-
-        <!-- Filter -->
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <select class="form-control" id="specializationFilter">
-                    <option value="">Tất cả chuyên khoa</option>
-                    <option value="Tim mạch">Tim mạch</option>
-                    <option value="Thần kinh">Thần kinh</option>
-                    <option value="Chỉnh hình">Chỉnh hình</option>
-                    <option value="Nhi khoa">Nhi khoa</option>
-                    <option value="Da liễu">Da liễu</option>
-                    <option value="Y học tổng quát">Y học tổng quát</option>
-                    <option value="Phẫu thuật">Phẫu thuật</option>
-                    <option value="Ung thư">Ung thư</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <select class="form-control" id="sortBy">
-                    <option value="createdAt">Sắp xếp theo Ngày tạo</option>
-                    <option value="experience">Sắp xếp theo Kinh nghiệm (năm)</option>
-                    <option value="specialization">Sắp xếp theo Chuyên khoa</option>
-                    <!-- <option value="createdAt">Sắp xếp theo Ngày tạo</option> -->
-                </select>
-            </div>
-            <div class="col-md-4">
-                <select class="form-control" id="sortOrder">
-                    <option value="asc">Tăng dần</option>
-                    <option value="desc">Giảm dần</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="doctorsList">
-            <!-- Doctors will be populated by JavaScript -->
-        </div>
-        <div id="paginationControls" class="d-flex justify-content-center mt-3 hidden">
-            <button id="prevPage" class="btn btn-primary me-2">Trang trước</button>
-            <span id="currentPage" class="align-self-center"></span>
-            <button id="nextPage" class="btn btn-primary ms-2">Trang sau</button>
         </div>
     </div>
     </div>
+
+    <?php require_once(__DIR__ . '/../template/footer.php'); ?>
+    <?php require_once(__DIR__ . '/../template/scripts.php'); ?>
 
     <!-- JavaScript -->
-    <?php require_once(__DIR__ . '/../template/scripts.php'); ?>
     <script>
         <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
-            document.getElementById("doctorFormElement").addEventListener("submit", function(e) {
+            document.getElementById("doctorFormElement").addEventListener("submit", async function(e) {
                 e.preventDefault();
 
                 // Lấy nút được bấm
                 const clickedButton = document.activeElement;
                 const action = clickedButton.value; // "create" hoặc "update"
 
-                // Thu thập dữ liệu như bạn đã có
+                // Thu thập dữ liệu
                 const userId = document.getElementById("userId").value;
                 const specialization = document.getElementById("specialization").value;
                 const experience = parseInt(document.getElementById("experience").value);
@@ -243,26 +222,133 @@ require_once(__DIR__ . '/../template/header.php'); ?>
 
                 let url = '';
                 if (action === 'create') {
-                    url = '/doctors/create';
-                } else if (action === 'update') {
-                    url = '/doctors/update';
+                    url = '<?php echo getenv('API_AJAX_URL') ?>/api/doctor/createDoctorProfile';
+                } else {
+                    alert("Hành động không được hỗ trợ!");
+                    return;
                 }
 
-                fetch(url, {
+                document.getElementById("doctorFormElement").addEventListener("submit", async function(e) {
+                    e.preventDefault();
+
+                    const clickedButton = document.activeElement;
+                    const action = clickedButton.value;
+
+                    const userId = document.getElementById("userId").value;
+                    const specialization = document.getElementById("specialization").value;
+                    const experience = parseInt(document.getElementById("experience").value);
+                    const qualifications = document.getElementById("qualifications").value.split(',').map(q => q.trim());
+                    const date = document.getElementById("availabilityDate").value;
+                    const startTime = document.getElementById("startTime").value;
+                    const endTime = document.getElementById("endTime").value;
+
+                    const availability = [{
+                        day: date,
+                        slots: [{
+                            startTime,
+                            endTime
+                        }]
+                    }];
+
+                    const requestPayload = {
+                        userId,
+                        specialization,
+                        experience,
+                        qualifications,
+                        availability
+                    };
+
+                    let url = '';
+                    if (action === 'create') {
+                        url = '<?php echo getenv('API_AJAX_URL') ?>/api/doctor/createDoctorProfile';
+                    } else {
+                        alert("Hành động không được hỗ trợ!");
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer <?php echo $_SESSION['user_session']['token']; ?>'
+                            },
+                            body: JSON.stringify(requestPayload)
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            const createdDoctor = data.doctor || data.data;
+
+                            // Gọi API cập nhật role thành "doctor"
+                            const updateUserUrl = `<?php echo getenv('API_AJAX_URL') ?>/api/user/UpdateUser/${userId}`;
+                            const updateRoleResponse = await fetch(updateUserUrl, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer <?php echo $_SESSION['user_session']['token']; ?>'
+                                },
+                                body: JSON.stringify({
+                                    "role": "doctor"
+                                })
+                            });
+                            const updateResult = await updateRoleResponse.json();
+
+                            if (!updateRoleResponse.ok) {
+                                console.warn('Cập nhật vai trò thất bại:', updateResult.message || updateResult.error || updateResult._error);
+                                alert('Tạo bác sĩ thành công, nhưng cập nhật vai trò thất bại');
+                            } else {
+                                alert(`Tạo bác sĩ thành công! ID: ${createdDoctor.id}`);
+                            }
+
+                            //location.reload();
+                        } else {
+                            const errorMessage = data.message || data.error || data._error || 'Có lỗi xảy ra';
+                            alert(`Lỗi khi tạo bác sĩ: ${errorMessage}`);
+                        }
+                    } catch (error) {
+                        console.error('Error creating doctor:', error);
+                        alert('Có lỗi xảy ra khi tạo bác sĩ');
+                    }
+                });
+
+            });
+
+            // Add delete function
+            async function deleteDoctor(doctorId, doctorName) {
+                // Show confirmation dialog
+                if (!confirm(`Bạn có chắc chắn muốn xóa bác sĩ ${doctorName}?`)) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch("<?php echo getenv('API_AJAX_URL'); ?>/api/doctor/deleteDoctors", {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer <?php echo $_SESSION['user_session']['token']; ?>'
                         },
-                        body: JSON.stringify(requestPayload)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Server response:', data);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
+                        body: JSON.stringify({
+                            doctorIds: [doctorId]
+                        })
                     });
-            });
+
+                    if (response.ok) {
+                        //
+                        // Show success message
+                        alert('Xóa bác sĩ thành công!');
+                        // Reload the page or refresh the doctor list
+                        location.reload();
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Lỗi khi xóa bác sĩ: ${errorData.message || 'Có lỗi xảy ra'}`);
+                    }
+                } catch (error) {
+                    console.error('Error deleting doctor:', error);
+                    alert('Có lỗi xảy ra khi xóa bác sĩ');
+                }
+            }
         <?php endif ?>
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -355,17 +441,14 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                 }
             }
 
-
             async function renderDoctors(doctors) {
                 if (!doctors.length) {
                     doctorsList.innerHTML = '<p>Không có bác sĩ phù hợp.</p>';
                     return;
                 }
-
                 // Process each doctor and fetch user details
                 const doctorCards = await Promise.all(doctors.map(async (doctor) => {
                     let fullName = doctor.fullName;
-
                     // Fetch user service to get first name and last name if fullName is not available
                     if (!fullName && doctor.userId) {
                         try {
@@ -385,44 +468,40 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                             console.error('Error fetching user data:', error);
                         }
                     }
-
+                    //console.log(doctor.id);
                     // Fallback if still no name
                     const name = fullName || `#${doctor.userId.slice(0, 8)}`;
                     const specialization = doctor.specialization || 'Không rõ';
                     const experience = doctor.experience ?? 'N/A';
                     const qualifications = doctor.qualifications?.join(', ') || 'Chưa cập nhật';
-
                     // Add button that directs to show/doctorId (show details)
                     return `
-            <div class="card mb-2">
-                <div class="card-body">
-                    <h5 class="card-title text-primary">Bác sĩ: ${name}</h5>
-                    <p class="card-text">
-                        Chuyên khoa: ${specialization}<br>
-                        Kinh nghiệm: ${experience} năm<br>
-                        Bằng cấp: ${qualifications}
-                    </p>
-                    <a href="/doctors/show/${doctor.userId}" class="btn btn-primary btn-sm">
-                        Xem chi tiết
-                    </a>
-                     <a href="/doctors/schedule/${doctor.userId}" class="btn btn-success btn-sm">
-                        Đặt lịch hẹn
-                    </a>
-                    <?php if (isset($_SESSION['user_session']) && ($_SESSION['user_session']['role'] === 'admin' || $_SESSION['user_session']['role'] === 'employee')): ?>
-                     <a href="/doctors/update/${doctor.userId}" class="btn btn-secondary btn-sm ">
-                        Cập nhật hồ sơ
-                    </a>
-                    <?php endif ?>
-                    <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
-                    <a href="/doctors/delete/${doctor.userId}" class="btn btn-danger btn-sm">
-                        Xóa hồ sơ
-                    </a>
-                    <?php endif ?>
-                </div>
-            </div>
-        `;
+<div class="card mb-2">
+    <div class="card-body">
+        <h5 class="card-title text-primary">Bác sĩ: ${name}</h5>
+        <p class="card-text">
+            Chuyên khoa: ${specialization}<br>
+            Kinh nghiệm: ${experience} năm<br>
+            Bằng cấp: ${qualifications}
+        </p>
+        <a href="/doctors/show/${doctor.id}" class="btn btn-primary btn-sm">
+            Xem chi tiết
+        </a>
+         <a href="/doctors/schedule/${doctor.userId}" class="btn btn-success btn-sm">
+            Đặt lịch hẹn
+        </a>
+        <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
+                     <a href="/doctors/update/${doctor.id}" class="btn btn-secondary btn-sm ">
+            Cập nhật hồ sơ
+        </a>
+        <button onclick="deleteDoctor('${doctor.id}', '${name}')" class="btn btn-danger btn-sm">
+            Xóa hồ sơ
+        </button>
+        <?php endif ?>
+    </div>
+</div>
+`;
                 }));
-
                 doctorsList.innerHTML = doctorCards.join('');
             }
 
@@ -441,7 +520,6 @@ require_once(__DIR__ . '/../template/header.php'); ?>
             fetchDoctors(); // Gọi API ban đầu
         });
     </script>
-
 </body>
 
 </html>

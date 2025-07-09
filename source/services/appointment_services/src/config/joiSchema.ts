@@ -45,7 +45,7 @@ export const timeSlotSchema = Joi.object({
 
 export const availabilitySchema = Joi.object({
     day: Joi.string()
-        .valid('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
+        .valid('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY')
         .required()
         .messages({
             'any.only': 'Day must be a valid day of the week',

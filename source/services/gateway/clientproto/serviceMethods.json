@@ -54,7 +54,8 @@
         "method": "PUT"
       },
       "DeleteDoctors": {
-        "method": "DELETE"
+        "method": "POST",
+        "params": []
       }
     },
     "InternalService": {

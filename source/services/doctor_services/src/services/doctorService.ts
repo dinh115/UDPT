@@ -22,8 +22,7 @@ export class DoctorService {
         if (isNaN(date.getTime())) {
             throw new Error('Invalid date');
         }
-
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
         return days[date.getDay()] as DayOfWeek;
     }
 

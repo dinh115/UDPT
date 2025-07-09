@@ -35,7 +35,7 @@ const testDoctors = {
         qualifications: ['MBBS', 'MD Cardiology', 'Fellowship in Interventional Cardiology'],
         availability: [
             {
-                day: 'Monday',
+                day: 'MONDAY',
                 slots: [
                     { startTime: '09:00', endTime: '09:30', isBooked: false },
                     { startTime: '09:30', endTime: '10:00', isBooked: false },
@@ -44,7 +44,7 @@ const testDoctors = {
                 ]
             },
             {
-                day: 'Tuesday',
+                day: 'TUESDAY',
                 slots: [
                     { startTime: '09:00', endTime: '09:30', isBooked: false },
                     { startTime: '09:30', endTime: '10:00', isBooked: false }
@@ -59,7 +59,7 @@ const testDoctors = {
         qualifications: ['MBBS', 'MD Neurology', 'DM Neurology'],
         availability: [
             {
-                day: 'Wednesday',
+                day: 'WEDNESDAY',
                 slots: [
                     { startTime: '11:00', endTime: '11:30', isBooked: false },
                     { startTime: '11:30', endTime: '12:00', isBooked: false },
@@ -67,7 +67,7 @@ const testDoctors = {
                 ]
             },
             {
-                day: 'Friday',
+                day: 'FRIDAY',
                 slots: [
                     { startTime: '10:00', endTime: '10:30', isBooked: false },
                     { startTime: '10:30', endTime: '11:00', isBooked: true }
@@ -393,7 +393,7 @@ class DoctorGrpcTestClient {
                 qualifications: ['MBBS', 'MD Cardiology', 'Fellowship in Interventional Cardiology', 'FACC'],
                 availability: [
                     {
-                        day: 'Monday',
+                        day: 'MONDAY',
                         slots: [
                             { startTime: '09:00', endTime: '09:30', isBooked: false },
                             { startTime: '09:30', endTime: '10:00', isBooked: false },
@@ -426,7 +426,7 @@ class DoctorGrpcTestClient {
                 qualifications: ['MBBS', 'MD Cardiology', 'Fellowship in Interventional Cardiology', 'FACC'],
                 availability: [
                     {
-                        day: 'Monday',
+                        day: 'MONDAY',
                         slots: [
                             { startTime: '09:00', endTime: '09:30', isBooked: false },
                             { startTime: '09:30', endTime: '10:00', isBooked: false },
@@ -479,7 +479,7 @@ class DoctorGrpcTestClient {
         try {
             const newAvailability = [
                 {
-                    day: 'Monday',
+                    day: 'MONDAY',
                     slots: [
                         { startTime: '08:00', endTime: '08:30', isBooked: false },
                         { startTime: '08:30', endTime: '09:00', isBooked: false },
@@ -487,7 +487,7 @@ class DoctorGrpcTestClient {
                     ]
                 },
                 {
-                    day: 'Wednesday',
+                    day: 'WEDNESDAY',
                     slots: [
                         { startTime: '10:00', endTime: '10:30', isBooked: false },
                         { startTime: '10:30', endTime: '11:00', isBooked: false }
@@ -527,7 +527,7 @@ class DoctorGrpcTestClient {
                 experience: 3,
                 qualifications: ['MBBS'],
                 availability: [{
-                    day: 'Monday',
+                    day: 'MONDAY',
                     slots: [
                         { startTime: '08:00', endTime: '08:30', isBooked: false },
                         { startTime: '08:30', endTime: '09:00', isBooked: false },
@@ -712,7 +712,7 @@ class DoctorGrpcTestClient {
         try {
             const response = await getAvailableSlots({
                 doctorId: cardiologistId,
-                date: '2025-08-25' // Monday
+                date: '2025-08-25' // MONDAY
             }, createServiceMetadata()) as any;
 
             console.log(chalk.yellow('\n--- Available Slots Response ---\n'), JSON.stringify(response, null, 2));
@@ -731,7 +731,7 @@ class DoctorGrpcTestClient {
         try {
             const response = await getAvailableSlots({
                 doctorId: cardiologistId,
-                date: '2025-08-02' // Sunday (no availability)
+                date: '2025-08-02' // SUNDAY (no availability)
             }, createServiceMetadata()) as any;
 
             console.log(chalk.yellow('\n--- No Availability Response ---\n'), JSON.stringify(response, null, 2));
@@ -801,7 +801,7 @@ class DoctorGrpcTestClient {
         try {
             const response = await getSlotStats({
                 doctorId: cardiologistId,
-                date: '2025-08-25' // Monday
+                date: '2025-08-25' // MONDAY
             }, createServiceMetadata()) as any;
 
             console.log(chalk.yellow('\n--- Daily Stats Response ---\n'), JSON.stringify(response, null, 2));
@@ -850,7 +850,7 @@ class DoctorGrpcTestClient {
         try {
             const response = await bookSlot({
                 doctorId: cardiologistId,
-                appointmentDate: '2025-08-25', // Monday
+                appointmentDate: '2025-08-25', // MONDAY
                 timeSlot: {
                     startTime: '09:00',
                     endTime: '09:30'
