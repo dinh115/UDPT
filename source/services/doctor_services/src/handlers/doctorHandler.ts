@@ -4,7 +4,7 @@ import logger from '../config/logger';
 import { handleGrpcError } from './errorHandler';
 import {
     doctorQuerySchema,
-    isValidUUIDv4,
+    isValidUUID,
     validateDoctorIdSchema,
     createDoctorProfileSchema,
     updateDoctorProfileSchema,
@@ -39,8 +39,15 @@ export class UserServiceHandlers {
     ): Promise<void> {
         try {
             // Get user metadata
-            const user = getUserFromMetadata(call.metadata);
+            // const user = getUserFromMetadata(call.metadata);
             //console.log(chalk.green(JSON.stringify(user)));
+            // if (!user) {
+            //     const response = GetDoctorByIdResponse.create({
+            //         success: false,
+            //         error: 'Access denied',
+            //     });
+            //     return callback(null, response);
+            // }
 
             const { error, value } = validateDoctorIdSchema.validate(call.request);
             if (error) {
@@ -78,8 +85,15 @@ export class UserServiceHandlers {
     ): Promise<void> {
         try {
             // Get user metadata
-            const user = getUserFromMetadata(call.metadata);
+            //const user = getUserFromMetadata(call.metadata);
             //console.log(chalk.green(JSON.stringify(user)));
+            // if (!user) {
+            //     const response = GetDoctorByIdResponse.create({
+            //         success: false,
+            //         error: 'Access denied',
+            //     });
+            //     return callback(null, response);
+            // }
 
             const { error, value } = validateUserIdSchema.validate(call.request);
             if (error) {
@@ -117,16 +131,16 @@ export class UserServiceHandlers {
         callback: grpc.sendUnaryData<findDoctorsResponse>
     ): Promise<void> {
         try {
-            const user = getUserFromMetadata(call.metadata);
+            //const user = getUserFromMetadata(call.metadata);
             //console.log(chalk.green(JSON.stringify(user)));
 
-            if (!user) {
-                const response = findDoctorsResponse.create({
-                    success: false,
-                    error: 'Access denied',
-                });
-                return callback(null, response);
-            }
+            // if (!user) {
+            //     const response = findDoctorsResponse.create({
+            //         success: false,
+            //         error: 'Access denied',
+            //     });
+            //     return callback(null, response);
+            // }
 
             //console.log(call.request);
 
@@ -139,6 +153,7 @@ export class UserServiceHandlers {
                 return callback(null, response);
 
             }
+
             //console.log(value);
 
             let result = await doctorService.findDoctors(value);
@@ -238,7 +253,7 @@ export class UserServiceHandlers {
             // Check for authenticated user
             const { userId } = call.request;
 
-            if (!userId || !isValidUUIDv4(userId)) {
+            if (!userId || !isValidUUID(userId)) {
                 const response = UpdateDoctorProfileResponse.create({
                     success: false,
                     error: 'User Id is required when update user and must be in in UUIDv4 format.',

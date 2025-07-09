@@ -17,6 +17,15 @@ const skipTokenParsing = [
     '/api/user/VerifyToken'
 ];
 
+export const xServiceTokenParser = async (req, res, next) => {
+    const token = req.headers['x-service-token'];
+    // Đưa token vào metadata
+    req.metadata = req.metadata || {};
+    req.metadata.serviceToken = token;
+
+    next();
+};
+
 export const jwtTokenParser = async (req, res, next) => {
     try {
         console.log('Parsing JWT token...');
@@ -26,27 +35,44 @@ export const jwtTokenParser = async (req, res, next) => {
             return next();
         }
 
-        // Extract JWT token from Authorization header
+        // Tạo metadata object để lưu thông tin truyền đi các gRPC service
+        const metadata = new grpc.Metadata();
+
+        // =======================
+        // 1. Parse x-service-token
+        // =======================
+        const serviceToken = req.headers['x-service-token'];
+        if (serviceToken) {
+            metadata.add('x-service-token', serviceToken);
+            req.metadata = req.metadata || {};
+            req.metadata.serviceToken = serviceToken;
+            console.log('x-service-token parsed and added to metadata');
+        }
+
+        // =======================
+        // 2. Parse JWT token
+        // =======================
         let jwtToken = req.headers['authorization'];
         if (!jwtToken) {
-            return next(); // Continue without token data if no token provided
+            req.grpcMetadata = metadata; // vẫn truyền metadata (có thể chứa x-service-token)
+            return next();
         }
 
         jwtToken = jwtToken?.split(' ')[1]; // Extract token from "Bearer <token>"
         if (!jwtToken) {
-            return next(); // Continue without token data if invalid format
+            req.grpcMetadata = metadata;
+            return next();
         }
 
-        // Get the user service client
         const userServiceGroup = GrpcClientMap.get('USER');
         if (!userServiceGroup || !userServiceGroup.AuthService) {
             console.error('User AuthService not found');
+            req.grpcMetadata = metadata;
             return next();
         }
 
         const authService = userServiceGroup.AuthService;
 
-        // Call VerifyToken to get user data
         const verifyTokenPromise = new Promise((resolve, reject) => {
             authService.VerifyToken({ token: jwtToken }, (err, response) => {
                 if (err) {
@@ -60,67 +86,40 @@ export const jwtTokenParser = async (req, res, next) => {
         try {
             const tokenData = await verifyTokenPromise;
             if (!tokenData.success)
-                throw new Error('Token verification fail')
+                throw new Error('Token verification failed');
+
             console.log('Token verification successful:', tokenData);
-            // Create gRPC metadata with user information
-            const metadata = new grpc.Metadata();
 
-            // Add user information to metadata
-
-            if (tokenData.userId) {
-                metadata.add('userId', tokenData.userId.toString());
-            }
-            if (tokenData.username) {
-                metadata.add('username', tokenData.username);
-            }
-            if (tokenData.email) {
-                metadata.add('email', tokenData.email);
-            }
-            if (tokenData.role) {
-                metadata.add('role', tokenData.role);
-            }
-            if (tokenData.status) {
-                metadata.add('status', tokenData.status);
-            }
-            if (tokenData.address) {
-                metadata.add('address', tokenData.address);
-            }
-            if (tokenData.dateOfBirth) {
-                metadata.add('dateOfBirth', tokenData.dateOfBirth);
-            }
-            if (tokenData.phone) {
-                metadata.add('phone', tokenData.phone);
-            }
-            // Add the original JWT token to metadata
+            // Add user info to metadata
+            if (tokenData.userId) metadata.add('userId', tokenData.userId.toString());
+            if (tokenData.username) metadata.add('username', tokenData.username);
+            if (tokenData.email) metadata.add('email', tokenData.email);
+            if (tokenData.role) metadata.add('role', tokenData.role);
+            if (tokenData.status) metadata.add('status', tokenData.status);
+            if (tokenData.address) metadata.add('address', tokenData.address);
+            if (tokenData.dateOfBirth) metadata.add('dateOfBirth', tokenData.dateOfBirth);
+            if (tokenData.phone) metadata.add('phone', tokenData.phone);
             metadata.add('token', jwtToken);
 
-            // Store metadata in request object for use in route handlers
             req.grpcMetadata = metadata;
-
-            // Also store user data in request for easy access
             req.user = tokenData;
-
-            // Store user info in header for logging middleware compatibility
             req.headers['__user-info'] = JSON.stringify(tokenData);
 
             console.log('JWT token parsed and metadata created successfully');
-            next();
-
+            return next();
         } catch (error) {
             console.error('Token verification failed:', error);
-
-            // Don't block the request, just log the error and continue
-            // This allows the downstream services to handle authentication as needed
-            console.log('Continuing without token data due to verification failure');
-            next();
+            req.grpcMetadata = metadata;
+            return next();
         }
 
     } catch (error) {
         console.error('JWT token parsing failed:', error);
-        // Continue without token data rather than blocking the request
-        next();
+        req.grpcMetadata = new grpc.Metadata(); // fallback to empty metadata
+        return next();
     }
 };
+
 
 // Helper function to get gRPC metadata from request
 export const getGrpcMetadata = (req) => {

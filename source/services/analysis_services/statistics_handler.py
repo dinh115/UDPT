@@ -3,11 +3,16 @@ from mysql.connector import Error
 import os
 def get_patient_statistics(start_date, end_date, group_type):
   try:
+    db_host = os.getenv("MYSQL_HOST", "mysql-analysis")
+    db_user = os.getenv("MYSQL_USER", "root")
+    db_name = os.getenv("MYSQL_DATABASE", "appointment_db")
+    print(f"DEBUG: Connecting to DB host='{db_host}', user='{db_user}', database='{db_name}'")
     conn = mysql.connector.connect(
       host=os.getenv("MYSQL_HOST", "mysql-analysis"),
+      port=int(os.getenv("MYSQL_PORT", 3306)),
       user=os.getenv("MYSQL_USER", "root"),
       password=os.getenv("MYSQL_USER", "root"),
-      database=os.getenv("MYSQL_DATABASE", "appointment_db")
+      database=os.getenv("MYSQL_DATABASE", "appointment_db"),
     )
     cursor = conn.cursor()
     if group_type == 0: # BY_DATE
@@ -61,7 +66,7 @@ def get_prescription_statistics(start_date, end_date, group_type):
         FROM appointment_db.prescription
         WHERE is_deleted = FALSE
          AND status IN ('APPROVED', 'COMPLETED')
-         AND DATE(created_at) BETWEEN %s AND %s
+         AND DATE(created_at) BETWEEN "%s" AND "%s"
         GROUP BY DATE(created_at)
         ORDER BY DATE(created_at)
       """

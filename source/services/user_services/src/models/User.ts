@@ -1,12 +1,19 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { IUser, statuses, roles } from '../types';
-import { v4 as uuidv4 } from 'uuid';
+import { v5 as uuidv5 } from 'uuid';
+
+const UUID_NAMESPACE = '3f96061a-3a25-4f89-9ae9-abc012345678';
 
 const userSchema = new Schema<IUser>({
     _id: {
         type: String,
-        default: uuidv4,
-        required: true
+        default: function () {
+            if (!this.username) {
+                throw new Error('username is required for UUIDv5 generation');
+            }
+            return uuidv5(this.username, UUID_NAMESPACE);
+        },
+        required: true,
     },
     email: {
         type: String,
@@ -27,10 +34,11 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: true,
         trim: true,
+        // Example valid phone data: "+84901234567", "+12025550123", "84901234567"
         validate: {
-            validator: function(v: string) {
-                // Basic phone regex - adjust as needed for your requirements
-                return /^[\+]?[1-9][\d]{0,15}$/.test(v);
+            validator: function (v: string) {
+                // phone regex: allows +, country code, and 8-15 digits
+                return /^\+?[1-9]\d{7,14}$/.test(v);
             },
             message: 'Phone number is not valid'
         }
@@ -45,7 +53,7 @@ const userSchema = new Schema<IUser>({
         type: Date,
         required: true,
         validate: {
-            validator: function(v: Date) {
+            validator: function (v: Date) {
                 // No future dates allowed
                 return v <= new Date();
             },

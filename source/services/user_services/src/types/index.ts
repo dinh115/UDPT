@@ -61,9 +61,9 @@ export interface CreateUserRequest {
     password?: string;
     role?: Role;
     status?: Status;
-    phone?: string;
-    address?: string;
-    dateOfBirth?: Date;
+    phone: string;
+    address: string;
+    dateOfBirth: Date;
 }
 
 export interface UpdateUserRequest {
@@ -83,16 +83,6 @@ export interface ApiResponse<T = any> {
     data?: T;
     error?: string;
     message?: string;
-}
-
-export interface UserQueryOptions {
-    page?: number;
-    limit?: number;
-    status?: string;
-    role?: string;
-    search?: string;
-    sortBy?: string;
-    sortOrder?: 'asc' | 'desc';
 }
 
 export interface FindUsersOptions {

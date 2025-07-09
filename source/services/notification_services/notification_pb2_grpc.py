@@ -44,6 +44,26 @@ class AppointmentServiceStub(object):
                 request_serializer=notification__pb2.PrescriptionReadyRequest.SerializeToString,
                 response_deserializer=notification__pb2.AppointmentResponse.FromString,
                 _registered_method=True)
+        self.AcceptAppointment = channel.unary_unary(
+                '/appointment.AppointmentService/AcceptAppointment',
+                request_serializer=notification__pb2.AcceptAppointmentRequest.SerializeToString,
+                response_deserializer=notification__pb2.GenericResponse.FromString,
+                _registered_method=True)
+        self.AddUser = channel.unary_unary(
+                '/appointment.AppointmentService/AddUser',
+                request_serializer=notification__pb2.AddUserRequest.SerializeToString,
+                response_deserializer=notification__pb2.GenericResponse.FromString,
+                _registered_method=True)
+        self.BookAppointment = channel.unary_unary(
+                '/appointment.AppointmentService/BookAppointment',
+                request_serializer=notification__pb2.AnalysisAppointmentRequest.SerializeToString,
+                response_deserializer=notification__pb2.AnalysisAppointmentResponse.FromString,
+                _registered_method=True)
+        self.GetUpcomingConfirmedAppointments = channel.unary_unary(
+                '/appointment.AppointmentService/GetUpcomingConfirmedAppointments',
+                request_serializer=notification__pb2.Empty.SerializeToString,
+                response_deserializer=notification__pb2.GetUpcomingConfirmedAppointmentsResponse.FromString,
+                _registered_method=True)
 
 
 class AppointmentServiceServicer(object):
@@ -61,6 +81,30 @@ class AppointmentServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def AcceptAppointment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AddUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def BookAppointment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetUpcomingConfirmedAppointments(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AppointmentServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -73,6 +117,26 @@ def add_AppointmentServiceServicer_to_server(servicer, server):
                     servicer.SendPrescriptionReady,
                     request_deserializer=notification__pb2.PrescriptionReadyRequest.FromString,
                     response_serializer=notification__pb2.AppointmentResponse.SerializeToString,
+            ),
+            'AcceptAppointment': grpc.unary_unary_rpc_method_handler(
+                    servicer.AcceptAppointment,
+                    request_deserializer=notification__pb2.AcceptAppointmentRequest.FromString,
+                    response_serializer=notification__pb2.GenericResponse.SerializeToString,
+            ),
+            'AddUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddUser,
+                    request_deserializer=notification__pb2.AddUserRequest.FromString,
+                    response_serializer=notification__pb2.GenericResponse.SerializeToString,
+            ),
+            'BookAppointment': grpc.unary_unary_rpc_method_handler(
+                    servicer.BookAppointment,
+                    request_deserializer=notification__pb2.AnalysisAppointmentRequest.FromString,
+                    response_serializer=notification__pb2.AnalysisAppointmentResponse.SerializeToString,
+            ),
+            'GetUpcomingConfirmedAppointments': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUpcomingConfirmedAppointments,
+                    request_deserializer=notification__pb2.Empty.FromString,
+                    response_serializer=notification__pb2.GetUpcomingConfirmedAppointmentsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -129,6 +193,114 @@ class AppointmentService(object):
             '/appointment.AppointmentService/SendPrescriptionReady',
             notification__pb2.PrescriptionReadyRequest.SerializeToString,
             notification__pb2.AppointmentResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AcceptAppointment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/appointment.AppointmentService/AcceptAppointment',
+            notification__pb2.AcceptAppointmentRequest.SerializeToString,
+            notification__pb2.GenericResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AddUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/appointment.AppointmentService/AddUser',
+            notification__pb2.AddUserRequest.SerializeToString,
+            notification__pb2.GenericResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BookAppointment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/appointment.AppointmentService/BookAppointment',
+            notification__pb2.AnalysisAppointmentRequest.SerializeToString,
+            notification__pb2.AnalysisAppointmentResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetUpcomingConfirmedAppointments(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/appointment.AppointmentService/GetUpcomingConfirmedAppointments',
+            notification__pb2.Empty.SerializeToString,
+            notification__pb2.GetUpcomingConfirmedAppointmentsResponse.FromString,
             options,
             channel_credentials,
             insecure,

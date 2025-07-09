@@ -1,0 +1,136 @@
+/* Statistics Page Styles */
+.statistics-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.filter-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.filter-card .card-header {
+    background: #fff;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 600;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 20px;
+}
+
+.chart-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.chart-card .card-header {
+    background: #fff;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 600;
+    color: #495057;
+}
+
+.chart-card .card-body {
+    padding: 20px;
+}
+
+#patientChart, #prescriptionChart {
+    max-height: 300px;
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+}
+
+.loading-spinner .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Filter form styles */
+.filter-form .form-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.filter-form .form-control,
+.filter-form .form-select {
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+}
+
+.filter-form .form-control:focus,
+.filter-form .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.filter-form .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 8px 16px;
+    font-weight: 500;
+}
+
+.filter-form .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .statistics-container {
+        padding: 10px;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+    
+    .filter-form .row > div {
+        margin-bottom: 15px;
+    }
+}
+
+/* Chart specific styles */
+.chart-wrapper {
+    position: relative;
+    height: 300px;
+}
+
+.chart-no-data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Success/Error messages */
+.alert {
+    margin-bottom: 20px;
+    border-radius: 6px;
+}
+
+.alert-success {
+    background-color: #d1edff;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}

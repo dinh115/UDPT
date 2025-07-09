@@ -1,12 +1,12 @@
 import Joi from 'joi';
-import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { validate as uuidValidate } from 'uuid';
 
 // =================== VALIDATION SCHEMAS ===================
 
 export const validateUserIdSchema = Joi.object({
     id: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -14,7 +14,7 @@ export const validateUserIdSchema = Joi.object({
         .required()
         .messages({
             'any.required': 'User ID is required',
-            'any.invalid': 'User ID must be a valid UUID v4'
+            'any.invalid': 'User ID must be a valid UUID'
         }),
 }
 )
@@ -250,12 +250,12 @@ export const userQuerySchema = Joi.object({
 export const batchUsersSchema = Joi.object({
     userIds: Joi.array()
         .items(Joi.string().custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
         }).messages({
-            'any.invalid': 'Each user ID must be a valid UUID v4'
+            'any.invalid': 'Each user ID must be a valid UUID'
         }))
         .min(1)
         .max(100)
@@ -268,8 +268,8 @@ export const batchUsersSchema = Joi.object({
 });
 
 /**
- * Check if a string is a valid UUID v4
+ * Check if a string is a valid UUID
  */
-export const isValidUUIDv4 = (uuid: string): boolean => {
-    return uuidValidate(uuid) && uuidVersion(uuid) === 4;
+export const isValidUUID = (uuid: string): boolean => {
+    return uuidValidate(uuid);
 };

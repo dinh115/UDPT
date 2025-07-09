@@ -12,6 +12,11 @@
                 <div class="alert success-message">
                     <i class="fas fa-check-circle"></i> Đăng xuất thành công.
                 </div>
+
+            <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'registered'): ?>
+                <div class="alert success-message">
+                    <i class="fas fa-check-circle"></i> Đăng ký thành công.
+                </div>
             <?php endif; ?>
 
             <?php if (isset($error) && $error): ?>
@@ -102,7 +107,6 @@
             }
         }, 3000);
     </script>
-
 </body>
 
 </html>

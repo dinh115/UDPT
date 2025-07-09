@@ -1,0 +1,6 @@
+docker exec -it doctor-service-mongodb mongosh
+
+docker exec -it doctor-service-mongodb mongosh -u admin -p adminpassword --authenticationDatabase admin
+
+source gateway               shell
+npm start
