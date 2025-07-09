@@ -31,6 +31,7 @@ message MedicineResponse {
   int32 stock_quantity = 6;
   string created_at = 7;
   string updated_at = 8;
+  bool is_deleted = 9;
 }
 
 message MedicineListResponse {

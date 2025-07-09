@@ -35,8 +35,7 @@ public class MedicineServiceImpl implements MedicineService {
         log.info("MedicineServiceImpl | getAllMedicines | Getting all medicines");
         try {
             List<Medicine> medicineList = medicineRepository.findAll()
-                                    .stream()
-                                    .filter(medicine -> !medicine.getIsDeleted())
+                                    .stream()   
                                     .collect(Collectors.toList());
             return medicineList.stream()
                     .map(medicineMapper::toResponse)

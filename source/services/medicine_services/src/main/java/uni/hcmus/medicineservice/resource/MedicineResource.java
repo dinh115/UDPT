@@ -33,6 +33,7 @@ public class MedicineResource extends MedicineServiceGrpc.MedicineServiceImplBas
                     .setStockQuantity(m.getStockQuantity())
                     .setCreatedAt(m.getCreatedAt() != null ? m.getCreatedAt().toString() : "")
                     .setUpdatedAt(m.getUpdatedAt() != null ? m.getUpdatedAt().toString() : "")
+                    .setIsDeleted(m.getIsDeleted() != null ? m.getIsDeleted() : true)
                     .build()
             );
         }

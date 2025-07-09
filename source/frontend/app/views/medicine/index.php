@@ -68,6 +68,7 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                         <option value="available">Còn hàng</option>
                         <option value="low">Sắp hết (< 100)</option>
                         <option value="out">Hết hàng</option>
+                        <option value="deleted">Đã xóa</option>
                     </select>
                 </div>
             </div>
@@ -161,13 +162,16 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                 if (stockStatus) {
                     switch (stockStatus) {
                         case 'available':
-                            filteredMedicines = filteredMedicines.filter(medicine => medicine.stock_quantity > 0);
+                            filteredMedicines = filteredMedicines.filter(medicine => medicine.stock_quantity > 0 && !medicine.is_deleted);
                             break;
                         case 'low':
-                            filteredMedicines = filteredMedicines.filter(medicine => medicine.stock_quantity > 0 && medicine.stock_quantity < 100);
+                            filteredMedicines = filteredMedicines.filter(medicine => medicine.stock_quantity > 0 && medicine.stock_quantity < 100 && !medicine.is_deleted);
                             break;
                         case 'out':
-                            filteredMedicines = filteredMedicines.filter(medicine => medicine.stock_quantity === 0);
+                            filteredMedicines = filteredMedicines.filter(medicine => medicine.stock_quantity === 0 && !medicine.is_deleted);
+                            break;
+                        case 'deleted':
+                            filteredMedicines = filteredMedicines.filter(medicine => medicine.is_deleted);
                             break;
                     }
                 }
@@ -200,8 +204,15 @@ require_once(__DIR__ . '/../template/header.php'); ?>
 
                 const medicineCards = medicineList.map(medicine => {
                     const stockStatus = getStockStatus(medicine.stock_quantity);
+                    const isDeleted = medicine.is_deleted || false;
+                    const deletedStatus = isDeleted ? 'Đã xóa' : 'Hoạt động';
+                    const deletedClass = isDeleted ? 'bg-secondary' : 'bg-success';
+                    
+                    // Chỉ hiển thị "sắp hết hàng" nếu không phải hết hàng và không bị xóa
+                    const showLowStockAlert = medicine.stock_quantity < 100 && medicine.stock_quantity > 0 && !isDeleted;
+                    
                     return `
-                        <div class="medicine-card-item mb-3">
+                        <div class="medicine-card-item mb-3 ${isDeleted ? 'deleted-medicine' : ''}">
                             <div class="card medicine-item-card">
                                 <div class="card-body">
                                     <div class="row">
@@ -209,6 +220,7 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                                             <h4 class="medicine-title mb-2">
                                                 ${medicine.name}
                                                 <span class="badge ${stockStatus.class} ms-2">${stockStatus.text}</span>
+                                                <span class="badge ${deletedClass} ms-2">${deletedStatus}</span>
                                             </h4>
                                             <div class="row">
                                                 <div class="col-6">
@@ -227,13 +239,19 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                                             <button onclick="viewMedicineDetails('${medicine.medicine_id}')" class="btn btn-info btn-sm mb-2 me-1">
                                                 <i class="fas fa-eye"></i> Chi tiết
                                             </button>
-                                            <button onclick="editMedicine('${medicine.medicine_id}')" class="btn btn-warning btn-sm mb-2 me-1">
-                                                <i class="fas fa-edit"></i> Sửa
-                                            </button>
-                                            <button onclick="deleteMedicine('${medicine.medicine_id}', '${medicine.name}')" class="btn btn-danger btn-sm mb-2">
-                                                <i class="fas fa-trash"></i> Xóa
-                                            </button>
-                                            ${medicine.stock_quantity < 100 ? 
+                                            ${!isDeleted ? `
+                                                <button onclick="editMedicine('${medicine.medicine_id}')" class="btn btn-warning btn-sm mb-2 me-1">
+                                                    <i class="fas fa-edit"></i> Sửa
+                                                </button>
+                                                <button onclick="deleteMedicine('${medicine.medicine_id}', '${medicine.name}')" class="btn btn-danger btn-sm mb-2">
+                                                    <i class="fas fa-trash"></i> Xóa
+                                                </button>
+                                            ` : `
+                                                <button onclick="restoreMedicine('${medicine.medicine_id}', '${medicine.name}')" class="btn btn-success btn-sm mb-2">
+                                                    <i class="fas fa-undo"></i> Khôi phục
+                                                </button>
+                                            `}
+                                            ${showLowStockAlert ? 
                                                 `<div class="alert alert-warning alert-sm mt-2">
                                                     <i class="fas fa-exclamation-triangle"></i> Sắp hết hàng
                                                 </div>` : ''
@@ -667,12 +685,39 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                 document.body.style.paddingRight = '';
             }
 
+            // Thêm function khôi phục thuốc
+            async function restoreMedicine(medicineId, medicineName) {
+                if (!confirm(`Bạn có chắc chắn muốn khôi phục thuốc "${medicineName}"?`)) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`http://localhost:3000/api/medicine/RestoreMedicine/${medicineId}`, {
+                        method: 'PUT' // Theo API structure
+                    });
+
+                    if (response.ok) {
+                        alert('Khôi phục thuốc thành công!');
+                        removeExistingModals();
+                        fetchMedicines();
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Error response:', response.status, errorText);
+                        alert(`Có lỗi xảy ra khi khôi phục thuốc: ${response.status} - ${errorText}`);
+                    }
+                } catch (error) {
+                    console.error('Error restoring medicine:', error);
+                    alert('Có lỗi xảy ra khi khôi phục thuốc: ' + error.message);
+                }
+            }
+
             // Make functions global
             window.openCreateModal = openCreateModal;
             window.viewMedicineDetails = viewMedicineDetails;
             window.editMedicine = editMedicine;
             window.deleteMedicine = deleteMedicine;
             window.saveMedicine = saveMedicine;
+            window.restoreMedicine = restoreMedicine;
 
             // Initialize
             fetchMedicines();
@@ -844,6 +889,26 @@ require_once(__DIR__ . '/../template/header.php'); ?>
 
         .action-btn i {
             margin-right: 0.5rem;
+        }
+
+        /* Deleted Medicine Styles */
+        .deleted-medicine {
+            opacity: 0.7;
+            background-color: #f8f9fa;
+        }
+
+        .deleted-medicine .medicine-item-card {
+            border: 2px dashed #6c757d;
+            background-color: #f8f9fa;
+        }
+
+        .deleted-medicine .medicine-title {
+            color: #6c757d;
+            text-decoration: line-through;
+        }
+
+        .deleted-medicine .medicine-info {
+            color: #6c757d;
         }
     </style>
 </body>
