@@ -84,6 +84,7 @@ public class MedicineResource extends MedicineServiceGrpc.MedicineServiceImplBas
     @Override
     public void updateMedicine(uni.hcmus.medicineservice.grpc.UpdateMedicineRequest request, StreamObserver<uni.hcmus.medicineservice.grpc.MedicineResponse> responseObserver) {
         UpdateMedicineRequest updateRequest = new UpdateMedicineRequest(
+            request.getMedicineId(),
             request.getName(),
             request.getUnit(),
             request.getSupplier(),
