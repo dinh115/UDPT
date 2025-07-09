@@ -64,9 +64,9 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                 </div>
                 <div class="col-md-3">
                     <select class="form-control" id="stockFilter">
-                        <option value="">Tất cả trạng thái</option>
-                        <option value="available">Còn hàng</option>
-                        <option value="low">Sắp hết (< 100)</option>
+                        <option value="available">Hoạt động</option>
+                        <option value="in_stock">Còn hàng (≥100)</option>
+                        <option value="low">Sắp hết (&lt;100)</option>
                         <option value="out">Hết hàng</option>
                         <option value="deleted">Đã xóa</option>
                     </select>
@@ -114,6 +114,9 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                     if (data && data.medicines && Array.isArray(data.medicines)) {
                         medicines = data.medicines;
                         populateSupplierFilter();
+                        
+                        // Set default filter to "available"
+                        stockFilter.value = 'available';
                         filterAndDisplayMedicines();
                     } else {
                         console.error('Invalid response structure:', data);
@@ -162,18 +165,35 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                 if (stockStatus) {
                     switch (stockStatus) {
                         case 'available':
-                            filteredMedicines = filteredMedicines.filter(medicine => medicine.stock_quantity > 0 && !medicine.is_deleted);
+                            // Hiển thị tất cả thuốc hoạt động (chưa xóa) - bao gồm còn hàng, hết hàng, sắp hết
+                            filteredMedicines = filteredMedicines.filter(medicine => !medicine.is_deleted);
                             break;
                         case 'low':
-                            filteredMedicines = filteredMedicines.filter(medicine => medicine.stock_quantity > 0 && medicine.stock_quantity < 100 && !medicine.is_deleted);
+                            // Chỉ thuốc sắp hết và chưa bị xóa
+                            filteredMedicines = filteredMedicines.filter(medicine => 
+                                medicine.stock_quantity > 0 && medicine.stock_quantity < 100 && !medicine.is_deleted
+                            );
                             break;
                         case 'out':
-                            filteredMedicines = filteredMedicines.filter(medicine => medicine.stock_quantity === 0 && !medicine.is_deleted);
+                            // Chỉ thuốc hết hàng và chưa bị xóa
+                            filteredMedicines = filteredMedicines.filter(medicine => 
+                                medicine.stock_quantity === 0 && !medicine.is_deleted
+                            );
+                            break;
+                        case 'in_stock':
+                            // Chỉ thuốc còn hàng (>= 100) và chưa bị xóa
+                            filteredMedicines = filteredMedicines.filter(medicine => 
+                                medicine.stock_quantity >= 100 && !medicine.is_deleted
+                            );
                             break;
                         case 'deleted':
+                            // Chỉ thuốc đã xóa
                             filteredMedicines = filteredMedicines.filter(medicine => medicine.is_deleted);
                             break;
                     }
+                } else {
+                    // Default: hiển thị tất cả thuốc hoạt động (chưa xóa)
+                    filteredMedicines = filteredMedicines.filter(medicine => !medicine.is_deleted);
                 }
 
                 // Sort
@@ -205,8 +225,6 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                 const medicineCards = medicineList.map(medicine => {
                     const stockStatus = getStockStatus(medicine.stock_quantity);
                     const isDeleted = medicine.is_deleted || false;
-                    const deletedStatus = isDeleted ? 'Đã xóa' : 'Hoạt động';
-                    const deletedClass = isDeleted ? 'bg-secondary' : 'bg-success';
                     
                     // Chỉ hiển thị "sắp hết hàng" nếu không phải hết hàng và không bị xóa
                     const showLowStockAlert = medicine.stock_quantity < 100 && medicine.stock_quantity > 0 && !isDeleted;
@@ -220,7 +238,6 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                                             <h4 class="medicine-title mb-2">
                                                 ${medicine.name}
                                                 <span class="badge ${stockStatus.class} ms-2">${stockStatus.text}</span>
-                                                <span class="badge ${deletedClass} ms-2">${deletedStatus}</span>
                                             </h4>
                                             <div class="row">
                                                 <div class="col-6">
@@ -647,7 +664,7 @@ require_once(__DIR__ . '/../template/header.php'); ?>
 
                 try {
                     const response = await fetch(`http://localhost:3000/api/medicine/DeleteMedicine/${medicineId}`, {
-                        method: 'DELETE'
+                        method: 'POST'
                     });
 
                     if (response.ok) {

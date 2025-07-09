@@ -34,9 +34,7 @@ public class MedicineServiceImpl implements MedicineService {
     public List<MedicineResponse> getAllMedicines() {
         log.info("MedicineServiceImpl | getAllMedicines | Getting all medicines");
         try {
-            List<Medicine> medicineList = medicineRepository.findAll()
-                                    .stream()   
-                                    .collect(Collectors.toList());
+            List<Medicine> medicineList = medicineRepository.findAll();
             return medicineList.stream()
                     .map(medicineMapper::toResponse)
                     .collect(Collectors.toList());

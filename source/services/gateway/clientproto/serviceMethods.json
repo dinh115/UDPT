@@ -255,7 +255,7 @@
         ]
       },
       "DeleteMedicine": {
-        "method": "DELETE",
+        "method": "PUT",
         "params": [
           "medicine_id"
         ]
