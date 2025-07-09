@@ -15,6 +15,7 @@ return [
         'create_doctor' => '/doctors/Create',
         'update_doctor' => '/doctors/update',
         'update_doctor_availability' => '/doctors/updateAvailability',
-        'appointment_get_id' => 'Appointments'
+        'appointment_get_id' => 'Appointments',
+        'patient_info' => '/api/patient'
     ]
 ];
