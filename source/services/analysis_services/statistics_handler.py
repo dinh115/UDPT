@@ -66,7 +66,7 @@ def get_prescription_statistics(start_date, end_date, group_type):
         FROM appointment_db.prescription
         WHERE is_deleted = FALSE
          AND status IN ('APPROVED', 'COMPLETED')
-         AND DATE(created_at) BETWEEN "%s" AND "%s"
+         AND DATE(created_at) BETWEEN %s AND %s
         GROUP BY DATE(created_at)
         ORDER BY DATE(created_at)
       """

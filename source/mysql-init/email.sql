@@ -1,3 +1,5 @@
+ALTER DATABASE logs CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 CREATE TABLE logs.email_logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255),
@@ -5,7 +7,7 @@ CREATE TABLE logs.email_logs (
     status ENUM('success', 'failed'),
     message TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE logs.user (
     id VARCHAR(36) PRIMARY KEY,
@@ -13,11 +15,11 @@ CREATE TABLE logs.user (
     firstname VARCHAR(255),
     lastname VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE logs.appointments_tab (
 	appointment_id char(36) NOT NULL,
-    id VARCHAR(36) PRIMARY KEY,
+    id int AUTO_INCREMENT PRIMARY KEY,
     patient_id CHAR(36) NOT NULL,-- UUID
     doctor_id CHAR(36) NOT NULL,-- UUID
     appointment_date DATE NOT NULL,
@@ -27,7 +29,7 @@ CREATE TABLE logs.appointments_tab (
     notes TEXT,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL
-);
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE logs;
 
@@ -103,6 +105,7 @@ END$$
 
 DELIMITER ;
 
+SET NAMES 'utf8mb4';
 
 INSERT INTO logs.user (id, email, firstname, lastname, created_at) VALUES
 ('patient_uuid_002', 'tranvanb@example.com', 'Trần Văn', 'B', NOW()),
@@ -110,23 +113,23 @@ INSERT INTO logs.user (id, email, firstname, lastname, created_at) VALUES
 ('doctor_uuid_002', 'john.doe@example.com', 'John', 'Doe', NOW()),
 ('doctor_uuid_003', 'emily.white@example.com', 'Emily', 'White', NOW());
 
-INSERT INTO logs.appointments_tab (appointment_id, id, patient_id, doctor_id, appointment_date, start_time, end_time, status, notes, created_at, updated_at) VALUES
+INSERT INTO logs.appointments_tab (appointment_id, patient_id, doctor_id, appointment_date, start_time, end_time, status, notes, created_at, updated_at) VALUES
 -- --- Happy Path (đã xác nhận, trong vòng 3 ngày tới) ---
 -- Lịch hẹn 1: Nguyễn Văn A với Dr. Sarah Smith vào ngày 08/07/2025
-('app_uuid_001', 'app_uuid_001', 'patient_uuid_001', 'doctor_uuid_001', '2025-07-08', '10:00:00', '11:00:00', 'confirmed', 'Kiểm tra định kỳ', NOW(), NOW()),
+('app_uuid_001', 'patient_uuid_001', 'doctor_uuid_001', '2025-07-08', '10:00:00', '11:00:00', 'confirmed', 'Kiểm tra định kỳ', NOW(), NOW()),
 -- Lịch hẹn 2: Trần Văn B với Dr. John Doe vào ngày 07/07/2025
-('app_uuid_004', 'app_uuid_004', 'patient_uuid_002', 'doctor_uuid_002', '2025-07-07', '14:30:00', '15:00:00', 'confirmed', 'Khám tổng quát', NOW(), NOW()),
+('app_uuid_004', 'patient_uuid_002', 'doctor_uuid_002', '2025-07-07', '14:30:00', '15:00:00', 'confirmed', 'Khám tổng quát', NOW(), NOW()),
 -- Lịch hẹn 3: Lê Thị C với Dr. Emily White vào ngày 09/07/2025 (Ngày cuối cùng trong phạm vi 3 ngày)
-('app_uuid_005', 'app_uuid_005', 'patient_uuid_003', 'doctor_uuid_003', '2025-07-09', '09:00:00', '09:45:00', 'confirmed', 'Tư vấn dinh dưỡng', NOW(), NOW()),
+('app_uuid_005', 'patient_uuid_003', 'doctor_uuid_003', '2025-07-09', '09:00:00', '09:45:00', 'confirmed', 'Tư vấn dinh dưỡng', NOW(), NOW()),
 
 -- --- Lịch hẹn không đạt điều kiện ngày (đã xác nhận nhưng ngoài 3 ngày tới) ---
 -- Lịch hẹn 4: Quá xa trong tương lai (sau 3 ngày)
-('app_uuid_002', 'app_uuid_002', 'patient_uuid_001', 'doctor_uuid_001', '2025-07-15', '14:00:00', '15:00:00', 'confirmed', 'Tái khám', NOW(), NOW()),
+('app_uuid_002', 'patient_uuid_001', 'doctor_uuid_001', '2025-07-15', '14:00:00', '15:00:00', 'confirmed', 'Tái khám', NOW(), NOW()),
 -- Lịch hẹn 5: Đã diễn ra trong quá khứ
-('app_uuid_006', 'app_uuid_006', 'patient_uuid_002', 'doctor_uuid_002', '2025-07-01', '08:00:00', '08:30:00', 'confirmed', 'Khám mắt', NOW(), NOW()),
+('app_uuid_006','patient_uuid_002', 'doctor_uuid_002', '2025-07-01', '08:00:00', '08:30:00', 'confirmed', 'Khám mắt', NOW(), NOW()),
 
 -- --- Lịch hẹn không đạt điều kiện trạng thái (trong 3 ngày tới nhưng pending/cancelled) ---
 -- Lịch hẹn 6: Đang chờ (pending)
-('app_uuid_003', 'app_uuid_003', 'patient_uuid_001', 'doctor_uuid_001', '2025-07-07', '09:00:00', '10:00:00', 'pending', 'Khám lần đầu', NOW(), NOW()),
+('app_uuid_003','patient_uuid_001', 'doctor_uuid_001', '2025-07-07', '09:00:00', '10:00:00', 'pending', 'Khám lần đầu', NOW(), NOW()),
 -- Lịch hẹn 7: Đã hủy (cancelled)
-('app_uuid_007', 'app_uuid_007', 'patient_uuid_003', 'doctor_uuid_003', '2025-07-08', '16:00:00', '16:45:00', 'cancelled', 'Hủy do bận', NOW(), NOW());
+('app_uuid_007','patient_uuid_003', 'doctor_uuid_003', '2025-07-08', '16:00:00', '16:45:00', 'cancelled', 'Hủy do bận', NOW(), NOW());

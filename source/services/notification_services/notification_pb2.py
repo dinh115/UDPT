@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12notification.proto\x12\x0b\x61ppointment\".\n\x08TimeSlot\x12\x11\n\tstartTime\x18\x01 \x01(\t\x12\x0f\n\x07\x65ndTime\x18\x02 \x01(\t\"\xdb\x01\n\x1a\x41nalysisAppointmentRequest\x12\x15\n\rappointmentId\x18\x01 \x01(\t\x12\x0f\n\x07patient\x18\x02 \x01(\t\x12\x0e\n\x06\x64octor\x18\x03 \x01(\t\x12\x17\n\x0f\x61ppointmentDate\x18\x04 \x01(\t\x12\'\n\x08timeSlot\x18\x05 \x01(\x0b\x32\x15.appointment.TimeSlot\x12\x0e\n\x06status\x18\x06 \x01(\t\x12\r\n\x05notes\x18\x07 \x01(\t\x12\x11\n\tcreatedAt\x18\x08 \x01(\t\x12\x11\n\tupdatedAt\x18\t \x01(\t\".\n\x1b\x41nalysisAppointmentResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x9e\x01\n\x12\x41ppointmentRequest\x12\x13\n\x0bpatientName\x18\x01 \x01(\t\x12\x14\n\x0cpatientEmail\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x11\n\tstartTime\x18\x04 \x01(\t\x12\x0f\n\x07\x65ndTime\x18\x05 \x01(\t\x12\x12\n\ndoctorName\x18\x06 \x01(\t\x12\x17\n\x0f\x63onsultationFee\x18\x07 \x01(\x05\"0\n\x18PrescriptionReadyRequest\x12\x14\n\x0cpatientEmail\x18\x01 \x01(\t\"7\n\x13\x41ppointmentResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"1\n\x18\x41\x63\x63\x65ptAppointmentRequest\x12\x15\n\rappointmentId\x18\x01 \x01(\t\"T\n\x0e\x41\x64\x64UserRequest\x12\x0e\n\x06userid\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x11\n\tfirstname\x18\x03 \x01(\t\x12\x10\n\x08lastname\x18\x04 \x01(\t\"\"\n\x0fGenericResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x07\n\x05\x45mpty\"\x9b\x01\n\x0f\x41ppointmentInfo\x12\x13\n\x0bpatientName\x18\x01 \x01(\t\x12\x14\n\x0cpatientEmail\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x11\n\tstartTime\x18\x04 \x01(\t\x12\x0f\n\x07\x65ndTime\x18\x05 \x01(\t\x12\x12\n\ndoctorName\x18\x06 \x01(\t\x12\x17\n\x0f\x63onsultationFee\x18\x07 \x01(\x05\"^\n(GetUpcomingConfirmedAppointmentsResponse\x12\x32\n\x0c\x61ppointments\x18\x01 \x03(\x0b\x32\x1c.appointment.AppointmentInfo2\xbe\x04\n\x12\x41ppointmentService\x12Q\n\x0cSendReminder\x12\x1f.appointment.AppointmentRequest\x1a .appointment.AppointmentResponse\x12`\n\x15SendPrescriptionReady\x12%.appointment.PrescriptionReadyRequest\x1a .appointment.AppointmentResponse\x12X\n\x11\x41\x63\x63\x65ptAppointment\x12%.appointment.AcceptAppointmentRequest\x1a\x1c.appointment.GenericResponse\x12\x44\n\x07\x41\x64\x64User\x12\x1b.appointment.AddUserRequest\x1a\x1c.appointment.GenericResponse\x12\x64\n\x0f\x42ookAppointment\x12\'.appointment.AnalysisAppointmentRequest\x1a(.appointment.AnalysisAppointmentResponse\x12m\n GetUpcomingConfirmedAppointments\x12\x12.appointment.Empty\x1a\x35.appointment.GetUpcomingConfirmedAppointmentsResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12notification.proto\x12\x0b\x61ppointment\".\n\x08TimeSlot\x12\x11\n\tstartTime\x18\x01 \x01(\t\x12\x0f\n\x07\x65ndTime\x18\x02 \x01(\t\"\xdb\x01\n\x1a\x41nalysisAppointmentRequest\x12\x15\n\rappointmentId\x18\x01 \x01(\t\x12\x0f\n\x07patient\x18\x02 \x01(\t\x12\x0e\n\x06\x64octor\x18\x03 \x01(\t\x12\x17\n\x0f\x61ppointmentDate\x18\x04 \x01(\t\x12\'\n\x08timeSlot\x18\x05 \x01(\x0b\x32\x15.appointment.TimeSlot\x12\x0e\n\x06status\x18\x06 \x01(\t\x12\r\n\x05notes\x18\x07 \x01(\t\x12\x11\n\tcreatedAt\x18\x08 \x01(\t\x12\x11\n\tupdatedAt\x18\t \x01(\t\".\n\x1b\x41nalysisAppointmentResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x9e\x01\n\x12\x41ppointmentRequest\x12\x13\n\x0bpatientName\x18\x01 \x01(\t\x12\x14\n\x0cpatientEmail\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x11\n\tstartTime\x18\x04 \x01(\t\x12\x0f\n\x07\x65ndTime\x18\x05 \x01(\t\x12\x12\n\ndoctorName\x18\x06 \x01(\t\x12\x17\n\x0f\x63onsultationFee\x18\x07 \x01(\x05\"-\n\x18PrescriptionReadyRequest\x12\x11\n\tpatientId\x18\x01 \x01(\t\"7\n\x13\x41ppointmentResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"1\n\x18\x41\x63\x63\x65ptAppointmentRequest\x12\x15\n\rappointmentId\x18\x01 \x01(\t\"T\n\x0e\x41\x64\x64UserRequest\x12\x0e\n\x06userid\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x11\n\tfirstname\x18\x03 \x01(\t\x12\x10\n\x08lastname\x18\x04 \x01(\t\"\"\n\x0fGenericResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x07\n\x05\x45mpty\"\x9b\x01\n\x0f\x41ppointmentInfo\x12\x13\n\x0bpatientName\x18\x01 \x01(\t\x12\x14\n\x0cpatientEmail\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x11\n\tstartTime\x18\x04 \x01(\t\x12\x0f\n\x07\x65ndTime\x18\x05 \x01(\t\x12\x12\n\ndoctorName\x18\x06 \x01(\t\x12\x17\n\x0f\x63onsultationFee\x18\x07 \x01(\x05\"^\n(GetUpcomingConfirmedAppointmentsResponse\x12\x32\n\x0c\x61ppointments\x18\x01 \x03(\x0b\x32\x1c.appointment.AppointmentInfo2\xbe\x04\n\x12\x41ppointmentService\x12Q\n\x0cSendReminder\x12\x1f.appointment.AppointmentRequest\x1a .appointment.AppointmentResponse\x12`\n\x15SendPrescriptionReady\x12%.appointment.PrescriptionReadyRequest\x1a .appointment.AppointmentResponse\x12X\n\x11\x41\x63\x63\x65ptAppointment\x12%.appointment.AcceptAppointmentRequest\x1a\x1c.appointment.GenericResponse\x12\x44\n\x07\x41\x64\x64User\x12\x1b.appointment.AddUserRequest\x1a\x1c.appointment.GenericResponse\x12\x64\n\x0f\x42ookAppointment\x12\'.appointment.AnalysisAppointmentRequest\x1a(.appointment.AnalysisAppointmentResponse\x12m\n GetUpcomingConfirmedAppointments\x12\x12.appointment.Empty\x1a\x35.appointment.GetUpcomingConfirmedAppointmentsResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -40,21 +40,21 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_APPOINTMENTREQUEST']._serialized_start=354
   _globals['_APPOINTMENTREQUEST']._serialized_end=512
   _globals['_PRESCRIPTIONREADYREQUEST']._serialized_start=514
-  _globals['_PRESCRIPTIONREADYREQUEST']._serialized_end=562
-  _globals['_APPOINTMENTRESPONSE']._serialized_start=564
-  _globals['_APPOINTMENTRESPONSE']._serialized_end=619
-  _globals['_ACCEPTAPPOINTMENTREQUEST']._serialized_start=621
-  _globals['_ACCEPTAPPOINTMENTREQUEST']._serialized_end=670
-  _globals['_ADDUSERREQUEST']._serialized_start=672
-  _globals['_ADDUSERREQUEST']._serialized_end=756
-  _globals['_GENERICRESPONSE']._serialized_start=758
-  _globals['_GENERICRESPONSE']._serialized_end=792
-  _globals['_EMPTY']._serialized_start=794
-  _globals['_EMPTY']._serialized_end=801
-  _globals['_APPOINTMENTINFO']._serialized_start=804
-  _globals['_APPOINTMENTINFO']._serialized_end=959
-  _globals['_GETUPCOMINGCONFIRMEDAPPOINTMENTSRESPONSE']._serialized_start=961
-  _globals['_GETUPCOMINGCONFIRMEDAPPOINTMENTSRESPONSE']._serialized_end=1055
-  _globals['_APPOINTMENTSERVICE']._serialized_start=1058
-  _globals['_APPOINTMENTSERVICE']._serialized_end=1632
+  _globals['_PRESCRIPTIONREADYREQUEST']._serialized_end=559
+  _globals['_APPOINTMENTRESPONSE']._serialized_start=561
+  _globals['_APPOINTMENTRESPONSE']._serialized_end=616
+  _globals['_ACCEPTAPPOINTMENTREQUEST']._serialized_start=618
+  _globals['_ACCEPTAPPOINTMENTREQUEST']._serialized_end=667
+  _globals['_ADDUSERREQUEST']._serialized_start=669
+  _globals['_ADDUSERREQUEST']._serialized_end=753
+  _globals['_GENERICRESPONSE']._serialized_start=755
+  _globals['_GENERICRESPONSE']._serialized_end=789
+  _globals['_EMPTY']._serialized_start=791
+  _globals['_EMPTY']._serialized_end=798
+  _globals['_APPOINTMENTINFO']._serialized_start=801
+  _globals['_APPOINTMENTINFO']._serialized_end=956
+  _globals['_GETUPCOMINGCONFIRMEDAPPOINTMENTSRESPONSE']._serialized_start=958
+  _globals['_GETUPCOMINGCONFIRMEDAPPOINTMENTSRESPONSE']._serialized_end=1052
+  _globals['_APPOINTMENTSERVICE']._serialized_start=1055
+  _globals['_APPOINTMENTSERVICE']._serialized_end=1629
 # @@protoc_insertion_point(module_scope)
