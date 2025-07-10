@@ -29,6 +29,10 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                     <i class="fas fa-plus"></i>
                     <span>Thêm thuốc mới</span>
                 </button>
+                    <a href="/prescription" class="action-btn">
+                    <i class="fas fa-prescription-bottle"></i>
+                    <span>Quản lý đơn thuốc</span>
+                </a>
             </div>
         </div>
 
@@ -268,11 +272,6 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                                                     <i class="fas fa-undo"></i> Khôi phục
                                                 </button>
                                             `}
-                                            ${showLowStockAlert ? 
-                                                `<div class="alert alert-warning alert-sm mt-2">
-                                                    <i class="fas fa-exclamation-triangle"></i> Sắp hết hàng
-                                                </div>` : ''
-                                            }
                                         </div>
                                     </div>
                                 </div>

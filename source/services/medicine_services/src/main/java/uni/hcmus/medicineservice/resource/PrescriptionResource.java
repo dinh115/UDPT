@@ -36,7 +36,8 @@ public class PrescriptionResource extends PrescriptionServiceGrpc.PrescriptionSe
                 .setStatus(p.getStatus() != null ? p.getStatus().name() : "")
                 .setIsPaid(p.getIsPaid())
                 .setCreatedAt(p.getCreatedAt() != null ? p.getCreatedAt().toString() : "")
-                .setUpdatedAt(p.getUpdatedAt() != null ? p.getUpdatedAt().toString() : "");
+                .setUpdatedAt(p.getUpdatedAt() != null ? p.getUpdatedAt().toString() : "")
+                .setIsDeleted(p.isDeleted());
             
             // Add prescription items
             for (PrescriptionItemResponse item : p.getItems()) {
@@ -53,6 +54,7 @@ public class PrescriptionResource extends PrescriptionServiceGrpc.PrescriptionSe
                                 .setStockQuantity(item.getMedicine().getStockQuantity())
                                 .setCreatedAt(item.getMedicine().getCreatedAt() != null ? item.getMedicine().getCreatedAt().toString() : "")
                                 .setUpdatedAt(item.getMedicine().getUpdatedAt() != null ? item.getMedicine().getUpdatedAt().toString() : "")
+                                .setIsDeleted(false)
                                 .build()
                         )
                         .setQuantity(item.getQuantity())
@@ -80,8 +82,10 @@ public class PrescriptionResource extends PrescriptionServiceGrpc.PrescriptionSe
             .setStatus(p.getStatus() != null ? p.getStatus().name() : "")
             .setIsPaid(p.getIsPaid())
             .setCreatedAt(p.getCreatedAt() != null ? p.getCreatedAt().toString() : "")
-            .setUpdatedAt(p.getUpdatedAt() != null ? p.getUpdatedAt().toString() : "");
-        
+            .setUpdatedAt(p.getUpdatedAt() != null ? p.getUpdatedAt().toString() : "")
+            .setIsDeleted(p.isDeleted());
+
+
         // Add prescription items
         for (PrescriptionItemResponse item : p.getItems()) {
             prescriptionBuilder.addItems(

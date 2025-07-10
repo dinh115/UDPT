@@ -37,7 +37,7 @@ require_once(__DIR__ . '/../template/header.php');
                         <i class="fas fa-calendar-plus"></i>
                         <span>Đặt lịch hẹn</span>
                     </a>
-                    <a href="/prescriptions/new" class="action-btn">
+                    <a href="/medicine" class="action-btn">
                         <i class="fas fa-prescription"></i>
                         <span>Quản lý thuốc</span>
                     </a>

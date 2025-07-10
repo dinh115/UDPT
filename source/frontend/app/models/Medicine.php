@@ -75,7 +75,7 @@ class Medicine extends ApiService
     {
         try {
             $endpoint = $this->endpoints['medicine'] . '/DeleteMedicine/' . $medicineId;
-            $response = $this->httpClient->delete($endpoint);
+            $response = $this->httpClient->put($endpoint);
             return $this->handleResponse($response);
         } catch (Exception $e) {
             return [

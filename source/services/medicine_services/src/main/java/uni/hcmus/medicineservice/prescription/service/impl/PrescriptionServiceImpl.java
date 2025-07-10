@@ -281,7 +281,6 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         log.info("PrescriptionServiceImpl | getAllPrescriptions | Getting all prescriptions");
         try {
             List<Prescription> prescriptions = prescriptionRepository.findAll().stream()
-                    .filter(prescription -> !prescription.getIsDeleted())
                     .collect(Collectors.toList());
             
             return prescriptionMapper.toResponseList(prescriptions);

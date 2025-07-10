@@ -227,7 +227,13 @@
         ]
       },
       "DeletePrescription": {
-        "method": "DELETE",
+        "method": "PUT",
+        "params": [
+          "prescription_id"
+        ]
+      },
+      "RestorePrescription": {
+        "method": "PUT",
         "params": [
           "prescription_id"
         ]
