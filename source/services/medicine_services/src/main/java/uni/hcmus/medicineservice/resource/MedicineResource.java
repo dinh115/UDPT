@@ -33,6 +33,7 @@ public class MedicineResource extends MedicineServiceGrpc.MedicineServiceImplBas
                     .setStockQuantity(m.getStockQuantity())
                     .setCreatedAt(m.getCreatedAt() != null ? m.getCreatedAt().toString() : "")
                     .setUpdatedAt(m.getUpdatedAt() != null ? m.getUpdatedAt().toString() : "")
+                    .setIsDeleted(m.getIsDeleted() != null ? m.getIsDeleted() : true)
                     .build()
             );
         }
@@ -52,6 +53,7 @@ public class MedicineResource extends MedicineServiceGrpc.MedicineServiceImplBas
             .setStockQuantity(m.getStockQuantity())
             .setCreatedAt(m.getCreatedAt() != null ? m.getCreatedAt().toString() : "")
             .setUpdatedAt(m.getUpdatedAt() != null ? m.getUpdatedAt().toString() : "")
+            .setIsDeleted(m.getIsDeleted() != null ? m.getIsDeleted() : true)
             .build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
@@ -76,6 +78,7 @@ public class MedicineResource extends MedicineServiceGrpc.MedicineServiceImplBas
             .setStockQuantity(m.getStockQuantity())
             .setCreatedAt(m.getCreatedAt() != null ? m.getCreatedAt().toString() : "")
             .setUpdatedAt(m.getUpdatedAt() != null ? m.getUpdatedAt().toString() : "")
+            .setIsDeleted(m.getIsDeleted() != null ? m.getIsDeleted() : true)
             .build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
@@ -84,6 +87,7 @@ public class MedicineResource extends MedicineServiceGrpc.MedicineServiceImplBas
     @Override
     public void updateMedicine(uni.hcmus.medicineservice.grpc.UpdateMedicineRequest request, StreamObserver<uni.hcmus.medicineservice.grpc.MedicineResponse> responseObserver) {
         UpdateMedicineRequest updateRequest = new UpdateMedicineRequest(
+            request.getMedicineId(),
             request.getName(),
             request.getUnit(),
             request.getSupplier(),
@@ -100,6 +104,7 @@ public class MedicineResource extends MedicineServiceGrpc.MedicineServiceImplBas
             .setStockQuantity(m.getStockQuantity())
             .setCreatedAt(m.getCreatedAt() != null ? m.getCreatedAt().toString() : "")
             .setUpdatedAt(m.getUpdatedAt() != null ? m.getUpdatedAt().toString() : "")
+            .setIsDeleted(m.getIsDeleted() != null ? m.getIsDeleted() : true)
             .build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();

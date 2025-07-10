@@ -1,4 +1,15 @@
-<?php require_once '../template/header.php'; ?>
+<?php
+$title = 'Hồ Sơ Bệnh Nhân';
+require_once(__DIR__ . '/../template/header.php');
+require_once(__DIR__ . '/../template/navbar.php');
+
+// Lấy dữ liệu từ userInfo
+$fullName = trim(($userInfo['lastName'] ?? '') . ' ' . ($userInfo['firstName'] ?? ''));
+$createdAt = isset($userInfo['createdAt']['seconds']) ? 
+    (new DateTime())->setTimestamp($userInfo['createdAt']['seconds'])->format('d/m/Y H:i') : 'N/A';
+$dateOfBirth = isset($userInfo['dateOfBirth']) ? 
+    (new DateTime($userInfo['dateOfBirth']))->format('d/m/Y') : 'N/A';
+?>
 
 <div class="container mt-4">
     <div class="row">

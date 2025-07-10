@@ -4,7 +4,19 @@ class Doctors extends Controller
 
     public function index()
     {
-        $this->view('doctors/index');
+        $data = [];
+        if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'doctor') {
+            $userId = $_SESSION['user_session']['user']['id'];
+            $doctorModel = $this->model('Doctor');
+            $result = $doctorModel->getDoctorByUserId($userId);
+            if ($result['success']) {
+                $data = [
+                    'doctor' => $result['data']['doctor'],
+                    'sessionDoctorId' => $result['data']['doctor']['id']
+                ];
+            }
+        }
+        $this->view('doctors/index', $data);
     }
 
     public function show($id = null)
@@ -17,56 +29,64 @@ class Doctors extends Controller
         $doctorModel = $this->model('Doctor');
         $result = $doctorModel->getDoctorById($id);
 
+
+
+        //var_dump($result);
         if ($result['success']) {
             $data = [
-                'title' => 'Doctor Details',
-                'doctor' => $result['data']
+                'title' => 'Chi tiết Bác sĩ',
+                'doctor' => $result['data']['doctor'],
+                'isProfileOwner' => $_SESSION['user_session']['role'] === 'doctor' && $_SESSION['user_session']['user']['id'] === $result['data']['doctor']['userId']
             ];
             $this->view('doctors/show', $data);
         } else {
-
             $this->renderError(
-                'Doctor Not Found',
+                'Không tìm thấy Bác sĩ',
                 $result['error']
             );
             return;
         }
     }
 
-    public function create()
+    public function update($id = null)
     {
-        $this->view('doctors/create');
-    }
-
-
-    public function update()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
-            $this->renderError('404', 'Page Not Found', 'Sorry the page you are looking for does not exist');
+        if (!$id) {
+            $this->redirect('/doctors');
             return;
         }
+
+        // Lấy model Doctor
         $doctorModel = $this->model('Doctor');
+        $result = $doctorModel->getDoctorById($id);
 
-        // Đọc JSON từ body request (fetch gửi từ JS)
-        $data = json_decode(file_get_contents('php://input'), true);
-
-        if (!$data) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Invalid JSON']);
+        // Kiểm tra quyền truy cập
+        $userSession = $_SESSION['user_session'] ?? null;
+        if (
+            !$userSession || (
+                $userSession['role'] !== 'admin' &&
+                $userSession['role'] !== 'employee' &&
+                $_SESSION['user_session']['user']['id'] !== $result['data']['doctor']['userId']
+            )
+        ) {
+            // Không có quyền truy cập
+            $this->redirect('/doctors'); // hoặc redirect về trang lỗi/404
             return;
         }
 
-        // Debug view request
-        // header('Content-Type: application/json');
-        // echo json_encode($data, JSON_PRETTY_PRINT);
-        // exit;
-
-        // Gọi API thông qua ApiService
-        $response = $this->$doctorModel->createDoctorProfile($data);
-
-        // Trả response JSON lại cho frontend
-        header('Content-Type: application/json');
-        echo json_encode($response);
+        //var_dump($result);
+        if ($result['success']) {
+            $data = [
+                'title' => 'Chi tiết Bác sĩ',
+                'doctor' => $result['data']['doctor']
+            ];
+            $this->view('doctors/update', $data);
+        } else {
+            $this->renderError(
+                'Không tìm thấy Bác sĩ',
+                $result['error']
+            );
+            return;
+        }
     }
 
     public function api()

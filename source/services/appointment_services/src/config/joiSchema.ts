@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { validate as uuidValidate } from 'uuid';
 
 const validateDateNotInPast = (value: string | Date, helpers: any) => {
     const today = new Date();
@@ -45,7 +45,7 @@ export const timeSlotSchema = Joi.object({
 
 export const availabilitySchema = Joi.object({
     day: Joi.string()
-        .valid('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
+        .valid('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY')
         .required()
         .messages({
             'any.only': 'Day must be a valid day of the week',
@@ -60,7 +60,7 @@ export const availabilitySchema = Joi.object({
 export const validateAppointmentIdSchema = Joi.object({
     AppointmentId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -76,7 +76,7 @@ export const validateAppointmentIdSchema = Joi.object({
 export const bookAppointmentSchema = Joi.object({
     doctorId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -99,12 +99,12 @@ export const bookAppointmentSchema = Joi.object({
     timeSlot: timeSlotSchema.required().messages({
         'any.required': 'Time slot is required'
     }),
-    notes: Joi.string().max(500).optional().messages({
+    notes: Joi.string().allow('').max(500).optional().messages({
         'string.max': 'Notes cannot be more than 500 characters'
     }),
     patientId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -119,7 +119,7 @@ export const bookAppointmentSchema = Joi.object({
 export const updateAppointmentSchema = Joi.object({
     appointmentId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -148,7 +148,7 @@ export const updateAppointmentSchema = Joi.object({
 export const acceptAppointmentSchema = Joi.object({
     appointmentId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -164,7 +164,7 @@ export const acceptAppointmentSchema = Joi.object({
 export const cancelAppointmentSchema = Joi.object({
     appointmentId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -176,7 +176,7 @@ export const cancelAppointmentSchema = Joi.object({
         })
 });
 
-// GetMyAppointmentsRequest schema
+/// GetMyAppointmentsRequest schema
 export const getMyAppointmentsSchema = Joi.object({
     status: Joi.string()
         .valid('pending', 'confirmed', 'completed', 'cancelled')
@@ -190,14 +190,26 @@ export const getMyAppointmentsSchema = Joi.object({
     limit: Joi.number().integer().min(1).max(100).default(10).optional().empty('').messages({
         'number.min': 'Limit must be at least 1',
         'number.max': 'Limit cannot exceed 100'
-    })
+    }),
+    userId: Joi.string()
+        .trim()
+        .optional()
+        .messages({
+            'string.empty': 'User ID cannot be empty if provided'
+        }),
+    doctorId: Joi.string()
+        .trim()
+        .optional()
+        .messages({
+            'string.empty': 'Doctor ID cannot be empty if provided'
+        })
 });
 
 // User schema for validation
 export const userSchema = Joi.object({
     id: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -229,7 +241,7 @@ export const userSchema = Joi.object({
 export const doctorSchema = Joi.object({
     id: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -248,7 +260,7 @@ export const doctorSchema = Joi.object({
 export const authContextSchema = Joi.object({
     userId: Joi.string()
         .custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -301,7 +313,7 @@ export const appointmentQuerySchema = Joi.object({
 export const batchAppointmentSchema = Joi.object({
     appointmentIds: Joi.array()
         .items(Joi.string().custom((value, helpers) => {
-            if (!isValidUUIDv4(value)) {
+            if (!isValidUUID(value)) {
                 return helpers.error('any.invalid');
             }
             return value;
@@ -323,6 +335,6 @@ export const batchAppointmentSchema = Joi.object({
 /**
  * Check if a string is a valid UUID
  */
-export const isValidUUIDv4 = (uuid: string): boolean => {
-    return uuidValidate(uuid) && uuidVersion(uuid) === 4;
+export const isValidUUID = (uuid: string): boolean => {
+    return uuidValidate(uuid);
 };

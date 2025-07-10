@@ -8,7 +8,7 @@ import {
     acceptAppointmentSchema,
     cancelAppointmentSchema,
     getMyAppointmentsSchema,
-    isValidUUIDv4
+    isValidUUID
 } from '../config/joiSchema';
 import chalk from 'chalk';
 import { convertToAppointmentProto, getUserFromMetadata, convertDateToTimestamps } from '.';
@@ -57,7 +57,7 @@ export class AppointmentServiceHandlers {
             }
 
             // Validate input using Joi
-            const { error, value } = bookAppointmentSchema.validate(call.request);
+            const { error, value } = bookAppointmentSchema.validate(call.request, { convert: true, stripUnknown: true });
             if (error) {
                 const response = BookAppointmentResponse.create({
                     success: false,
@@ -86,7 +86,7 @@ export class AppointmentServiceHandlers {
             // Validate patientId
             const isInvalidPatientId =
                 (!patientId) ||
-                (!isPatient && !isValidUUIDv4(patientId));
+                (!isPatient && !isValidUUID(patientId));
 
             if (isInvalidPatientId) {
                 const response = BookAppointmentResponse.create({
@@ -138,7 +138,7 @@ export class AppointmentServiceHandlers {
             }
 
             // Validate input using Joi
-            const { error, value } = updateAppointmentSchema.validate(call.request, { stripUnknown: true });
+            const { error, value } = updateAppointmentSchema.validate(call.request, { convert: true, stripUnknown: true });
             if (error) {
                 const response = UpdateAppointmentResponse.create({
                     success: false,
@@ -214,7 +214,7 @@ export class AppointmentServiceHandlers {
             }
 
             // Validate input using Joi
-            const { error, value } = acceptAppointmentSchema.validate(call.request);
+            const { error, value } = acceptAppointmentSchema.validate(call.request, { convert: true, stripUnknown: true });
             if (error) {
                 const response = AcceptAppointmentResponse.create({
                     success: false,
@@ -234,8 +234,7 @@ export class AppointmentServiceHandlers {
             }
 
             // Check if the current user is the doctor for this appointment or an employee/admin
-            const isDoctor = user.role === UserRole.DOCTOR &&
-                appointment.doctorId === await this.appointmentService.getDoctorIdByUserId(user.userId);
+            const isDoctor = user.role === UserRole.DOCTOR && appointment.doctorId === user.userId;
             const isEmployee = user.role === UserRole.EMPLOYEE;
             const isAdmin = user.role === UserRole.ADMIN;
 
@@ -280,7 +279,7 @@ export class AppointmentServiceHandlers {
             }
 
             // Validate input using Joi
-            const { error, value } = cancelAppointmentSchema.validate(call.request);
+            const { error, value } = cancelAppointmentSchema.validate(call.request, { convert: true, stripUnknown: true });
             if (error) {
                 const response = CancelAppointmentResponse.create({
                     success: false,
@@ -335,7 +334,6 @@ export class AppointmentServiceHandlers {
     ): Promise<void> {
         try {
             const user = getUserFromMetadata(call.metadata);
-            //console.log(chalk.green(JSON.stringify(user)));
 
             if (!user || !user.userId || !user.role) {
                 const response = GetMyAppointmentsResponse.create({
@@ -351,6 +349,18 @@ export class AppointmentServiceHandlers {
                 const response = GetMyAppointmentsResponse.create({
                     success: false,
                     error: error.details[0].message,
+                });
+                return callback(null, response);
+            }
+
+            // Check if user is trying to query for other users' appointments
+            const isQueryingOtherUsers = value.userId || value.doctorId;
+
+            // Only admin/employee can query for other users' appointments
+            if (isQueryingOtherUsers && !['admin', 'employee'].includes(user.role.toLowerCase())) {
+                const response = GetMyAppointmentsResponse.create({
+                    success: false,
+                    error: 'Insufficient permissions to query other users appointments',
                 });
                 return callback(null, response);
             }
@@ -376,8 +386,5 @@ export class AppointmentServiceHandlers {
             callback(err, null);
         }
     }
-}
 
-function setRole(arg0: UserRole) {
-    throw new Error('Function not implemented.');
 }

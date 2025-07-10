@@ -2,9 +2,8 @@ import { CacheService } from "../cache/cache.js";
 
 // some api services need to cache to improve performance
 const applyingCacheUrls = [
-  '/api/patient',
-  '/api/product',
-  '/api/doctor',];
+    '/api/patient',
+    '/api/product'];
 
 // Create an instance of CacheService
 const cacheService = new CacheService();
@@ -16,7 +15,7 @@ export const caching = (req, res, next) => {
     if (!isMatching || req.method !== 'GET') {
         return next();
     }
-    
+
     // Check if the response is already cached
     const cached = cacheService.getCache(req.url, req.method);
     if (cached) {

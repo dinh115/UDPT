@@ -32,6 +32,7 @@ import {
 
 } from '../proto/generated/doctor';
 import chalk from 'chalk';
+import { toJsonString } from '@bufbuild/protobuf';
 
 // =================== INTERNAL SERVICE HANDLERS ===================
 export class InternalServiceHandlers {
@@ -151,6 +152,8 @@ export class InternalServiceHandlers {
             //console.log(value);
 
             let result = await doctorService.findDoctors(value);
+
+            console.log(JSON.stringify(result));
 
             const response = findDoctorsResponse.create({
                 success: true,

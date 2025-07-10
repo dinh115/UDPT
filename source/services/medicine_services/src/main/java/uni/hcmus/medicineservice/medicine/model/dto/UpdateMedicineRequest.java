@@ -16,6 +16,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "Request to update medicine information")
 public class UpdateMedicineRequest {
+    @NotBlank(message = "Medicine ID cannot be blank")
+    @Schema(description = "Unique identifier for the medicine", example = "med123", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String medicineId;
     
     @NotBlank(message = "Medicine name cannot be blank")
     @Schema(description = "Name of the medicine", example = "Paracetamol", requiredMode = Schema.RequiredMode.REQUIRED)

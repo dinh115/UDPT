@@ -41,12 +41,14 @@ export async function setupRoutes(app) {
           // Get gRPC metadata from the JWT token parser middleware
           const metadata = getGrpcMetadata(req);
 
-          // Build request object based on HTTP method
+          // Merge body first (for POST/PUT), then fallback to params for missing keys
           if (["post", "put"].includes(httpMethod)) {
             Object.assign(request, req.body);
-          } else {
-            for (const key of paramKeys) {
-              request[key] = req.params[key];
+          }
+
+          for (const paramKey of paramKeys) {
+            if (!request.hasOwnProperty(paramKey) && req.params[paramKey]) {
+              request[paramKey] = req.params[paramKey];
             }
           }
 

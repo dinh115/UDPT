@@ -1,5 +1,5 @@
 /***
- * TO RUN THIS FILE: node seed-appointments.js
+ * TO RUN THIS FILE: node seed_appointments.js
  */
 
 const mongoose = require('mongoose');
@@ -215,11 +215,12 @@ async function getDoctorIds() {
 
         const DoctorSchema = new mongoose.Schema({
             _id: String,
+            userId: String,
             specialization: String
         });
 
         const Doctor = doctorConnection.model('Doctor', DoctorSchema);
-        const doctors = await Doctor.find().select('_id specialization');
+        const doctors = await Doctor.find().select('_id userId specialization');
 
         await doctorConnection.close();
 
@@ -288,7 +289,7 @@ async function seedAppointments() {
         for (let i = 0; i < appointmentsToCreate; i++) {
             const patientId = randomElement(patientUserIds);
             const doctor = randomElement(doctors);
-            const appointment = generateAppointment(patientId, doctor._id);
+            const appointment = generateAppointment(patientId, doctor.userId);
             appointments.push(appointment);
         }
 

@@ -168,7 +168,8 @@ class Auth extends Controller
         $response = [
             'logged_in' => $this->authService->isLoggedIn(),
             'user' => $this->authService->getUser(),
-            'role' => $this->authService->getUserRole()
+            'role' => $this->authService->getUserRole(),
+            'token' => $this->authService->getToken()
         ];
 
         $this->jsonResponse($response);

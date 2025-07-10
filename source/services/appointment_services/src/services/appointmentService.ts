@@ -62,11 +62,14 @@ export class AppointmentService {
             const { patientId, doctorId, appointmentDate, timeSlot, notes }: IAppointmentInput = data;
 
             // Find doctor and check if exists
-            const doctorResponse = await this.doctorService.getDoctorByIdInternal({ doctorId });
-            if (!doctorResponse.success) throw new Error('Doctor not found');
+            const doctorResponse = await this.doctorService.getDoctorByUserIdInternal({ userId: doctorId });
+            //logger.info("Response: " + JSON.stringify(doctorResponse));
+            if (!doctorResponse.success || !doctorResponse.doctor) throw new Error('Doctor not found');
+            //logger.info("Passed doctorResponse.success check");
+            const doctor_Id = doctorResponse.doctor.id;
 
             // Check if the requested time slot is available in doctor's schedule
-            const slotsResponse = await this.doctorService.getSlotsInternal({ doctorId, date: appointmentDate })
+            const slotsResponse = await this.doctorService.getSlotsInternal({ doctorId: doctor_Id, date: appointmentDate })
             if (!slotsResponse.success) throw new Error('Cannot get doctor\'s time slots');
             const availableSlots = slotsResponse.slots
 
@@ -141,10 +144,9 @@ export class AppointmentService {
             }
 
             // Find doctor and check if exists
-            const doctorResponse = await this.doctorService.getDoctorByIdInternal({ doctorId });
-            if (!doctorResponse.success) {
-                throw new Error('Doctor not found');
-            }
+            const doctorResponse = await this.doctorService.getDoctorByUserIdInternal({ userId: doctorId });
+            if (!doctorResponse.success || !doctorResponse.doctor) throw new Error('Doctor not found');
+            const doctor_Id = doctorResponse.doctor.id;
 
             // Update appointment fields
             if (appointmentDate && timeSlot) {
@@ -152,7 +154,7 @@ export class AppointmentService {
                 const newDateTime = appointmentDate;
 
                 // Check if the time slot exists
-                const slotsResponse = await this.doctorService.getSlotsInternal({ doctorId, date: appointmentDate.toString() });
+                const slotsResponse = await this.doctorService.getSlotsInternal({ doctorId: doctor_Id, date: appointmentDate.toString() });
                 if (!slotsResponse.success) {
                     throw new Error('Could not fetch doctor slots');
                 }
@@ -211,8 +213,13 @@ export class AppointmentService {
             // Check if appointment exists
             const appointment = await Appointment.findById(appointmentId);
             if (!appointment) throw new Error('Appointment not found');
-            // Check if appointment is in pending status
 
+            const doctorResponse = await this.doctorService.getDoctorByUserIdInternal({ userId: appointment.doctorId });
+            if (!doctorResponse.success || !doctorResponse.doctor) throw new Error('Doctor not found');
+            const doctor_Id = doctorResponse.doctor.id;
+
+
+            // Check if appointment is in pending status
             if (appointment.status !== AppointmentStatus.PENDING)
                 throw new Error(`Cannot accept appointment. Current status: ${appointment.status}`);
 
@@ -229,7 +236,7 @@ export class AppointmentService {
 
             // Mark the slot as booked
             const isSlotUpdated = await this.doctorService.updateSlotBookingStatusInternal({
-                doctorId: appointment.doctorId,
+                doctorId: doctor_Id,
                 appointmentDate: appointment.appointmentDate.toISOString().split('T')[0],
                 timeSlot: appointment.timeSlot,
                 isBooked: true // Mark as booked
@@ -239,12 +246,13 @@ export class AppointmentService {
             // Find all other pending appointments with the same doctor and time slot
             const conflictingPendingAppointments = await Appointment.find({
                 _id: { $ne: appointmentId },
-                doctor: appointment.doctorId,
+                doctorId: appointment.doctorId,
                 appointmentDate: appointment.appointmentDate,
                 'timeSlot.startTime': appointment.timeSlot.startTime,
                 status: AppointmentStatus.PENDING
             });
 
+            logger.info(conflictingPendingAppointments)
             // Cancel all conflicting pending appointments
             if (conflictingPendingAppointments.length > 0) {
                 await Appointment.updateMany(
@@ -255,7 +263,7 @@ export class AppointmentService {
                         status: AppointmentStatus.CANCELLED
                     }
                 );
-                //console.log(`Cancelled ${conflictingPendingAppointments.length} conflicting appointments`);
+                logger.info(`Cancelled ${conflictingPendingAppointments.length} conflicting appointments`);
             }
 
             // Accept the appointment
@@ -271,20 +279,36 @@ export class AppointmentService {
 
     async getMyAppointments(data: GetMyAppointmentsRequest, userId: string, userRole: UserRole) {
         try {
-            const { status, page = 1, limit = 10 } = data;
+            const { status, page = 1, limit = 10, userId: requestedUserId, doctorId: requestedDoctorId } = data;
 
             let query: any = {};
 
-            // Build query based on user role
-            if (userRole === UserRole.DOCTOR) {
-                // For doctors, find appointments through doctor profile
-                const doctorResponse = await this.doctorService.getDoctorByUserIdInternal({ userId });
-                if (!doctorResponse.success) throw new Error('Doctor not found');
-                query.doctorId = doctorResponse.doctor?.id;
-            } else if (userRole === UserRole.PATIENT) {
-                // For patients, 
-                query.patientId = userId;
+            // Check if admin/employee is querying for specific users
+            const isAdminOrEmployee = ['admin', 'employee'].includes(userRole.toLowerCase());
+
+            if ((requestedUserId || requestedDoctorId) && isAdminOrEmployee) {
+                // Admin/employee querying with specific filters
+                if (requestedUserId) {
+                    query.patientId = requestedUserId;
+                }
+                if (requestedDoctorId) {
+                    query.doctorId = requestedDoctorId;
+                }
+                // Note: If both are provided, it will find appointments between that specific patient and doctor
+            } else if (!requestedUserId && !requestedDoctorId) {
+                // Default behavior - user querying their own appointments
+                if (userRole === UserRole.DOCTOR) {
+                    // For doctors, find appointments through doctor profile
+                    const doctorResponse = await this.doctorService.getDoctorByUserIdInternal({ userId });
+                    if (!doctorResponse.success || !doctorResponse.doctor) throw new Error('Doctor not found');
+                    query.doctorId = doctorResponse.doctor.userId;
+                } else if (userRole === UserRole.PATIENT) {
+                    // For patients
+                    query.patientId = userId;
+                }
             }
+            // If non-admin/employee tries to use userId/doctorId, they'll get no results due to permission check in handler
+
             if (status) {
                 query.status = status;
             }
@@ -297,8 +321,6 @@ export class AppointmentService {
                 .limit(Number(limit));
 
             const total = await Appointment.countDocuments(query);
-
-            //console.log(appointments);
 
             return {
                 data: appointments,
@@ -322,8 +344,10 @@ export class AppointmentService {
             const appointment = await Appointment.findById(appointmentId)
             if (!appointment) throw new Error('Appointment not found');
 
-            const doctorResponse = await this.doctorService.getDoctorByIdInternal({ doctorId: appointment.doctorId });
-            if (!doctorResponse.success) throw new Error('Doctor not found');
+            const doctorResponse = await this.doctorService.getDoctorByUserIdInternal({ userId: appointment.doctorId });
+            if (!doctorResponse.success || !doctorResponse.doctor) throw new Error('Doctor not found');
+            const doctor_Id = doctorResponse.doctor.id;
+            logger.info("doctorId: " + doctor_Id);
 
 
             if (appointment.status === AppointmentStatus.COMPLETED)
@@ -336,7 +360,7 @@ export class AppointmentService {
             // Free up the time slot when cancelling
             const isSlotUpdated = await this.doctorService.updateSlotBookingStatusInternal(
                 {
-                    doctorId: appointment.doctorId,
+                    doctorId: doctor_Id,
                     appointmentDate: appointment.appointmentDate.toISOString().split('T')[0],
                     timeSlot: appointment.timeSlot,
                     isBooked: Boolean(false) // Mark as not booked

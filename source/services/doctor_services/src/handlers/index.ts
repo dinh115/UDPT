@@ -86,7 +86,7 @@ export function convertDateToTimestamps(obj: any): any {
 
 export function convertToDoctorProto(doctor: IDoctor): Doctor {
     return {
-        id: doctor.id,
+        id: doctor._id,
         userId: doctor.userId,
         specialization: doctor.specialization,
         experience: doctor.experience,

@@ -23,8 +23,8 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
                             <p class="mb-0 opacity-75">Quản lý thông tin và lịch sử khám bệnh</p>
                         </div>
                         <div class="d-flex gap-2">
-                            <a href="/patient/history" class="btn btn-light btn-lg">
-                                <i class="fas fa-history me-2"></i>Lịch Sử Lịch hẹn
+                            <a href="/patients/history" class="btn btn-light btn-lg">
+                                <i class="fas fa-history me-2"></i>Lịch Sử Khám Bệnh
                             </a>
                             <a href="/patient/edit" class="btn btn-outline-light btn-lg">
                                 <i class="fas fa-edit me-2"></i>Chỉnh Sửa
@@ -45,7 +45,7 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
                         <div class="icon-shape icon-sm bg-primary text-white rounded-circle me-3">
                             <i class="fas fa-user"></i>
                         </div>
-                        <div>
+                        <div class = 'py-3'>
                             <h5 class="card-title mb-0 text-dark">Thông Tin Cá Nhân</h5>
                             <small class="text-muted">Chi tiết thông tin bệnh nhân</small>
                         </div>
@@ -148,7 +148,7 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white border-0 pb-0">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center py-3">
                             <div class="icon-shape icon-sm bg-success text-white rounded-circle me-3">
                                 <i class="fas fa-history"></i>
                             </div>

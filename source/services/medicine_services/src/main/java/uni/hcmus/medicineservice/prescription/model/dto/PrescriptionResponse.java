@@ -40,4 +40,7 @@ public class PrescriptionResponse {
     
     @Schema(description = "Last updated time")
     private LocalDateTime updatedAt;
+
+    @Schema(description = "Is the prescription deleted?")
+    private boolean isDeleted;
 }

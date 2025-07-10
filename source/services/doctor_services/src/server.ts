@@ -42,7 +42,7 @@ function createGrpcServer(): grpc.Server {
         CreateDoctorProfile: withTimestampConversion(doctorHandlers.createDoctorProfile.bind(doctorHandlers)),
         findDoctors: withTimestampConversion(doctorHandlers.getDoctors.bind(doctorHandlers)),
         GetDoctorById: withTimestampConversion(doctorHandlers.getDoctorProfileById.bind(doctorHandlers)),
-        GetDoctorUserById: withTimestampConversion(doctorHandlers.getDoctorProfileByUserId.bind(doctorHandlers)),
+        GetDoctorByUserId: withTimestampConversion(doctorHandlers.getDoctorProfileByUserId.bind(doctorHandlers)),
         UpdateDoctorProfile: withTimestampConversion(doctorHandlers.updateDoctorProfile.bind(doctorHandlers)),
         UpdateDoctorAvailability: withTimestampConversion(doctorHandlers.updateDoctorAvailability.bind(doctorHandlers)),
         DeleteDoctors: withTimestampConversion(doctorHandlers.deleteDoctors.bind(doctorHandlers)),
@@ -123,7 +123,7 @@ function createGrpcServer(): grpc.Server {
 // =================== SERVER STARTUP ===================
 const startServers = async () => {
     try {
-        // Connect to database and Redis
+        // Connect to database
         await connectDatabase();
         // Start gRPC server
         const grpcServer = createGrpcServer();

@@ -37,6 +37,7 @@ class HttpClient
     public function get($endpoint, $params = [], $headers = [])
     {
         $url = $this->baseUrl . $endpoint;
+        //var_dump(value: $url);
         if (!empty($params)) {
             $url .= '?' . http_build_query($params);
         }

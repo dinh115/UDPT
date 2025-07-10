@@ -96,7 +96,7 @@ export const jwtTokenParser = async (req, res, next) => {
             if (tokenData.email) metadata.add('email', tokenData.email);
             if (tokenData.role) metadata.add('role', tokenData.role);
             if (tokenData.status) metadata.add('status', tokenData.status);
-            if (tokenData.address) metadata.add('address', tokenData.address);
+            //if (tokenData.address) metadata.add('address', tokenData.address);
             if (tokenData.dateOfBirth) metadata.add('dateOfBirth', tokenData.dateOfBirth);
             if (tokenData.phone) metadata.add('phone', tokenData.phone);
             metadata.add('token', jwtToken);

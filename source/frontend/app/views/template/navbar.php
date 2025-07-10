@@ -27,11 +27,6 @@
                       </a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link <?= isActive('/appointments') ?>" href="/appointments">
-                          <i class="fas fa-calendar-check me-1"></i>Lịch hẹn
-                      </a>
-                  </li>
-                  <li class="nav-item">
                       <a class="nav-link <?= isActive('/doctors') ?>" href="/doctors">
                           <i class="fas fa-user-md me-1"></i>Bác sĩ
                       </a>

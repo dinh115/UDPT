@@ -80,5 +80,5 @@
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src='/js/statistics.js'></script>
+    <script src='statistics.js'></script>
 </body>

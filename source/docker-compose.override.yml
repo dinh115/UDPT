@@ -38,7 +38,7 @@ services:
 
   user-mongodb:
     ports:
-      - "27017:27017" # Avoid conflict with above
+      - "27017:27017" # Avoid conflict
 
   doctor-mongodb:
     ports:

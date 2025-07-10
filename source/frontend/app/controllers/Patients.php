@@ -62,22 +62,22 @@ class Patients extends Controller
     //     }
     // }
 
-    // public function history()
-    // {
-    //     try {
-    //         $userId = $_SESSION['user_id'];
-    //         $visitHistory = $this->patientModel->getVisitHistory($userId);
+    public function history()
+    {
+        try {
+            $userId = $_SESSION['user_session']['user']['id'];
+            $visitHistory = $this->patientModel->getVisitHistory($userId);
 
-    //         $data = [
-    //             'title' => 'Lịch Sử Khám Bệnh',
-    //             'visitHistory' => $visitHistory
-    //         ];
+            $data = [
+                'title' => 'Lịch Sử Khám Bệnh',
+                'visitHistory' => $visitHistory
+            ];
 
-    //         $this->view('patient/history', $data);
-    //     } catch (Exception $e) {
-    //         $this->renderError('Lỗi', 'Không thể tải lịch sử khám bệnh', $e->getMessage());
-    //     }
-    // }
+            $this->view('patient/history', $data);
+        } catch (Exception $e) {
+            $this->renderError('Lỗi', 'Không thể tải lịch sử khám bệnh', $e->getMessage());
+        }
+    }
 
     public function detail($visitId)
     {
@@ -117,51 +117,6 @@ class Patients extends Controller
             $this->view('patient/detail', $data);
         } catch (Exception $e) {
             $this->renderError('Lỗi', 'Không thể tải chi tiết lượt khám', $e->getMessage());
-        }
-    }
-
-    // API endpoints for AJAX requests
-    public function getVisitHistory()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-            $this->jsonResponse(['error' => 'Method not allowed'], 405);
-        }
-
-        try {
-            $userId = $_SESSION['user_id'];
-            $visitHistory = $this->patientModel->getVisitHistory($userId);
-            $this->jsonResponse(['success' => true, 'data' => $visitHistory]);
-        } catch (Exception $e) {
-            $this->jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
-        }
-    }
-
-    public function getVisitDetail()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-            $this->jsonResponse(['error' => 'Method not allowed'], 405);
-        }
-
-        $visitId = $_GET['id'] ?? null;
-        if (!$visitId) {
-            $this->jsonResponse(['success' => false, 'error' => 'ID lượt khám không hợp lệ'], 400);
-        }
-
-        try {
-            $visitDetail = $this->patientModel->getVisitDetail($visitId);
-            
-            if (!$visitDetail) {
-                $this->jsonResponse(['success' => false, 'error' => 'Không tìm thấy thông tin lượt khám'], 404);
-            }
-
-            // Check if this visit belongs to current user
-            if ($visitDetail['patient'] !== $_SESSION['user_id']) {
-                $this->jsonResponse(['success' => false, 'error' => 'Không có quyền truy cập'], 403);
-            }
-
-            $this->jsonResponse(['success' => true, 'data' => $visitDetail]);
-        } catch (Exception $e) {
-            $this->jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
 }

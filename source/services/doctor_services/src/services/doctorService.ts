@@ -23,11 +23,19 @@ export class DoctorService {
             throw new Error('Invalid date');
         }
 
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        return days[date.getDay()] as DayOfWeek;
+        // Chính xác thứ tự theo getDay(): 0 = Sunday → 6 = Saturday
+        const days: DayOfWeek[] = [
+            DayOfWeek.SUNDAY,
+            DayOfWeek.MONDAY,
+            DayOfWeek.TUESDAY,
+            DayOfWeek.WEDNESDAY,
+            DayOfWeek.THURSDAY,
+            DayOfWeek.FRIDAY,
+            DayOfWeek.SATURDAY,
+        ];
+
+        return days[date.getDay()];
     }
-
-
     // Helper method to find and update slot booking status
     async updateSlotBookingStatus(
         doctorId: string,
@@ -36,12 +44,17 @@ export class DoctorService {
         isBooked: boolean
     ) {
         const dayOfWeek = this._getDayOfWeek(appointmentDate);
+        //logger.info("dayOfWeek: " + dayOfWeek);
 
         const doctor = await Doctor.findById(doctorId);
         if (!doctor) throw new Error('DOctor not found');
+        //logger.info("doctor: " + doctor);
 
         const dayAvailability = doctor.availability.find(avail => avail.day === dayOfWeek);
+        //logger.info("dayAvailability: " + dayAvailability);
+
         if (!dayAvailability) throw new Error('Doctor is not available on this day');
+        //logger.info("PASSED");
 
         const slot = dayAvailability.slots.find(s =>
             s.startTime === timeSlot.startTime && s.endTime === timeSlot.endTime
@@ -60,14 +73,20 @@ export class DoctorService {
             if (!doctor) {
                 throw new Error('Doctor not found');
             }
+            //logger.info("Doctor id input: " + doctorId);
+            //logger.info("Doctor data: " + JSON.stringify(doctor));
 
             const requestedDate = new Date(date);
             const dayOfWeek = this._getDayOfWeek(requestedDate);
+            //logger.info("Day of week: " + dayOfWeek);
 
             const dayAvailability = doctor.availability.find(avail => avail.day === dayOfWeek);
+            //logger.info("Day Availability: " + JSON.stringify(dayAvailability));
             if (!dayAvailability) {
                 throw new Error('Doctor is not available on this day');
             }
+            //logger.info("PASSED ERROR CHECK POINT");
+
             return dayAvailability.slots.filter(slot => !slot.isBooked);
         }
         catch (error) {
