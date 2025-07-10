@@ -4,7 +4,7 @@ $description = 'Các chức năng liên quan đến bác sĩ.';
 require_once(__DIR__ . '/../template/header.php'); ?>
 
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <?php require_once(__DIR__ . '/../template/navbar.php'); ?>
 
@@ -18,169 +18,184 @@ require_once(__DIR__ . '/../template/header.php'); ?>
             </div>
         </div>
     </section>
+    <main class="flex-grow-1">
 
-    <div class="container">
+        <div class="container">
 
-        <!-- Dashboard Grid -->
-        <div class="dashboard-grid">
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
 
-            <!-- Quick Actions -->
-            <div class="quick-actions mt-0">
-                <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
+                <!-- Quick Actions -->
+                <div class="quick-actions mt-0">
+                    <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
 
-                    <a href="#doctorForm" class="action-btn">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        <span>Tạo hồ sơ bác sĩ</span>
+                        <a href="#doctorForm" class="action-btn">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                            <span>Tạo hồ sơ bác sĩ</span>
+                        </a>
+                    <?php endif ?>
+
+                    <a href="#doctorList" class="action-btn">
+                        <i class="fas fa-calendar-plus"></i>
+                        <span>Đặt lịch hẹn</span>
                     </a>
-                <?php endif ?>
+                    <?php if (isset($_SESSION['user_session'])): ?>
+                        <a href="/appointments/my" class="action-btn">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <span>Lịch hẹn của tôi</span>
+                        </a>
+                    <?php endif ?>
+                    <?php if (isset($sessionDoctorId)): ?>
+                        <a href="/doctors/show/<?php echo $sessionDoctorId ?>" class="action-btn">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <span>Hồ sơ của tôi</span>
+                        </a>
+                    <?php endif ?>
 
-                <a href="#doctorList" class="action-btn">
-                    <i class="fas fa-calendar-plus"></i>
-                    <span>Đặt lịch hẹn</span>
-                </a>
-            </div>
-        </div>
-
-
-        <!-- Doctor Form -->
-        <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
-            <div class="dashboard-card slide-up" id="doctorForm">
-                <div class="card-header">
-                    <div class="card-icon">
-                        <i class="fas fa-user-md"></i>
-                    </div>
-                    <div>
-                        <h3 class="card-title">Hồ Sơ Bác Sĩ</h3>
-                        <p class="card-subtitle">Tạo thông tin hồ sơ bác sĩ</p>
-                    </div>
                 </div>
+            </div>
 
-                <form id="doctorFormElement">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="userId" class="form-label">User ID</label>
-                            <input type="text" class="form-control" id="userId" required>
+
+            <!-- Doctor Form -->
+            <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
+                <div class="dashboard-card slide-up" id="doctorForm">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-user-md"></i>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="specialization" class="form-label">Chuyên khoa</label>
-                            <select class="form-control" id="specialization" required>
-                                <option value="">Chọn chuyên khoa</option>
-                                <option value="Tim mạch">Tim mạch</option>
-                                <option value="Thần kinh">Thần kinh</option>
-                                <option value="Chỉnh hình">Chỉnh hình</option>
-                                <option value="Nhi khoa">Nhi khoa</option>
-                                <option value="Da liễu">Da liễu</option>
-                                <option value="Y học tổng quát">Y học tổng quát</option>
-                                <option value="Phẫu thuật">Phẫu thuật</option>
-                                <option value="Ung thư">Ung thư</option>
-                            </select>
+                        <div>
+                            <h3 class="card-title">Hồ Sơ Bác Sĩ</h3>
+                            <p class="card-subtitle">Tạo thông tin hồ sơ bác sĩ</p>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="experience" class="form-label">Kinh nghiệm (năm)</label>
-                            <input type="number" class="form-control" id="experience" min="0" max="50" required>
+                    <form id="doctorFormElement">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="userId" class="form-label">User ID</label>
+                                <input type="text" class="form-control" id="userId" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="specialization" class="form-label">Chuyên khoa</label>
+                                <select class="form-control" id="specialization" required>
+                                    <option value="">Chọn chuyên khoa</option>
+                                    <option value="Tim mạch">Tim mạch</option>
+                                    <option value="Thần kinh">Thần kinh</option>
+                                    <option value="Chỉnh hình">Chỉnh hình</option>
+                                    <option value="Nhi khoa">Nhi khoa</option>
+                                    <option value="Da liễu">Da liễu</option>
+                                    <option value="Y học tổng quát">Y học tổng quát</option>
+                                    <option value="Phẫu thuật">Phẫu thuật</option>
+                                    <option value="Ung thư">Ung thư</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="qualifications" class="form-label">Bằng cấp</label>
-                            <input type="text" class="form-control" id="qualifications" placeholder="MBBS, MD, PhD...">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="experience" class="form-label">Kinh nghiệm (năm)</label>
+                                <input type="number" class="form-control" id="experience" min="0" max="50" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="qualifications" class="form-label">Bằng cấp</label>
+                                <input type="text" class="form-control" id="qualifications" placeholder="MBBS, MD, PhD...">
+                            </div>
                         </div>
-                    </div>
-                    <!-- Availability Section -->
-                    <div class="mb-4">
-                        <label class="form-label">Thời gian hoạt động</label>
-                        <div id="availabilityContainer">
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Ngày</label>
-                                    <select class="form-select form-control" id="availabilityDate" required>
-                                        <option value="">-- Chọn ngày --</option>
-                                        <option value="Monday">Thứ Hai</option>
-                                        <option value="Tuesday">Thứ Ba</option>
-                                        <option value="Wednesday">Thứ Tư</option>
-                                        <option value="Thursday">Thứ Năm</option>
-                                        <option value="Friday">Thứ Sáu</option>
-                                        <option value="Saturday">Thứ Bảy</option>
-                                        <option value="Sunday">Chủ Nhật</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Thời gian bắt đầu</label>
-                                    <input type="text" class="form-control" id="startTime" placeholder="e.g. 09:00" required>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Thời gian kết thúc</label>
-                                    <input type="text" class="form-control" id="endTime" placeholder="e.g. 17:00" required>
+                        <!-- Availability Section -->
+                        <div class="mb-4">
+                            <label class="form-label">Thời gian hoạt động</label>
+                            <div id="availabilityContainer">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Ngày</label>
+                                        <select class="form-select form-control" id="availabilityDate" required>
+                                            <option value="">-- Chọn ngày --</option>
+                                            <option value="MONDAY">Thứ Hai</option>
+                                            <option value="TUESDAY">Thứ Ba</option>
+                                            <option value="WEDNESDAY">Thứ Tư</option>
+                                            <option value="THURSDAY">Thứ Năm</option>
+                                            <option value="FRIDAY">Thứ Sáu</option>
+                                            <option value="SATURDAY">Thứ Bảy</option>
+                                            <option value="SUNDAY">Chủ Nhật</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Thời gian bắt đầu</label>
+                                        <input type="text" class="form-control" id="startTime" placeholder="e.g. 09:00" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Thời gian kết thúc</label>
+                                        <input type="text" class="form-control" id="endTime" placeholder="e.g. 17:00" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" name="action" value="create" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>
+                                <span>Tạo hồ sơ</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            <?php endif ?>
+
+            <!-- Doctor List -->
+            <div class="dashboard-card slide-up mt-5">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
                     </div>
-
-                    <div class="d-flex gap-2">
-                        <button type="submit" name="action" value="create" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>
-                            <span>Tạo hồ sơ</span>
-                        </button>
+                    <div id="doctorList">
+                        <h3 class="card-title">Xem hồ sơ bác sĩ</h3>
+                        <p class="card-subtitle">Hỗ trợ tìm kiếm và sắp xếp</p>
                     </div>
-                </form>
-            </div>
-        <?php endif ?>
+                </div>
 
-        <!-- Doctor List -->
-        <div class="dashboard-card slide-up mt-5">
-            <div class="card-header">
-                <div class="card-icon">
-                    <i class="fas fa-users"></i>
+                <!-- Filter -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <select class="form-control" id="specializationFilter">
+                            <option value="">Tất cả chuyên khoa</option>
+                            <option value="Tim mạch">Tim mạch</option>
+                            <option value="Thần kinh">Thần kinh</option>
+                            <option value="Chỉnh hình">Chỉnh hình</option>
+                            <option value="Nhi khoa">Nhi khoa</option>
+                            <option value="Da liễu">Da liễu</option>
+                            <option value="Y học tổng quát">Y học tổng quát</option>
+                            <option value="Phẫu thuật">Phẫu thuật</option>
+                            <option value="Ung thư">Ung thư</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control" id="sortBy">
+                            <option value="createdAt">Sắp xếp theo Ngày tạo</option>
+                            <option value="experience">Sắp xếp theo Kinh nghiệm (năm)</option>
+                            <option value="specialization">Sắp xếp theo Chuyên khoa</option>
+                            <!-- <option value="createdAt">Sắp xếp theo Ngày tạo</option> -->
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control" id="sortOrder">
+                            <option value="asc">Tăng dần</option>
+                            <option value="desc">Giảm dần</option>
+                        </select>
+                    </div>
                 </div>
-                <div id="doctorList">
-                    <h3 class="card-title">Xem hồ sơ bác sĩ</h3>
-                    <p class="card-subtitle">Hỗ trợ tìm kiếm và sắp xếp</p>
-                </div>
-            </div>
 
-            <!-- Filter -->
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <select class="form-control" id="specializationFilter">
-                        <option value="">Tất cả chuyên khoa</option>
-                        <option value="Tim mạch">Tim mạch</option>
-                        <option value="Thần kinh">Thần kinh</option>
-                        <option value="Chỉnh hình">Chỉnh hình</option>
-                        <option value="Nhi khoa">Nhi khoa</option>
-                        <option value="Da liễu">Da liễu</option>
-                        <option value="Y học tổng quát">Y học tổng quát</option>
-                        <option value="Phẫu thuật">Phẫu thuật</option>
-                        <option value="Ung thư">Ung thư</option>
-                    </select>
+                <div id="doctorsList">
+                    <!-- Doctors will be populated by JavaScript -->
                 </div>
-                <div class="col-md-4">
-                    <select class="form-control" id="sortBy">
-                        <option value="createdAt">Sắp xếp theo Ngày tạo</option>
-                        <option value="experience">Sắp xếp theo Kinh nghiệm (năm)</option>
-                        <option value="specialization">Sắp xếp theo Chuyên khoa</option>
-                        <!-- <option value="createdAt">Sắp xếp theo Ngày tạo</option> -->
-                    </select>
+                <div id="paginationControls" class="d-flex justify-content-center mt-3 hidden">
+                    <button id="prevPage" class="btn btn-primary me-2">Trang trước</button>
+                    <span id="currentPage" class="align-self-center"></span>
+                    <button id="nextPage" class="btn btn-primary ms-2">Trang sau</button>
                 </div>
-                <div class="col-md-4">
-                    <select class="form-control" id="sortOrder">
-                        <option value="asc">Tăng dần</option>
-                        <option value="desc">Giảm dần</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="doctorsList">
-                <!-- Doctors will be populated by JavaScript -->
-            </div>
-            <div id="paginationControls" class="d-flex justify-content-center mt-3 hidden">
-                <button id="prevPage" class="btn btn-primary me-2">Trang trước</button>
-                <span id="currentPage" class="align-self-center"></span>
-                <button id="nextPage" class="btn btn-primary ms-2">Trang sau</button>
             </div>
         </div>
-    </div>
-    </div>
+        </div>
+    </main>
 
     <?php require_once(__DIR__ . '/../template/footer.php'); ?>
     <?php require_once(__DIR__ . '/../template/scripts.php'); ?>
@@ -234,7 +249,23 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                     const clickedButton = document.activeElement;
                     const action = clickedButton.value;
 
-                    const userId = document.getElementById("userId").value;
+                    const userId = document.getElementById("userId").value.trim();
+                    // Kiểm tra userId có tồn tại
+                    const userCheckResponse = await fetch(`<?php echo getenv('API_AJAX_URL') ?>/api/user/GetUserInternal/${userId}`, {
+                        method: 'GET',
+                        headers: {
+                            'x-service-token': 'service-secret-token-123'
+                        }
+                    });
+
+                    const userCheckResult = await userCheckResponse.json();
+
+                    if (!userCheckResponse.ok || !userCheckResult.success || !userCheckResult.user) {
+                        alert('Người dùng không tồn tại. Vui lòng kiểm tra lại User ID.');
+                        console.error('User check failed:', userCheckResult.error || 'Unknown error');
+                        return;
+                    }
+
                     const specialization = document.getElementById("specialization").value;
                     const experience = parseInt(document.getElementById("experience").value);
                     const qualifications = document.getElementById("qualifications").value.split(',').map(q => q.trim());
@@ -302,10 +333,14 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                                 alert(`Tạo bác sĩ thành công! ID: ${createdDoctor.id}`);
                             }
 
-                            //location.reload();
+                            location.reload();
                         } else {
                             const errorMessage = data.message || data.error || data._error || 'Có lỗi xảy ra';
-                            alert(`Lỗi khi tạo bác sĩ: ${errorMessage}`);
+                            if (errorMessage?.includes('E11000') || error.code === 11000) {
+                                alert('Tài khoản bác sĩ đã tồn tại. Vui lòng kiểm tra lại.');
+                            } else {
+                                alert('Có lỗi xảy ra khi tạo bác sĩ: ' + errorMessage);
+                            }
                         }
                     } catch (error) {
                         console.error('Error creating doctor:', error);
@@ -487,7 +522,7 @@ require_once(__DIR__ . '/../template/header.php'); ?>
         <a href="/doctors/show/${doctor.id}" class="btn btn-primary btn-sm">
             Xem chi tiết
         </a>
-         <a href="/doctors/schedule/${doctor.userId}" class="btn btn-success btn-sm">
+         <a href="/doctors/show/${doctor.id}/#scheduleNow" class="btn btn-success btn-sm">
             Đặt lịch hẹn
         </a>
         <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>

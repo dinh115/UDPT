@@ -2,173 +2,176 @@
 require_once(__DIR__ . '/../template/header.php');
 ?>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <?php require_once(__DIR__ . '/../template/navbar.php'); ?>
     <link rel="stylesheet" href="<?= $baseUrl ?>/css/showDoctor.css">
+    <main class="flex-grow-1">
 
-    <div class="mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <i class="fas fa-user-md"></i>
-                        </div>
-                        <div>
-                            <h3 class="card-title">Cập nhật Hồ Sơ Bác Sĩ</h3>
-                            <p class="card-subtitle">Chỉnh sửa thông tin bác sĩ và lịch khám</p>
-                        </div>
-                    </div>
-
-                    <?php if (isset($doctor) && $doctor): ?>
-                        <form id="updateDoctorForm">
-                            <!-- Hidden Doctor ID -->
-                            <input type="hidden" id="doctorId" value="<?php echo htmlspecialchars($doctor['id']); ?>">
-
-                            <!-- Doctor Name Header -->
-                            <div class="info-section">
-                                <div class="doctor-name-header">
-                                    <h2 class="doctor-name">
-                                        <i class="fas fa-user-md"></i>
-                                        Bác sĩ: <?php echo htmlspecialchars(getDoctorName($doctor)); ?>
-                                    </h2>
-                                </div>
+        <div class="mt-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-user-md"></i>
                             </div>
+                            <div>
+                                <h3 class="card-title">Cập nhật Hồ Sơ Bác Sĩ</h3>
+                                <p class="card-subtitle">Chỉnh sửa thông tin bác sĩ và lịch khám</p>
+                            </div>
+                        </div>
 
-                            <!-- Basic Information (Admin Only) -->
-                            <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
+                        <?php if (isset($doctor) && $doctor): ?>
+                            <form id="updateDoctorForm">
+                                <!-- Hidden Doctor ID -->
+                                <input type="hidden" id="doctorId" value="<?php echo htmlspecialchars($doctor['id']); ?>">
+
+                                <!-- Doctor Name Header -->
+                                <div class="info-section">
+                                    <div class="doctor-name-header">
+                                        <h2 class="doctor-name">
+                                            <i class="fas fa-user-md"></i>
+                                            Bác sĩ: <?php echo htmlspecialchars(getDoctorName($doctor)); ?>
+                                        </h2>
+                                    </div>
+                                </div>
+
+                                <!-- Basic Information (Admin Only) -->
+                                <?php if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'admin'): ?>
+                                    <div class="info-section">
+                                        <h4 class="section-title">
+                                            <i class="fas fa-info-circle"></i>
+                                            Thông tin cơ bản
+                                        </h4>
+
+                                        <div class="form-group mb-3">
+                                            <label for="specialization" class="form-label">Chuyên khoa</label>
+                                            <input type="text"
+                                                class="form-control"
+                                                id="specialization"
+                                                value="<?php echo htmlspecialchars($doctor['specialization'] ?? ''); ?>"
+                                                placeholder="Nhập chuyên khoa">
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="experience" class="form-label">Kinh nghiệm (năm)</label>
+                                            <input type="number"
+                                                class="form-control"
+                                                id="experience"
+                                                value="<?php echo htmlspecialchars($doctor['experience'] ?? ''); ?>"
+                                                placeholder="Nhập số năm kinh nghiệm"
+                                                min="0">
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="qualifications" class="form-label">Bằng cấp & Chứng chỉ</label>
+                                            <textarea class="form-control"
+                                                id="qualifications"
+                                                rows="3"
+                                                placeholder="Nhập bằng cấp, mỗi bằng cấp trên một dòng"><?php
+                                                                                                        if (isset($doctor['qualifications']) && is_array($doctor['qualifications'])) {
+                                                                                                            echo htmlspecialchars(implode("\n", $doctor['qualifications']));
+                                                                                                        }
+                                                                                                        ?></textarea>
+                                            <small class="form-text text-muted">Mỗi bằng cấp/chứng chỉ trên một dòng</small>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+
+                                <!-- Availability Section -->
                                 <div class="info-section">
                                     <h4 class="section-title">
-                                        <i class="fas fa-info-circle"></i>
-                                        Thông tin cơ bản
+                                        <i class="fas fa-calendar-alt"></i>
+                                        Lịch khám
                                     </h4>
 
-                                    <div class="form-group mb-3">
-                                        <label for="specialization" class="form-label">Chuyên khoa</label>
-                                        <input type="text"
-                                            class="form-control"
-                                            id="specialization"
-                                            value="<?php echo htmlspecialchars($doctor['specialization'] ?? ''); ?>"
-                                            placeholder="Nhập chuyên khoa">
-                                    </div>
+                                    <div id="availability-container">
+                                        <?php
+                                        $daysOfWeek = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+                                        $existingAvailability = isset($doctor['availability']) ? $doctor['availability'] : [];
 
-                                    <div class="form-group mb-3">
-                                        <label for="experience" class="form-label">Kinh nghiệm (năm)</label>
-                                        <input type="number"
-                                            class="form-control"
-                                            id="experience"
-                                            value="<?php echo htmlspecialchars($doctor['experience'] ?? ''); ?>"
-                                            placeholder="Nhập số năm kinh nghiệm"
-                                            min="0">
-                                    </div>
+                                        // Create a lookup array for existing availability
+                                        $availabilityLookup = [];
+                                        foreach ($existingAvailability as $avail) {
+                                            $availabilityLookup[$avail['day']] = $avail['slots'] ?? [];
+                                        }
+                                        ?>
 
-                                    <div class="form-group mb-3">
-                                        <label for="qualifications" class="form-label">Bằng cấp & Chứng chỉ</label>
-                                        <textarea class="form-control"
-                                            id="qualifications"
-                                            rows="3"
-                                            placeholder="Nhập bằng cấp, mỗi bằng cấp trên một dòng"><?php
-                                                                                                    if (isset($doctor['qualifications']) && is_array($doctor['qualifications'])) {
-                                                                                                        echo htmlspecialchars(implode("\n", $doctor['qualifications']));
-                                                                                                    }
-                                                                                                    ?></textarea>
-                                        <small class="form-text text-muted">Mỗi bằng cấp/chứng chỉ trên một dòng</small>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
+                                        <?php foreach ($daysOfWeek as $day): ?>
+                                            <div class="day-availability mb-4">
+                                                <div class="day-header">
+                                                    <h5>
+                                                        <i class="fas fa-calendar-day"></i>
+                                                        <?php echo translateDay($day); ?>
+                                                    </h5>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-primary"
+                                                        onclick="addTimeSlot('<?php echo $day; ?>')">
+                                                        <i class="fa fa-plus-square text-white" aria-hidden="true"></i>
+                                                        Thêm khung giờ
+                                                    </button>
+                                                </div>
 
-                            <!-- Availability Section -->
-                            <div class="info-section">
-                                <h4 class="section-title">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    Lịch khám
-                                </h4>
-
-                                <div id="availability-container">
-                                    <?php
-                                    $daysOfWeek = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
-                                    $existingAvailability = isset($doctor['availability']) ? $doctor['availability'] : [];
-
-                                    // Create a lookup array for existing availability
-                                    $availabilityLookup = [];
-                                    foreach ($existingAvailability as $avail) {
-                                        $availabilityLookup[$avail['day']] = $avail['slots'] ?? [];
-                                    }
-                                    ?>
-
-                                    <?php foreach ($daysOfWeek as $day): ?>
-                                        <div class="day-availability mb-4">
-                                            <div class="day-header">
-                                                <h5>
-                                                    <i class="fas fa-calendar-day"></i>
-                                                    <?php echo translateDay($day); ?>
-                                                </h5>
-                                                <button type="button"
-                                                    class="btn btn-sm btn-primary"
-                                                    onclick="addTimeSlot('<?php echo $day; ?>')">
-                                                    <i class="fas fa-plus"></i> Thêm khung giờ
-                                                </button>
-                                            </div>
-
-                                            <div class="time-slots-container" id="slots-<?php echo $day; ?>">
-                                                <?php if (isset($availabilityLookup[$day])): ?>
-                                                    <?php foreach ($availabilityLookup[$day] as $index => $slot): ?>
-                                                        <div class="time-slot-input mb-2">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input type="time"
-                                                                        class="form-control"
-                                                                        name="availability[<?php echo $day; ?>][<?php echo $index; ?>][startTime]"
-                                                                        value="<?php echo htmlspecialchars($slot['startTime']); ?>"
-                                                                        required>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input type="time"
-                                                                        class="form-control"
-                                                                        name="availability[<?php echo $day; ?>][<?php echo $index; ?>][endTime]"
-                                                                        value="<?php echo htmlspecialchars($slot['endTime']); ?>"
-                                                                        required>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <button type="button"
-                                                                        class="btn btn-sm btn-danger"
-                                                                        onclick="removeTimeSlot(this)">
-                                                                        <i class="fas fa-trash"></i>
-                                                                    </button>
+                                                <div class="time-slots-container" id="slots-<?php echo $day; ?>">
+                                                    <?php if (isset($availabilityLookup[$day])): ?>
+                                                        <?php foreach ($availabilityLookup[$day] as $index => $slot): ?>
+                                                            <div class="time-slot-input mb-2">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input type="time"
+                                                                            class="form-control"
+                                                                            name="availability[<?php echo $day; ?>][<?php echo $index; ?>][startTime]"
+                                                                            value="<?php echo htmlspecialchars($slot['startTime']); ?>"
+                                                                            required>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input type="time"
+                                                                            class="form-control"
+                                                                            name="availability[<?php echo $day; ?>][<?php echo $index; ?>][endTime]"
+                                                                            value="<?php echo htmlspecialchars($slot['endTime']); ?>"
+                                                                            required>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <button type="button"
+                                                                            class="btn btn-sm btn-danger"
+                                                                            onclick="removeTimeSlot(this)">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </div>
                                             </div>
-                                        </div>
-                                    <?php endforeach; ?>
+                                        <?php endforeach; ?>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- Action Buttons -->
-                            <div class="action-buttons">
-                                <button type="submit" class="btn-custom btn-update">
-                                    <i class="fas fa-save"></i>
-                                    Cập nhật
-                                </button>
-                                <a href="/doctors/show/<?php echo $doctor['id']; ?>" class="btn-custom btn-secondary">
-                                    <i class="fas fa-arrow-left"></i>
-                                    Quay lại
-                                </a>
-                            </div>
-                        </form>
+                                <!-- Action Buttons -->
+                                <div class="action-buttons">
+                                    <button type="submit" class="btn-custom btn-update">
+                                        <i class="fas fa-save"></i>
+                                        Cập nhật
+                                    </button>
+                                    <a href="/doctors/show/<?php echo $doctor['id']; ?>" class="btn-custom btn-secondary">
+                                        <i class="fas fa-arrow-left"></i>
+                                        Quay lại
+                                    </a>
+                                </div>
+                            </form>
 
-                    <?php else: ?>
-                        <div class="alert alert-warning text-center">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Không tìm thấy thông tin bác sĩ.
-                        </div>
-                    <?php endif; ?>
+                        <?php else: ?>
+                            <div class="alert alert-warning text-center">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Không tìm thấy thông tin bác sĩ.
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <?php require_once(__DIR__ . '/../template/footer.php'); ?>
     <?php require_once(__DIR__ . '/../template/scripts.php'); ?>

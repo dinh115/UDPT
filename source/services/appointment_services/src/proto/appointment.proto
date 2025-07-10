@@ -28,7 +28,7 @@ message BookAppointmentRequest {
   string doctorId = 1;
   string appointmentDate = 2;
   TimeSlot timeSlot = 3;
-  string notes = 4;
+  optional string notes = 4;
   optional string patientId = 5; // For employees and admins
 }
 
@@ -79,6 +79,8 @@ message GetMyAppointmentsRequest {
   optional string status = 1;
   optional int32 page = 2;
   optional int32 limit = 3;
+  optional string userId = 4; 
+  optional string doctorId = 5; 
 }
 
 message PaginationInfo {

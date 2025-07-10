@@ -91,5 +91,17 @@ class Doctor extends ApiService
         }
     }
 
-
+    public function getDoctorByUserId($id)
+    {
+        try {
+            $endpoint = $this->endpoints['doctor_get_userId'] ?? '/api/doctor/GetDoctorByUserId'; // fallback nếu chưa config
+            $response = $this->httpClient->get($endpoint . '/' . $id);
+            return $this->handleResponse($response);
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }

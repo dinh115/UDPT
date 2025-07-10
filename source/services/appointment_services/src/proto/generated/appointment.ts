@@ -35,7 +35,9 @@ export interface BookAppointmentRequest {
   doctorId: string;
   appointmentDate: string;
   timeSlot: TimeSlot | undefined;
-  notes: string;
+  notes?:
+    | string
+    | undefined;
   /** For employees and admins */
   patientId?: string | undefined;
 }
@@ -87,6 +89,8 @@ export interface GetMyAppointmentsRequest {
   status?: string | undefined;
   page?: number | undefined;
   limit?: number | undefined;
+  userId?: string | undefined;
+  doctorId?: string | undefined;
 }
 
 export interface PaginationInfo {
@@ -393,7 +397,7 @@ export const Appointment: MessageFns<Appointment> = {
 };
 
 function createBaseBookAppointmentRequest(): BookAppointmentRequest {
-  return { doctorId: "", appointmentDate: "", timeSlot: undefined, notes: "", patientId: undefined };
+  return { doctorId: "", appointmentDate: "", timeSlot: undefined, notes: undefined, patientId: undefined };
 }
 
 export const BookAppointmentRequest: MessageFns<BookAppointmentRequest> = {
@@ -407,7 +411,7 @@ export const BookAppointmentRequest: MessageFns<BookAppointmentRequest> = {
     if (message.timeSlot !== undefined) {
       TimeSlot.encode(message.timeSlot, writer.uint32(26).fork()).join();
     }
-    if (message.notes !== "") {
+    if (message.notes !== undefined) {
       writer.uint32(34).string(message.notes);
     }
     if (message.patientId !== undefined) {
@@ -477,7 +481,7 @@ export const BookAppointmentRequest: MessageFns<BookAppointmentRequest> = {
       doctorId: isSet(object.doctorId) ? globalThis.String(object.doctorId) : "",
       appointmentDate: isSet(object.appointmentDate) ? globalThis.String(object.appointmentDate) : "",
       timeSlot: isSet(object.timeSlot) ? TimeSlot.fromJSON(object.timeSlot) : undefined,
-      notes: isSet(object.notes) ? globalThis.String(object.notes) : "",
+      notes: isSet(object.notes) ? globalThis.String(object.notes) : undefined,
       patientId: isSet(object.patientId) ? globalThis.String(object.patientId) : undefined,
     };
   },
@@ -493,7 +497,7 @@ export const BookAppointmentRequest: MessageFns<BookAppointmentRequest> = {
     if (message.timeSlot !== undefined) {
       obj.timeSlot = TimeSlot.toJSON(message.timeSlot);
     }
-    if (message.notes !== "") {
+    if (message.notes !== undefined) {
       obj.notes = message.notes;
     }
     if (message.patientId !== undefined) {
@@ -512,7 +516,7 @@ export const BookAppointmentRequest: MessageFns<BookAppointmentRequest> = {
     message.timeSlot = (object.timeSlot !== undefined && object.timeSlot !== null)
       ? TimeSlot.fromPartial(object.timeSlot)
       : undefined;
-    message.notes = object.notes ?? "";
+    message.notes = object.notes ?? undefined;
     message.patientId = object.patientId ?? undefined;
     return message;
   },
@@ -1185,7 +1189,7 @@ export const CancelAppointmentResponse: MessageFns<CancelAppointmentResponse> = 
 };
 
 function createBaseGetMyAppointmentsRequest(): GetMyAppointmentsRequest {
-  return { status: undefined, page: undefined, limit: undefined };
+  return { status: undefined, page: undefined, limit: undefined, userId: undefined, doctorId: undefined };
 }
 
 export const GetMyAppointmentsRequest: MessageFns<GetMyAppointmentsRequest> = {
@@ -1198,6 +1202,12 @@ export const GetMyAppointmentsRequest: MessageFns<GetMyAppointmentsRequest> = {
     }
     if (message.limit !== undefined) {
       writer.uint32(24).int32(message.limit);
+    }
+    if (message.userId !== undefined) {
+      writer.uint32(34).string(message.userId);
+    }
+    if (message.doctorId !== undefined) {
+      writer.uint32(42).string(message.doctorId);
     }
     return writer;
   },
@@ -1233,6 +1243,22 @@ export const GetMyAppointmentsRequest: MessageFns<GetMyAppointmentsRequest> = {
           message.limit = reader.int32();
           continue;
         }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.doctorId = reader.string();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1247,6 +1273,8 @@ export const GetMyAppointmentsRequest: MessageFns<GetMyAppointmentsRequest> = {
       status: isSet(object.status) ? globalThis.String(object.status) : undefined,
       page: isSet(object.page) ? globalThis.Number(object.page) : undefined,
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : undefined,
+      userId: isSet(object.userId) ? globalThis.String(object.userId) : undefined,
+      doctorId: isSet(object.doctorId) ? globalThis.String(object.doctorId) : undefined,
     };
   },
 
@@ -1261,6 +1289,12 @@ export const GetMyAppointmentsRequest: MessageFns<GetMyAppointmentsRequest> = {
     if (message.limit !== undefined) {
       obj.limit = Math.round(message.limit);
     }
+    if (message.userId !== undefined) {
+      obj.userId = message.userId;
+    }
+    if (message.doctorId !== undefined) {
+      obj.doctorId = message.doctorId;
+    }
     return obj;
   },
 
@@ -1272,6 +1306,8 @@ export const GetMyAppointmentsRequest: MessageFns<GetMyAppointmentsRequest> = {
     message.status = object.status ?? undefined;
     message.page = object.page ?? undefined;
     message.limit = object.limit ?? undefined;
+    message.userId = object.userId ?? undefined;
+    message.doctorId = object.doctorId ?? undefined;
     return message;
   },
 };

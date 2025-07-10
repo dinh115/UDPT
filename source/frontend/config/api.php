@@ -14,6 +14,7 @@ return [
         'posts' => '/posts',
         'doctors' => '/api/doctors/',
         'doctor_get_id' => '/api/doctor/GetDoctorById',
+        'doctor_get_userId' => '/api/doctor/GetDoctorByUserId',
         'update_doctor' => '/doctors/update',
         'update_doctor_availability' => '/doctors/updateAvailability',
         'appointment_get_id' => 'Appointments',

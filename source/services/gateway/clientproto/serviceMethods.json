@@ -197,7 +197,7 @@
         ]
       },
       "GetMyAppointments": {
-        "method": "GET"
+        "method": "POST"
       }
     },
     "HealthService": {
