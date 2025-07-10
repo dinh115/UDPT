@@ -18,6 +18,13 @@ return [
         'update_doctor' => '/doctors/update',
         'update_doctor_availability' => '/doctors/updateAvailability',
         'appointment_get_id' => 'Appointments',
-        'patient_info' => '/api/patient'
+        'patient_info' => '/api/patient',
+        'medicine' => '/api/medicine',
+        'medicine_get_all' => '/api/medicine/GetAllMedicines',
+        'medicine_get_by_id' => '/api/medicine/GetMedicineById',
+        'medicine_create' => '/api/medicine/CreateMedicine',
+        'medicine_update' => '/api/medicine/UpdateMedicine',
+        'medicine_delete' => '/api/medicine/DeleteMedicine',
+        'medicine_restore' => '/api/medicine/RestoreMedicine',
     ]
 ];

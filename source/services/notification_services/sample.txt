@@ -34,3 +34,57 @@ docker-compose build
 docker-compose up --build
 
 docker-compose exec notification_services /bin/sh
+
+http://localhost:3000/api/notification/AddUser
+{
+    "userid": "patient_uuid_004_test",
+    "email": "nguyendinhphuongdai@gmail.com",
+    "firstname": "Nguyễn",
+    "lastname": "Văn B"
+}
+
+{
+    "userid": "patient_uuid_005_test",
+    "email": "nguyendinhphuongdai@gmail.com",
+    "firstname": "Nguyễn",
+    "lastname": "Văn A"
+}
+
+http://localhost:3000/api/notification/BookAppointment
+{
+    "appointmentId": "app_uuid_100_test" ,
+    "appointmentDate": "2025-07-13",
+    "createdAt": "2025-07-06T10:00:00",
+    "updatedAt": "2025-07-06T10:00:00",
+    "doctor": "doctor_uuid_002",
+    "notes": "Khám tiêu hóa",
+    "patient": "patient_uuid_004_test",
+    "status": "pending",
+    "timeSlot": {
+        "startTime": "13:00:00",
+        "endTime": "13:30:00"
+    }
+}
+{
+    "appointmentId": "app_uuid_101_test" ,
+    "appointmentDate": "2025-07-13",
+    "createdAt": "2025-07-06T10:00:00",
+    "updatedAt": "2025-07-06T10:00:00",
+    "doctor": "doctor_uuid_002",
+    "notes": "Khám tiêu hóa",
+    "patient": "patient_uuid_005_test",
+    "status": "pending",
+    "timeSlot": {
+        "startTime": "13:00:00",
+        "endTime": "13:30:00"
+    }
+}
+
+http://localhost:3000/api/notification/AcceptAppointment
+{
+    "appointmentId: "app_uuid_100_test"
+}
+
+http://localhost:3000/api/notification/GetUpcomingConfirmedAppointments
+
+Send remider => check in frontend and check log database => success

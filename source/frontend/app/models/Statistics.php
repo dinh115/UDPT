@@ -1,180 +1,104 @@
 <?php
 
 class Statistics {
-    private $db;
-    
+    private $apiBaseUrl = 'http://localhost:3000/api/analysis/';
+
     public function __construct() {
-        // Initialize database connection
-        // $this->db = new PDO(...);
+        // No database connection needed as data will be fetched from API
     }
-    
+
     /**
      * Get patient statistics based on filters
+     * @param string $startDate The start date for the statistics (e.g., 'YYYY-MM-DD')
+     * @param string $endDate The end date for the statistics (e.g., 'YYYY-MM-DD')
+     * @param string $groupType The type of grouping (e.g., 'BY_DAY', 'BY_MONTH', 'BY_YEAR')
+     * @return array An associative array containing patient statistics
      */
     public function getPatientStats($startDate, $endDate, $groupType) {
-        // Sample data for demonstration
-        $sampleData = $this->generateSampleData($startDate, $endDate, $groupType, 'patient');
-        
-        return [
-            'stats' => $sampleData
+        $endpoint = $this->apiBaseUrl . 'GetPatientStatistics';
+        $postData = [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'groupType' => $groupType
         ];
-        
-        // Real implementation would look like:
-        /*
-        $sql = $this->buildPatientStatsQuery($startDate, $endDate, $groupType);
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            ':startDate' => $startDate,
-            ':endDate' => $endDate
-        ]);
-        
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        return [
-            'stats' => array_map(function($row) {
-                return [
-                    'label' => $row['label'],
-                    'patientCount' => (int)$row['patientCount']
-                ];
-            }, $results)
-        ];
-        */
+
+        error_log("Calling API for Patient Stats: " . $endpoint . " with data: " . json_encode($postData));
+        return $this->callApi($endpoint, $postData);
     }
-    
+
     /**
      * Get prescription statistics based on filters
+     * @param string $startDate The start date for the statistics (e.g., 'YYYY-MM-DD')
+     * @param string $endDate The end date for the statistics (e.g., 'YYYY-MM-DD')
+     * @param string $groupType The type of grouping (e.g., 'BY_DAY', 'BY_MONTH', 'BY_YEAR')
+     * @return array An associative array containing prescription statistics
      */
     public function getPrescriptionStats($startDate, $endDate, $groupType) {
-        // Sample data for demonstration
-        $sampleData = $this->generateSampleData($startDate, $endDate, $groupType, 'prescription');
-        
-        return [
-            'stats' => $sampleData
+        // Assuming a similar endpoint for prescription statistics
+        $endpoint = $this->apiBaseUrl . 'GetPrescriptionStatistics';
+        $postData = [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'groupType' => $groupType
         ];
-        
-        // Real implementation would look like:
-        /*
-        $sql = $this->buildPrescriptionStatsQuery($startDate, $endDate, $groupType);
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            ':startDate' => $startDate,
-            ':endDate' => $endDate
+
+        error_log("Calling API for Prescription Stats: " . $endpoint . " with data: " . json_encode($postData));
+        return $this->callApi($endpoint, $postData);
+    }
+
+    /**
+     * Helper function to make API calls
+     * @param string $url The API endpoint URL
+     * @param array $postData The data to send in the POST request body
+     * @return array The decoded JSON response from the API, or an error array
+     */
+    private function callApi($url, $postData) {
+        $ch = curl_init($url);
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the response as a string
+        curl_setopt($ch, CURLOPT_POST, true);           // Set as POST request
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData)); // Encode data as JSON
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen(json_encode($postData))
         ]);
-        
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        return [
-            'stats' => array_map(function($row) {
-                return [
-                    'label' => $row['label'],
-                    'prescriptionCount' => (int)$row['prescriptionCount']
-                ];
-            }, $results)
-        ];
-        */
-    }
-    
-    /**
-     * Generate sample data for demonstration
-     */
-    private function generateSampleData($startDate, $endDate, $groupType, $type) {
-        $start = new DateTime($startDate);
-        $end = new DateTime($endDate);
-        $data = [];
-        
-        switch ($groupType) {
-            case 'BY_DAY':
-                $interval = new DateInterval('P1D');
-                $format = 'Y-m-d';
-                break;
-            case 'BY_MONTH':
-                $interval = new DateInterval('P1M');
-                $format = 'Y-m';
-                // Set to first day of month
-                $start->modify('first day of this month');
-                break;
-            case 'BY_YEAR':
-                $interval = new DateInterval('P1Y');
-                $format = 'Y';
-                // Set to first day of year
-                $start->modify('first day of January this year');
-                break;
-            default:
-                $interval = new DateInterval('P1M');
-                $format = 'Y-m';
-                break;
+
+        // Execute the cURL request
+        $response = curl_exec($ch);
+
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            $curlError = curl_error($ch);
+            error_log('cURL Error calling ' . $url . ': ' . $curlError);
+            curl_close($ch);
+            return ['stats' => []]; // Return empty stats on error
         }
-        
-        $current = clone $start;
-        while ($current <= $end) {
-            $label = $current->format($format);
-            $count = rand(5, 25); // Random count for demonstration
-            
-            if ($type === 'patient') {
-                $data[] = [
-                    'label' => $label,
-                    'patientCount' => $count
-                ];
-            } else {
-                $data[] = [
-                    'label' => $label,
-                    'prescriptionCount' => $count
-                ];
-            }
-            
-            $current->add($interval);
+
+        // Get HTTP status code
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        error_log('API Response HTTP Code from ' . $url . ': ' . $httpCode);
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Decode the JSON response
+        $decodedResponse = json_decode($response, true);
+
+        // Check for JSON decoding errors
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            error_log('JSON Decode Error from ' . $url . ': ' . json_last_error_msg() . ' Raw response: ' . $response);
+            return ['stats' => []];
         }
-        
-        return $data;
-    }
-    
-    /**
-     * Build SQL query for patient statistics
-     */
-    private function buildPatientStatsQuery($startDate, $endDate, $groupType) {
-        $dateFormat = $this->getDateFormat($groupType);
-        
-        return "
-            SELECT 
-                DATE_FORMAT(created_at, '$dateFormat') as label,
-                COUNT(*) as patientCount
-            FROM patients 
-            WHERE created_at BETWEEN :startDate AND :endDate
-            GROUP BY DATE_FORMAT(created_at, '$dateFormat')
-            ORDER BY label
-        ";
-    }
-    
-    /**
-     * Build SQL query for prescription statistics
-     */
-    private function buildPrescriptionStatsQuery($startDate, $endDate, $groupType) {
-        $dateFormat = $this->getDateFormat($groupType);
-        
-        return "
-            SELECT 
-                DATE_FORMAT(created_at, '$dateFormat') as label,
-                COUNT(*) as prescriptionCount
-            FROM prescriptions 
-            WHERE created_at BETWEEN :startDate AND :endDate
-            GROUP BY DATE_FORMAT(created_at, '$dateFormat')
-            ORDER BY label
-        ";
-    }
-    
-    /**
-     * Get MySQL date format based on group type
-     */
-    private function getDateFormat($groupType) {
-        switch ($groupType) {
-            case 'BY_DAY':
-                return '%Y-%m-%d';
-            case 'BY_MONTH':
-                return '%Y-%m';
-            case 'BY_YEAR':
-                return '%Y';
-            default:
-                return '%Y-%m';
+
+        // Check if the API call was successful (e.g., HTTP 200 OK) and response is valid
+        if ($httpCode === 200 && is_array($decodedResponse) && isset($decodedResponse['stats'])) {
+            error_log('API Call to ' . $url . ' successful. Response: ' . json_encode($decodedResponse));
+            return $decodedResponse;
+        } else {
+            // Log or handle API specific errors (e.g., non-200 status, invalid JSON structure)
+            error_log('API Error: Unexpected response from ' . $url . '. HTTP Code: ' . $httpCode . ' Raw response: ' . $response);
+            return ['stats' => []]; // Return empty stats on error
         }
     }
 }

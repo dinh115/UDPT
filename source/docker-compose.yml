@@ -31,6 +31,8 @@ services:
     image: mongo:7
     container_name: user-services-mongodb
     restart: unless-stopped
+    ports:
+      - "27017:27017"  # Add this line
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: adminpassword
@@ -111,7 +113,7 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     volumes:
-      - ./mysql-init:/docker-entrypoint-initdb.d # Mount the initialization scripts
+      - ./mysql-init-1:/docker-entrypoint-initdb.d # Mount the initialization scripts
     networks:
       - internal
 

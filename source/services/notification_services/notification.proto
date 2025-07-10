@@ -43,7 +43,7 @@ message AppointmentRequest {
 }
 
 message PrescriptionReadyRequest {
-  string patientEmail = 1;
+  string patientId = 1; // Changed from patientEmail to patientId
 }
 
 

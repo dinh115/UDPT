@@ -12,15 +12,16 @@ class StatisticsController {
     /**
      * Handle AJAX request for statistics data
      */
-    public function getStatistics() {
+    public function getStatistics($startDate, $endDate, $groupType) { // Modified to accept parameters
         try {
             // Set content type to JSON
             header('Content-Type: application/json');
             
-            // Get parameters from request
-            $startDate = $_GET['startDate'] ?? '2025-06-01';
-            $endDate = $_GET['endDate'] ?? '2025-07-31';
-            $groupType = $_GET['groupType'] ?? 'BY_MONTH';
+            // Parameters are now passed in, no need to get from $_GET or $_POST here
+            // Get parameters from request (This part is removed as parameters are now passed in)
+            // $startDate = $_GET['startDate'] ?? '2025-06-01';
+            // $endDate = $_GET['endDate'] ?? '2025-07-31';
+            // $groupType = $_GET['groupType'] ?? 'BY_MONTH';
             
             // Validate parameters
             if (!$this->validateDateFormat($startDate) || !$this->validateDateFormat($endDate)) {
@@ -63,8 +64,17 @@ class StatisticsController {
 }
 
 // Handle AJAX requests
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'getStatistics') {
+// if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'getStatistics') {
+//     $controller = new StatisticsController();
+//     $controller->getStatistics();
+//     exit;
+// }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'getStatistics') {
     $controller = new StatisticsController();
-    $controller->getStatistics();
+    // Get parameters from request body (for POST, use $_POST)
+    $startDate = $_POST['startDate'] ?? '2025-06-01';
+    $endDate = $_POST['endDate'] ?? '2025-07-31';
+    $groupType = $_POST['groupType'] ?? 'BY_MONTH';
+    $controller->getStatistics($startDate, $endDate, $groupType); // Pass the parameters
     exit;
 }

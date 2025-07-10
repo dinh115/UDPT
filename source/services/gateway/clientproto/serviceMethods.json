@@ -255,7 +255,7 @@
         ]
       },
       "DeleteMedicine": {
-        "method": "DELETE",
+        "method": "PUT",
         "params": [
           "medicine_id"
         ]
@@ -277,17 +277,10 @@
         "method": "POST"
       },
       "UpdatePrescriptionStatus": {
-        "method": "PUT",
-        "params": [
-          "prescriptionId",
-          "newStatus"
-        ]
+        "method": "POST"
       },
       "MarkPrescriptionPaid": {
-        "method": "PUT",
-        "params": [
-          "prescriptionId"
-        ]
+        "method": "POST"
       },
       "GetPatientStatistics": {
         "method": "POST"
@@ -296,10 +289,7 @@
         "method": "POST"
       },
       "AcceptAppointment": {
-        "method": "PUT",
-        "params": [
-          "appointmentId"
-        ]
+        "method": "POST"
       }
     }
   },

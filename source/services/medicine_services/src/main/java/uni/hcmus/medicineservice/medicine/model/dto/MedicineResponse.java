@@ -38,4 +38,7 @@ public class MedicineResponse {
     
     @Schema(description = "Last updated time")
     private LocalDateTime updatedAt;
+
+    @Schema(description = "Indicates if the medicine is deleted", example = "false")
+    private Boolean isDeleted;
 }
