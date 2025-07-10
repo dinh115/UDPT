@@ -49,7 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(midlleware.jwtTokenParser);
 app.use(`/`, midlleware.logging);
-app.use(`/`, midlleware.caching);
+//app.use(`/`, midlleware.caching);
 
 // app.use(`/`, midlleware.authentication);
 

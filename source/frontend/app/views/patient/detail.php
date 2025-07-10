@@ -1,12 +1,22 @@
-<?php require_once '../template/header.php'; ?>
+<?php
+$title = 'Hồ Sơ Bệnh Nhân';
+require_once(__DIR__ . '/../template/header.php');
+require_once(__DIR__ . '/../template/navbar.php');
 
+// Lấy dữ liệu từ userInfo
+$fullName = trim(($userInfo['lastName'] ?? '') . ' ' . ($userInfo['firstName'] ?? ''));
+$createdAt = isset($userInfo['createdAt']['seconds']) ? 
+    (new DateTime())->setTimestamp($userInfo['createdAt']['seconds'])->format('d/m/Y H:i') : 'N/A';
+$dateOfBirth = isset($userInfo['dateOfBirth']) ? 
+    (new DateTime($userInfo['dateOfBirth']))->format('d/m/Y') : 'N/A';
+?>
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="fas fa-file-medical"></i> Chi Tiết Lượt Khám</h2>
+                <h2 class = "text-dark"><i class="fas fa-file-medical"></i> Chi Tiết Lượt Khám</h2>
                 <div>
-                    <a href="/patient/history" class="btn btn-secondary">
+                    <a href="/patients" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Quay lại
                     </a>
                     <button onclick="window.print()" class="btn btn-outline-primary">
@@ -18,7 +28,7 @@
             <?php if (isset($visitDetail)): ?>
                 <!-- Visit Information -->
                 <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-primary text-white py-3">
                         <h5 class="mb-0"><i class="fas fa-info-circle"></i> Thông Tin Lượt Khám</h5>
                     </div>
                     <div class="card-body">
@@ -51,15 +61,15 @@
                             <div class="col-md-6">
                                 <table class="table table-borderless">
                                     <tr>
-                                        <td><strong>Lý do khám:</strong></td>
+                                        <td class = 'text-nowrap'><strong>Lý do khám:</strong></td>
                                         <td><?php echo htmlspecialchars($visitDetail['reason_for_visit'] ?? 'N/A'); ?></td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Ghi chú:</strong></td>
+                                        <td class = 'text-nowrap'><strong>Ghi chú:</strong></td>
                                         <td><?php echo htmlspecialchars($visitDetail['notes'] ?? 'Không có ghi chú'); ?></td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Đơn thuốc:</strong></td>
+                                        <td class = 'text-nowrap'><strong>Đơn thuốc:</strong></td>
                                         <td>
                                             <?php if (!empty($visitDetail['prescription_id'])): ?>
                                                 <span class="badge bg-success">Có đơn thuốc</span>
@@ -77,7 +87,7 @@
 
                 <!-- Diagnosis -->
                 <div class="card mb-4">
-                    <div class="card-header bg-success text-white">
+                    <div class="card-header bg-success text-white py-3">
                         <h5 class="mb-0"><i class="fas fa-stethoscope"></i> Chẩn Đoán</h5>
                     </div>
                     <div class="card-body">
@@ -110,14 +120,13 @@
 
                 <!-- Vital Signs -->
                 <div class="card mb-4">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0"><i class="fas fa-heartbeat"></i> Chỉ Số Sinh Tồn</h5>
+                    <div class="card-header bg-warning text-dark py-3">
+                        <h5 class="mb-0"><i class="fas fa-heartbeat"></i> Chỉ Số Cơ Thể </h5>
                     </div>
                     <div class="card-body">
                         <?php if (isset($visitDetail['vital_signs']) && !empty($visitDetail['vital_signs'])): ?>
                             <div class="row">
                                 <?php 
-                                $vitalSigns = $this->patientModel->formatVitalSigns($visitDetail['vital_signs']);
                                 $chunks = array_chunk($vitalSigns, 3, true);
                                 foreach ($chunks as $chunk): ?>
                                     <div class="col-md-6">
@@ -142,7 +151,7 @@
 
                 <!-- Tests -->
                 <div class="card mb-4">
-                    <div class="card-header bg-info text-white">
+                    <div class="card-header bg-info text-white py-3">
                         <h5 class="mb-0"><i class="fas fa-vials"></i> Xét Nghiệm & Cận Lâm Sàng</h5>
                     </div>
                     <div class="card-body">
@@ -164,8 +173,8 @@
                                                 <td><?php echo htmlspecialchars($test['result'] ?? 'N/A'); ?></td>
                                                 <td>
                                                     <?php 
-                                                    if (isset($test['date'])) {
-                                                        $date = new DateTime($test['date']);
+                                                    if (isset($test['date']['seconds'])) {
+                                                        $date = (new DateTime())->setTimestamp($test['date']['seconds']);
                                                         echo $date->format('d/m/Y H:i');
                                                     } else {
                                                         echo 'N/A';

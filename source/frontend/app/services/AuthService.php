@@ -41,6 +41,7 @@ class AuthService extends ApiService
         //var_dump($result);
         if ($result['success']) {
             // Store user data and token in session
+
             $_SESSION[$this->sessionKey] = [
                 'token' => $result['data']['token'] ?? null,
                 'user' => $result['data']['user'] ?? null,

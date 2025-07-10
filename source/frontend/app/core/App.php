@@ -8,7 +8,7 @@ class App
     public function __construct()
     {
         $url = $this->parseUrl();
-
+        // echo $url[0] . "<br>";
         // DEBUG: See what URL is being parsed
         //echo "Parsed URL: ";
         //var_dump($url);
@@ -19,12 +19,13 @@ class App
             unset($url[0]);
         }
 
-        //echo "Controller: " . $this->controller . "<br>";
+        // echo "Controller: " . $this->controller . "<br>";
 
         require_once '../app/controllers/' . $this->controller . '.php';
         $this->controller = new $this->controller;
 
         // Check for method
+        // echo $url[1] . "<br>";
         if (isset($url[1])) {
             if (method_exists($this->controller, $url[1])) {
                 $this->method = $url[1];

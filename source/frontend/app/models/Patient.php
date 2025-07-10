@@ -6,7 +6,7 @@ class Patient extends ApiService
     public function getVisitHistory($userId)
     {
         try {
-            $endpoint = $this->endpoints['patient_info'] . '/visits/' . $userId;
+            $endpoint = $this->endpoints['patient'] . '/listvisits/' . $userId;
             $response = $this->httpClient->get($endpoint);
             return $this->handleResponse($response);
         } catch (Exception $e) {
@@ -20,7 +20,7 @@ class Patient extends ApiService
     public function getVisitDetail($visitId)
     {
         try {
-            $endpoint = $this->endpoints['patient_info'] . '/visit/' . $visitId;
+            $endpoint = $this->endpoints['patient'] . '/getVisit/' . $visitId;
             $response = $this->httpClient->get($endpoint);
             return $this->handleResponse($response);
         } catch (Exception $e) {
@@ -34,7 +34,7 @@ class Patient extends ApiService
     public function createVisit($data)
     {
         try {
-            $endpoint = $this->endpoints['patient_info'] . '/visit';
+            $endpoint = $this->endpoints['patient'] . '/createvisit/';
             $response = $this->httpClient->post($endpoint, $data);
             return $this->handleResponse($response);
         } catch (Exception $e) {
@@ -48,7 +48,7 @@ class Patient extends ApiService
     public function updateVisit($visitId, $data)
     {
         try {
-            $endpoint = $this->endpoints['patient_info'] . '/visit/' . $visitId;
+            $endpoint = $this->endpoints['patient'] . '/' . $visitId;
             $response = $this->httpClient->put($endpoint, $data);
             return $this->handleResponse($response);
         } catch (Exception $e) {
@@ -62,7 +62,7 @@ class Patient extends ApiService
     public function checkPatientService()
     {
         try {
-            $endpoint = $this->endpoints['patient_info'] . '/check';
+            $endpoint = $this->endpoints['patient'] . '/check';
             $response = $this->httpClient->get($endpoint);
             return $this->handleResponse($response);
         } catch (Exception $e) {

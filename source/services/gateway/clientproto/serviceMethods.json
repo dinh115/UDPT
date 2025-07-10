@@ -10,7 +10,7 @@
       "ListVisits": {
         "method": "GET",
         "params": [
-          "userId"
+          "patient"
         ]
       },
       "CreateVisit": {

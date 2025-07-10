@@ -28,7 +28,7 @@ message GetVisitResponse {
 }
 
 message ListVisitsRequest {
-  string userId = 1;
+  string patient = 1;
 }
 
 message ListVisitsResponse {
@@ -50,17 +50,19 @@ message CreateVisitResponse {
 
 message Visit {
   string id = 1;
-  string userId = 2;
-  string doctorId = 3;
+  string patient = 2;
+  string doctor = 3;
   google.protobuf.Timestamp visitDate = 4;
   string department = 5;
   string reason_for_visit = 6;
   repeated Diagnosis diagnosis = 7;
   VitalSigns vital_signs = 8;
   repeated TestResult tests = 9;
-  string notes = 10;
+  repeated string symptoms = 10;
+  repeated string allergies = 11;
+  string prescription  = 12;
+  string notes = 13;
 }
-
 message Diagnosis {
   string code = 1;
   string description = 2;

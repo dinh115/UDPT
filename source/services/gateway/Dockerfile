@@ -10,4 +10,5 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["sleep", "infinity"]
+# CMD ["sleep", "infinity"]
+CMD ["npm","start"]

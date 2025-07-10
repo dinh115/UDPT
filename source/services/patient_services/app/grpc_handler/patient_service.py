@@ -19,16 +19,16 @@ class PatientServiceHandler(patient_pb2_grpc.PatientServiceServicer):
         return patient_pb2.GetVisitResponse(visit=self._build_visit_message(doc))
 
     async def ListVisits(self, request, context):
-        visits = await repo.get_visits_by_patient(request.userId)
+        visits = await repo.get_visits_by_patient(request.patient)
         result = [self._build_visit_message(doc) for doc in visits]
         return patient_pb2.ListVisitsResponse(visits=result)
 
     async def CreateVisit(self, request, context):
         v = request.visit
         doc = {
-            "patient": v.userId,
-            "doctor": v.doctorId,
-            "visit_date": v.visitDate.ToDatetime(),
+            "patient": v.patient,
+            "doctor": v.doctor,
+            "visitDate": v.visitDate.ToDatetime(),
             "department": v.department,
             "reason_for_visit": v.reason_for_visit,
             "diagnosis": [
@@ -50,6 +50,9 @@ class PatientServiceHandler(patient_pb2_grpc.PatientServiceServicer):
                     "file_url": t.file_url
                 } for t in v.tests
             ],
+            "symptoms": list(v.symptoms),
+            "allergies": list(v.allergies),
+            "prescription": v.prescription,
             "notes": v.notes,
         }
         inserted = await repo.create_visit_dict(doc)
@@ -59,7 +62,7 @@ class PatientServiceHandler(patient_pb2_grpc.PatientServiceServicer):
         v = request.visit
         visit_id = request.id
         update_dict = {
-            "visit_date": v.visitDate.ToDatetime(),
+            "visitDate": v.visitDate.ToDatetime(),
             "department": v.department,
             "reason_for_visit": v.reason_for_visit,
             "diagnosis": [
@@ -81,6 +84,9 @@ class PatientServiceHandler(patient_pb2_grpc.PatientServiceServicer):
                     "file_url": t.file_url
                 } for t in v.tests
             ],
+            "symptoms": list(v.symptoms),
+            "allergies": list(v.allergies),
+            "prescription": v.prescription,
             "notes": v.notes,
         }
         updated = await repo.update_visit(visit_id, update_dict)
@@ -93,12 +99,13 @@ class PatientServiceHandler(patient_pb2_grpc.PatientServiceServicer):
     def _build_visit_message(self, doc):
         visit = patient_pb2.Visit(
             id=doc["_id"],
-            userId=doc["patient"],
-            doctorId=doc["doctor"],
-            visitDate=self._datetime_to_timestamp(doc["visit_date"]),
+            patient=doc["patient"],
+            doctor=doc["doctor"],
+            visitDate=self._datetime_to_timestamp(doc["visitDate"]),
             department=doc.get("department", ""),
             reason_for_visit=doc.get("reason_for_visit", ""),
             notes=doc.get("notes", ""),
+            prescription=doc.get("prescription", ""),
             diagnosis=[
                 patient_pb2.Diagnosis(code=d.get("code", ""), description=d.get("description", ""))
                 for d in doc.get("diagnosis", [])
@@ -110,7 +117,9 @@ class PatientServiceHandler(patient_pb2_grpc.PatientServiceServicer):
                     date=self._datetime_to_timestamp(t.get("date", datetime.utcnow())),
                     file_url=t.get("file_url", "")
                 ) for t in doc.get("tests", [])
-            ]
+            ],
+            symptoms=doc.get("symptoms", []),
+            allergies=doc.get("allergies", [])
         )
 
         vitals = doc.get("vital_signs")

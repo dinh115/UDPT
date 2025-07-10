@@ -17,6 +17,6 @@ return [
         'update_doctor' => '/doctors/update',
         'update_doctor_availability' => '/doctors/updateAvailability',
         'appointment_get_id' => 'Appointments',
-        'patient_info' => '/api/patient'
+        'patient' => '/api/patient'
     ]
 ];

@@ -30,5 +30,5 @@ async def get_visit_by_id(visit_id: str) -> Optional[dict]:
     return await collection.find_one({"_id": visit_id})
 
 async def get_visits_by_patient(patient_id: str, limit: int = 20, skip: int = 0) -> List[dict]:
-    cursor = collection.find({"patient": patient_id}).skip(skip).limit(limit).sort("visit_date", -1)
+    cursor = collection.find({"patient": patient_id}).skip(skip).limit(limit).sort("visitDate", -1)
     return await cursor.to_list(length=limit)

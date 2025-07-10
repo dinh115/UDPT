@@ -60,8 +60,11 @@
                               <i class="fas fa-user-circle me-1"></i><?= htmlspecialchars($_SESSION['user_session']['user']['username']) ?>
                           </a>
                           <ul class="dropdown-menu dropdown-menu-end mt-2" style="min-width: 100%;">
-                              <li><a class="dropdown-item" href="/profile"><i class="fas fa-user me-2"></i>Hồ sơ của tôi</a></li>
-                              <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog me-2"></i>Cài đặt</a></li>
+                                <?php
+                                    $role = $_SESSION['user_session']['user']['role'] ?? '';
+                                    $profileLink = ($role === 'patient') ? '/patients' : '/profile';
+                                ?>
+                                <li><a class="dropdown-item" href="<?= $profileLink ?>"><i class="fas fa-user me-2"></i>Hồ sơ của tôi</a></li>
                               <li>
                                   <hr class="dropdown-divider">
                               </li>
