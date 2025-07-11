@@ -359,14 +359,23 @@ document.getElementById('createVisitForm').addEventListener('submit', function(e
         method: 'POST',
         body: formData
     })
-    .then(response => response.text()) // <--- THAY .json() bằng .text()
+    .then(response => response.text())
     .then(text => {
         console.log('Raw response:', text);
         try {
             const data = JSON.parse(text);
             console.log('Parsed:', data);
+            
+            if (data.success) {
+                alert('Tạo phiếu khám thành công!');
+                // Redirect hoặc làm gì đó
+                window.location.href = '/appointments/my';
+            } else {
+                alert('Lỗi: ' + data.error);
+            }
         } catch (e) {
             console.error('Không parse được JSON:', e);
+            alert('Có lỗi xảy ra khi xử lý phản hồi từ server');
         }
     })
     .catch(error => {

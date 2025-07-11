@@ -50,8 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(midlleware.jwtTokenParser);
 app.use(`/`, midlleware.logging);
 //app.use(`/`, midlleware.caching);
-
-// app.use(`/`, midlleware.authentication);
+//app.use(`/`, midlleware.authentication);
 
 (async () => {
   console.time("SetupRoutes");

@@ -1,6 +1,6 @@
 <?php
 $title = 'MedPortal - Giới thiệu';
-$description = 'Đây là hệ thống quản lý bệnh viên được nhóm UPDT-03 thực hiện trong quá trình học môn Ứng dụng phân tán.';
+$description = 'Đây là hệ thống quản lý bệnh viên được nhóm UPDT-02 thực hiện trong quá trình học môn Ứng dụng phân tán.';
 require_once(__DIR__ . '/../template/header.php'); ?>
 
 <body class="d-flex flex-column min-vh-100">
@@ -33,3 +33,4 @@ require_once(__DIR__ . '/../template/header.php'); ?>
 </body>
 
 </html>
+
