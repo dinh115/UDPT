@@ -32,7 +32,7 @@ import {
 } from '../proto/generated/doctor';
 
 // =================== DOCTOR SERVICE HANDLERS ===================
-export class UserServiceHandlers {
+export class DoctorServiceHandlers {
     async getDoctorProfileById(
         call: grpc.ServerUnaryCall<GetDoctorByIdRequest, GetDoctorByIdResponse>,
         callback: grpc.sendUnaryData<GetDoctorByIdResponse>
