@@ -112,6 +112,9 @@ INSERT INTO logs.user (id, email, firstname, lastname, created_at) VALUES
 ('patient_uuid_003', 'lethic@example.com', 'Lê Thị', 'C', NOW()),
 ('doctor_uuid_002', 'john.doe@example.com', 'John', 'Doe', NOW()),
 ('doctor_uuid_003', 'emily.white@example.com', 'Emily', 'White', NOW());
+('patient_uuid_004', 'nguyendinhphuongdai@gmail.com', 'Trần Văn', 'A', NOW());
+
+
 
 INSERT INTO logs.appointments_tab (appointment_id, patient_id, doctor_id, appointment_date, start_time, end_time, status, notes, created_at, updated_at) VALUES
 -- --- Happy Path (đã xác nhận, trong vòng 3 ngày tới) ---
@@ -133,3 +136,9 @@ INSERT INTO logs.appointments_tab (appointment_id, patient_id, doctor_id, appoin
 ('app_uuid_003','patient_uuid_001', 'doctor_uuid_001', '2025-07-07', '09:00:00', '10:00:00', 'pending', 'Khám lần đầu', NOW(), NOW()),
 -- Lịch hẹn 7: Đã hủy (cancelled)
 ('app_uuid_007','patient_uuid_003', 'doctor_uuid_003', '2025-07-08', '16:00:00', '16:45:00', 'cancelled', 'Hủy do bận', NOW(), NOW());
+
+INSERT INTO logs.appointments_tab (appointment_id, patient_id, doctor_id, appointment_date, start_time, end_time, status, notes, created_at, updated_at) VALUES
+-- --- Happy Path (đã xác nhận, trong vòng 3 ngày tới) ---
+-- Lịch hẹn 1: Nguyễn Văn A với Dr. Sarah Smith vào ngày 08/07/2025
+('app_uuid_010', 'patient_uuid_004', 'doctor_uuid_002', '2025-07-13', '10:00:00', '11:00:00', 'confirmed', 'Kiểm tra định kỳ', NOW(), NOW());
+

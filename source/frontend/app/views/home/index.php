@@ -44,6 +44,9 @@ require_once(__DIR__ . '/../template/header.php');
                     <a href="/reports/generate" class="action-btn">
                         <i class="fas fa-file-alt"></i>
                         <span>Thống kê</span>
+                    <a href="/reminder" class="action-btn">
+                        <i class="fas fa-bell"></i>
+                        <span>Nhắc nhở</span>
                     </a>
                 </div>
             </div>

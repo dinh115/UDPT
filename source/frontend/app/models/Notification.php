@@ -1,7 +1,7 @@
 <?php
 
 class Notification {
-    private $apiBaseUrl = 'http://localhost:3000/api/notification/';
+    private $apiBaseUrl = 'http://gateway:3000/api/notification/';
 
     public function __construct() {
         // No database connection needed as data will be fetched from API
@@ -14,7 +14,7 @@ class Notification {
     public function getUpcomingConfirmedAppointments() {
         $endpoint = $this->apiBaseUrl . 'GetUpcomingConfirmedAppointments';
 
-        error_log("Calling API for Upcoming Confirmed Appointments: " . $endpoint);
+        error_log("Notification Model: Calling API for Upcoming Confirmed Appointments: " . $endpoint);
         return $this->callApi($endpoint, 'GET');
     }
 
@@ -26,7 +26,7 @@ class Notification {
     public function sendReminder($appointmentData) {
         $endpoint = $this->apiBaseUrl . 'SendReminder';
 
-        error_log("Calling API for Send Reminder: " . $endpoint . " with data: " . json_encode($appointmentData));
+        error_log("Notification Model: Calling API for Send Reminder: " . $endpoint . " with data: " . json_encode($appointmentData));
         return $this->callApi($endpoint, 'POST', $appointmentData);
     }
 
@@ -42,6 +42,7 @@ class Notification {
 
         // Set cURL options
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the response as a string
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Set a timeout for the request (10 seconds)
 
         if ($method === 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);           // Set as POST request
@@ -60,14 +61,15 @@ class Notification {
         // Check for cURL errors
         if (curl_errno($ch)) {
             $curlError = curl_error($ch);
-            error_log('cURL Error calling ' . $url . ': ' . $curlError);
+            error_log('Notification Model: cURL Error calling ' . $url . ': ' . $curlError);
             curl_close($ch);
             return ['success' => false, 'error' => 'cURL Error: ' . $curlError]; // Return error
         }
 
         // Get HTTP status code
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        error_log('API Response HTTP Code from ' . $url . ': ' . $httpCode);
+        error_log('Notification Model: API Response HTTP Code from ' . $url . ': ' . $httpCode);
+        error_log('Notification Model: Raw API Response from ' . $url . ': ' . $response); // Log raw response
 
         // Close cURL session
         curl_close($ch);
@@ -77,9 +79,11 @@ class Notification {
 
         // Check for JSON decoding errors
         if (json_last_error() !== JSON_ERROR_NONE) {
-            error_log('JSON Decode Error from ' . $url . ': ' . json_last_error_msg() . ' Raw response: ' . $response);
+            error_log('Notification Model: JSON Decode Error from ' . $url . ': ' . json_last_error_msg() . ' Raw response: ' . $response);
             return ['success' => false, 'error' => 'JSON Decode Error: ' . json_last_error_msg()];
         }
+
+        error_log('Notification Model: Decoded API Response from ' . $url . ': ' . json_encode($decodedResponse)); // Log decoded response
 
         // Return the decoded response, let the controller handle success/failure based on API's own 'success' flag
         return $decodedResponse;

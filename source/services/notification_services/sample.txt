@@ -88,3 +88,11 @@ http://localhost:3000/api/notification/AcceptAppointment
 http://localhost:3000/api/notification/GetUpcomingConfirmedAppointments
 
 Send remider => check in frontend and check log database => success
+
+INSERT INTO logs.user (id, email, firstname, lastname, created_at) VALUES
+('patient_uuid_004', 'nguyendinhphuongdai@gmail.com', 'Trần Văn', 'A', NOW());
+
+INSERT INTO logs.appointments_tab (appointment_id, patient_id, doctor_id, appointment_date, start_time, end_time, status, notes, created_at, updated_at) VALUES
+-- --- Happy Path (đã xác nhận, trong vòng 3 ngày tới) ---
+-- Lịch hẹn 1: Nguyễn Văn A với Dr. Sarah Smith vào ngày 08/07/2025
+('app_uuid_010', 'patient_uuid_004', 'doctor_uuid_002', '2025-07-12', '10:00:00', '11:00:00', 'confirmed', 'Kiểm tra định kỳ', NOW(), NOW());
