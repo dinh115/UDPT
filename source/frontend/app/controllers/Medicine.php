@@ -4,7 +4,11 @@ class Medicine extends Controller
 {
     public function index()
     {
-        $this->view('medicine/index');
+        if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'employee') {
+            $this->view('medicine/index');
+        } else {
+            $this->renderError('Lỗi', 'Bạn không có quyền truy cập vào trang này');
+        }
     }
 
     public function show($id)

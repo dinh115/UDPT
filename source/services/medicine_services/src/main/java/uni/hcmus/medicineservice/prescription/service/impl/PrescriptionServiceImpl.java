@@ -109,74 +109,29 @@ public class PrescriptionServiceImpl implements PrescriptionService {
             // Find prescription
             Prescription prescription = findPrescriptionById(prescriptionId);
             
-            // Only allow updates if status is CREATED
-            if (prescription.getStatus() != PrescriptionStatus.CREATED) {
-                log.error("PrescriptionServiceImpl | updatePrescription | Cannot update prescription with status: {}", 
-                        prescription.getStatus());
-                throw new InvalidStatusTransitionException(prescription.getStatus(), prescription.getStatus());
-            }
-            
             // Update basic prescription details
-            prescriptionMapper.updateEntity(request, prescription);
-            
-            // Track existing items to update or delete
-            Map<String, PrescriptionItem> existingItemsMap = prescription.getItems().stream()
-                    .filter(item -> !item.getIsDeleted())
-                    .collect(Collectors.toMap(PrescriptionItem::getPrescriptionItemId, item -> item));
-            
-            Set<String> updatedItemIds = new HashSet<>();
-            
-            // Process items from the request
-            for (UpdatePrescriptionItemRequest itemRequest : request.getItems()) {
-                if (itemRequest.getPrescriptionItemId() != null && existingItemsMap.containsKey(itemRequest.getPrescriptionItemId())) {
-                    // Update existing item
-                    PrescriptionItem existingItem = existingItemsMap.get(itemRequest.getPrescriptionItemId());
-                    
-                    // Update medicine if changed
-                    if (!existingItem.getMedicine().getMedicineId().equals(itemRequest.getMedicineId())) {
-                        Medicine medicine = medicineRepository.findByMedicineIdAndIsDeletedFalse(itemRequest.getMedicineId())
-                                .orElseThrow(() -> new MedicineNotFoundException(itemRequest.getMedicineId()));
-                        existingItem.setMedicine(medicine);
-                    }
-                    
-                    existingItem.setQuantity(itemRequest.getQuantity());
-                    existingItem.setDosageInstruction(itemRequest.getDosageInstruction());
-                    existingItem.calculateTotalCost();
-                    
-                    updatedItemIds.add(existingItem.getPrescriptionItemId());
-                } else {
-                    // Create new item
-                    Medicine medicine = medicineRepository.findByMedicineIdAndIsDeletedFalse(itemRequest.getMedicineId())
-                            .orElseThrow(() -> new MedicineNotFoundException(itemRequest.getMedicineId()));
-                    
-                    PrescriptionItem newItem = new PrescriptionItem();
-                    newItem.setPrescription(prescription);
-                    newItem.setMedicine(medicine);
-                    newItem.setQuantity(itemRequest.getQuantity());
-                    newItem.setDosageInstruction(itemRequest.getDosageInstruction());
-                    newItem.calculateTotalCost();
-                    
-                    prescription.getItems().add(newItem);
-                }
+            prescription.setIsPaid(request.getIsPaid());
+            log.info("PrescriptionServiceImpl | updatePrescription | isPaid changing from {} to {}", 
+                !prescription.getIsPaid(), request.getIsPaid());
+            // Chỉ update status nếu có thay đổi
+            if (request.getStatus() != null && !request.getStatus().equals(prescription.getStatus())) {
+                log.info("PrescriptionServiceImpl | updatePrescription | Status changing from {} to {}", 
+                    prescription.getStatus(), request.getStatus());
+                
+                // Validate status transition chỉ khi có thay đổi
+                validateStatusTransition(prescription.getStatus(), request.getStatus());
+                prescription.setStatus(request.getStatus());
+            } else {
+                log.info("PrescriptionServiceImpl | updatePrescription | Status remains the same: {}", 
+                    prescription.getStatus());
             }
-            
-            // Soft delete items not in the request
-            for (PrescriptionItem item : prescription.getItems()) {
-                if (!item.getIsDeleted() && item.getPrescriptionItemId() != null && 
-                        !updatedItemIds.contains(item.getPrescriptionItemId())) {
-                    item.setIsDeleted(true);
-                }
-            }
-            
-            // Recalculate total cost
-            prescription.calculateTotalCost();
-            
+        
             // Save updated prescription
             Prescription updatedPrescription = prescriptionRepository.save(prescription);
             
             log.info("PrescriptionServiceImpl | updatePrescription | Updated prescription with ID: {}", prescriptionId);
             return prescriptionMapper.toResponse(updatedPrescription);
-        } catch (PrescriptionNotFoundException | MedicineNotFoundException | InvalidStatusTransitionException e) {
+        } catch (PrescriptionNotFoundException | MedicineNotFoundException e) {
             throw e;
         } catch (Exception e) {
             log.error("PrescriptionServiceImpl | updatePrescription | Error: {}", e.getMessage(), e);

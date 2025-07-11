@@ -6,6 +6,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import uni.hcmus.medicineservice.prescription.service.PrescriptionService;
 import uni.hcmus.medicineservice.prescription.model.dto.CreatePrescriptionRequest;
 import uni.hcmus.medicineservice.prescription.model.dto.UpdatePrescriptionRequest;
+import uni.hcmus.medicineservice.prescription.model.enums.PrescriptionStatus;
 import uni.hcmus.medicineservice.prescription.model.dto.PrescriptionResponse;
 import uni.hcmus.medicineservice.prescription.model.dto.CreatePrescriptionItemRequest;
 import uni.hcmus.medicineservice.prescription.model.dto.UpdatePrescriptionItemRequest;
@@ -181,8 +182,22 @@ public class PrescriptionResource extends PrescriptionServiceGrpc.PrescriptionSe
             ))
             .collect(Collectors.toList());
         
+        //Convert string status to enum
+        PrescriptionStatus status = null;
+        if (request.getStatus() != null && !request.getStatus().isEmpty()) {
+            try {
+                status = PrescriptionStatus.valueOf(request.getStatus());
+            } catch (IllegalArgumentException e) {
+                responseObserver.onError(new IllegalArgumentException("Invalid status: " + request.getStatus()));
+                return;
+            }
+        }
+        
         UpdatePrescriptionRequest updateRequest = new UpdatePrescriptionRequest(
+            request.getPrescriptionId(),
             request.getMedicalRecordId(),
+            request.getIsPaid(),
+            status,
             itemRequests
         );
         
@@ -232,6 +247,7 @@ public class PrescriptionResource extends PrescriptionServiceGrpc.PrescriptionSe
         responseObserver.onCompleted();
     }
 
+    @Override
     public void restorePrescription(PrescriptionIdRequest request, StreamObserver<Empty> responseObserver) {
         prescriptionService.restorePrescription(request.getPrescriptionId());
         responseObserver.onNext(Empty.newBuilder().build());

@@ -5,7 +5,11 @@ class Prescription extends Controller
 {
     public function index()
     {
-        $this->view('prescription/index');
+        if (isset($_SESSION['user_session']) && $_SESSION['user_session']['role'] === 'employee') {
+            $this->view('prescription/index');
+        } else {
+            $this->renderError('Lỗi', 'Bạn không có quyền truy cập vào trang này');
+        }
     }
 
     public function show($id)

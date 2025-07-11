@@ -663,7 +663,7 @@ require_once(__DIR__ . '/../template/header.php'); ?>
 
                 try {
                     const response = await fetch(`http://localhost:3000/api/medicine/DeleteMedicine/${medicineId}`, {
-                        method: 'POST'
+                        method: 'PUT'
                     });
 
                     if (response.ok) {

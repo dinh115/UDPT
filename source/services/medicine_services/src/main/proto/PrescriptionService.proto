@@ -59,7 +59,9 @@ message CreatePrescriptionItemRequest {
 message UpdatePrescriptionRequest {
   string prescription_id = 1;
   string medical_record_id = 2;
-  repeated UpdatePrescriptionItemRequest items = 3;
+  bool is_paid = 3;
+  string status = 4;
+  repeated UpdatePrescriptionItemRequest items = 5;
 }
 
 message UpdatePrescriptionItemRequest {

@@ -327,7 +327,10 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                     }
 
                     const updateRequest = {
+                        prescriptionId: prescription.prescription_id,
                         medicalRecordId: prescription.medical_record_id,
+                        isPaid: prescription.is_paid,
+                        status: newStatus,
                         items: prescription.items.map(item => ({
                             prescriptionItemId: item.prescription_item_id,
                             medicineId: item.medicine.medicine_id,
@@ -336,7 +339,7 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                         }))
                     };
 
-                    console.log('Update request:', JSON.stringify(updateRequest, null, 2));
+                    console.log('Update status request:', JSON.stringify(updateRequest, null, 2));
 
                     const response = await fetch(`http://localhost:3000/api/prescription/UpdatePrescription/${prescriptionId}`, {
                         method: 'PUT',
@@ -376,7 +379,10 @@ require_once(__DIR__ . '/../template/header.php'); ?>
                     }
 
                     const updateRequest = {
+                        prescriptionId: prescription.prescription_id,
                         medicalRecordId: prescription.medical_record_id,
+                        isPaid: true,
+                        status: prescription.status,
                         items: prescription.items.map(item => ({
                             prescriptionItemId: item.prescription_item_id,
                             medicineId: item.medicine.medicine_id,

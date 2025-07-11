@@ -2,6 +2,7 @@ package uni.hcmus.medicineservice.prescription.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,6 +37,7 @@ public class Prescription extends BaseEntity {
     @Column(name = "status", nullable = false)
     private PrescriptionStatus status;
     
+    @Builder.Default
     @Column(name = "is_paid", nullable = false)
     private Boolean isPaid = false;
 
