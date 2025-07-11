@@ -564,9 +564,51 @@ require_once(__DIR__ . '/../template/header.php');
 
                 if (response.ok) {
                     const result = await response.json();
-
                     // APICUADAICHENVAODAYNHOXOACOMMENTSAUKHITHEM
+                    const fullAppointmentPayload = {
+                        appointmentId: result.appointmentId, // Assuming the API returns the new appointmentId
+                        appointmentDate: appointmentDate,
+                        createdAt: new Date().toISOString(), // Use current time
+                        updatedAt: new Date().toISOString(), // Use current time
+                        doctor: requestData.doctorId,
+                        notes: notes,
+                        patient: patientId,
+                        status: "pending", // Assuming initial status is pending
+                        timeSlot: selectedTimeSlot
+                    };
 
+                    // Call the notification API
+                    try {
+                        const notificationResponse = await fetch(`<?php echo getenv('API_AJAX_URL'); ?>/api/notification/BookAppointment`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer <?php echo $_SESSION['user_session']['token']; ?>'
+                            },
+                            body: JSON.stringify(fullAppointmentPayload)
+                        });
+                        const notificationResult = await notificationResponse.json();
+                        console.log('Notification API response for BookAppointment:', notificationResult);
+                    } catch (notificationError) {
+                        console.error('Error calling Notification API for BookAppointment:', notificationError);
+                    }
+
+                    // Call the analysis API
+                    try {
+                        const analysisResponse = await fetch(`<?php echo getenv('API_AJAX_URL'); ?>/api/analysis/BookAppointment`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer <?php echo $_SESSION['user_session']['token']; ?>'
+                            },
+                            body: JSON.stringify(fullAppointmentPayload)
+                        });
+                        const analysisResult = await analysisResponse.json();
+                        console.log('Analysis API response for BookAppointment:', analysisResult);
+                    } catch (analysisError) {
+                        console.error('Error calling Analysis API for BookAppointment:', analysisError);
+                    }
+                    // End of new API calls
                     // Gọi API của Đại
                     // .... TO BE ADDED.
 
