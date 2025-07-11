@@ -4,7 +4,7 @@
     <?php require_once(__DIR__ . '/../template/navbar.php'); ?>
 
     <div class="container mt-4">
-        <h1 class="mb-4">Nhắc nhở lịch khám</h1>
+        <h1 class="mb-4 text-dark">Nhắc nhở lịch khám</h1>
 
         <div id="loading" class="text-center mt-4" style="display: none;">
             <div class="spinner-border text-primary" role="status">
@@ -14,8 +14,8 @@
         </div>
 
         <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Các lịch hẹn sắp tới</h5>
+            <div class="card-header py-3">
+                <h5 class="mb-0 text-dark">Các lịch hẹn sắp tới</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

@@ -37,10 +37,12 @@ require_once(__DIR__ . '/../template/header.php');
                         <i class="fas fa-calendar-plus"></i>
                         <span>Đặt lịch hẹn</span>
                     </a>
-                    <a href="/medicine" class="action-btn">
-                        <i class="fas fa-prescription"></i>
-                        <span>Quản lý thuốc</span>
-                    </a>
+                    <?php if (isset($_SESSION['user_session']['user']['role']) && $_SESSION['user_session']['user']['role'] === 'employee'): ?>
+                        <a href="/medicine" class="action-btn">
+                            <i class="fas fa-prescription"></i>
+                            <span>Quản lý thuốc</span>
+                        </a>
+                    <?php endif; ?>
                     <a href="/reports/generate" class="action-btn">
                         <i class="fas fa-file-alt"></i>
                         <span>Thống kê</span>
