@@ -56,8 +56,11 @@
                           </a>
                           <ul class="dropdown-menu dropdown-menu-end mt-2" style="min-width: 100%;">
                                 <?php
-                                    $role = $_SESSION['user_session']['user']['role'] ?? '';
-                                    $profileLink = ($role === 'patient') ? '/patients' : '/profile';
+                                    $profileLink = match ($role) {
+                                        'patient' => '/patients',
+                                        'doctor' => '/doctors/navbarToShow/'. $_SESSION['user_session']['user']['id'],
+                                        default => '/home'
+                                    };
                                 ?>
                                 <li><a class="dropdown-item" href="<?= $profileLink ?>"><i class="fas fa-user me-2"></i>Hồ sơ của tôi</a></li>
                               <li>

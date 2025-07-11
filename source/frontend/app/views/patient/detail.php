@@ -16,7 +16,10 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class = "text-dark"><i class="fas fa-file-medical"></i> Chi Tiết Lượt Khám</h2>
                 <div>
-                    <a href="/patients" class="btn btn-secondary">
+                    <?php
+                        $returnUrl = $_GET['return_url'] ?? '/patients';
+                    ?>
+                    <a href="<?= htmlspecialchars($returnUrl) ?>" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Quay lại
                     </a>
                     <button onclick="window.print()" class="btn btn-outline-primary">

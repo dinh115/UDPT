@@ -15,9 +15,9 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="fas fa-history"></i> Lịch Sử Khám Bệnh</h2>
+                <h2 class = "text-dark"><i class="fas fa-history"></i> Lịch Sử Khám Bệnh</h2>
                 <div>
-                    <a href="/patient/info" class="btn btn-secondary">
+                    <a href="/patients" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Quay lại
                     </a>
                 </div>
@@ -56,20 +56,22 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
                             <select id="dateFilter" class="form-select">
                                 <option value="">Tất cả năm</option>
                                 <?php 
-                                $years = [];
-                                if (isset($visitHistory)) {
-                                    foreach ($visitHistory as $visit) {
-                                        if (!empty($visit['visit_date'])) {
-                                            $year = date('Y', strtotime($visit['visit_date']));
-                                            $years[] = $year;
+                                    $years = [];
+                                    if (isset($visitHistory)) {
+                                        foreach ($visitHistory as $visit) {
+                                            if (!empty($visit['visitDate']['seconds'])) {
+                                                $timestamp = $visit['visitDate']['seconds'];
+                                                $year = date('Y', $timestamp);
+                                                $years[] = $year;
+                                            }
                                         }
+                                        $years = array_unique($years);
+                                        rsort($years); // Sort in descending order
+
+                                        foreach ($years as $year): ?>
+                                            <option value="<?php echo $year; ?>"><?php echo $year; ?></option>
+                                        <?php endforeach;
                                     }
-                                    $years = array_unique($years);
-                                    rsort($years); // Sort in descending order
-                                    foreach ($years as $year): ?>
-                                        <option value="<?php echo $year; ?>"><?php echo $year; ?></option>
-                                    <?php endforeach;
-                                }
                                 ?>
                             </select>
                         </div>
@@ -95,20 +97,21 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
                                         <th>Khoa</th>
                                         <th>Lý do khám</th>
                                         <th>Chẩn đoán</th>
-                                        <th>Chỉ số sinh tồn</th>
-                                        <th>Thao tác</th>
+                                        <th>Chỉ số cơ thể</th>
+                                        <th>Xem chi tiết</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($visitHistory as $visit): 
-                                        $diagnosis = $this->patientModel->getDiagnosisDescription($visit['diagnosis'] ?? []);
-                                        $vitalSigns = $this->patientModel->formatVitalSigns($visit['vital_signs'] ?? []);
+                                        $diagnosis = $visit['diagnosis_description'];
+                                        $vitalSigns = $visit['vital_signs_formatted'];
                                     ?>
                                         <tr>
                                             <td>
                                                 <?php 
-                                                if (isset($visit['visit_date'])) {
-                                                    $date = new DateTime($visit['visit_date']);
+                                                if (isset($visit['visitDate']['seconds'])) {
+                                                    $timestamp = (int)$visit['visitDate']['seconds'];
+                                                    $date = (new DateTime())->setTimestamp($timestamp);
                                                     echo $date->format('d/m/Y H:i');
                                                 } else {
                                                     echo 'N/A';
@@ -143,7 +146,7 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
                                                 </small>
                                             </td>
                                             <td>
-                                                <a href="/patient/detail/<?php echo $visit['id']; ?>" class="btn btn-sm btn-outline-primary">
+                                                <a href="/patients/detail/<?php echo $visit['id']; ?>?return_url=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-eye"></i> Chi tiết
                                                 </a>
                                             </td>
@@ -214,4 +217,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once '../template/footer.php'; ?>
+
+<?php require_once(__DIR__ . '/../template/footer.php'); ?>
+<?php require_once(__DIR__ . '/../template/scripts.php'); ?>

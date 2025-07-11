@@ -34,7 +34,7 @@ class Patient extends ApiService
     public function createVisit($data)
     {
         try {
-            $endpoint = $this->endpoints['patient'] . '/createvisit/';
+            $endpoint = $this->endpoints['patient'] . '/createVisit/';
             $response = $this->httpClient->post($endpoint, $data);
             return $this->handleResponse($response);
         } catch (Exception $e) {

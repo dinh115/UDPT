@@ -95,4 +95,24 @@ class Doctors extends Controller
         $result = $doctorModel->getAllDoctor();
         $this->jsonResponse($result);
     }
+
+    public function navbarToShow()
+    {
+        if (!isset($_SESSION['user_session']) || $_SESSION['user_session']['role'] !== 'doctor') {
+            $this->redirect('/doctors');
+            return;
+        }
+
+        $userId = $_SESSION['user_session']['user']['id'];
+        $doctorModel = $this->model('Doctor');
+        $result = $doctorModel->getDoctorByUserId($userId);
+
+        if ($result['success'] && isset($result['data']['doctor']['id'])) {
+            $doctorId = $result['data']['doctor']['id'];
+            $this->redirect('/doctors/show/' . $doctorId);
+        } else {
+            $this->renderError('Không tìm thấy hồ sơ bác sĩ', 'Không thể lấy được ID bác sĩ từ user hiện tại.');
+        }
+    }
+
 }

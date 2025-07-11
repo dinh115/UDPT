@@ -12,7 +12,7 @@ class Users extends Controller {
         if ($result['success']) {
             $data = [
                 'title' => 'Users List',
-                'users' => $result['data'],
+                'users' => $result['data']['users'],
                 'current_page' => $page
             ];
         } else {
@@ -38,7 +38,7 @@ class Users extends Controller {
         if ($result['success']) {
             $data = [
                 'title' => 'User Details',
-                'user' => $result['data']
+                'user' => $result['data']['user']
             ];
             $this->view('users/show', $data);
         } else {

@@ -41,6 +41,9 @@ class HttpClient
         if (!empty($params)) {
             $url .= '?' . http_build_query($params);
         }
+        error_log("POST to $url");
+        error_log("Data: " . print_r($params, true));
+        error_log("Headers: " . print_r($headers, true));
 
         return $this->makeRequest('GET', $url, null, $headers);
     }
@@ -67,7 +70,6 @@ class HttpClient
     private function makeRequest($method, $url, $data = null, $headers = [])
     {
         $ch = curl_init();
-
         // Merge headers
         $requestHeaders = array_merge($this->defaultHeaders, $headers);
         $headerArray = [];
@@ -88,7 +90,11 @@ class HttpClient
 
         if ($data && in_array($method, ['POST', 'PUT', 'PATCH'])) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            if (!isset($requestHeaders['Content-Type'])) {
+                $headerArray[] = 'Content-Type: application/json';
+            }
         }
+
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

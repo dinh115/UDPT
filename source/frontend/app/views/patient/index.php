@@ -205,11 +205,18 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
                                             </td>
                                             <td>
                                                 <span class="text-truncate d-inline-block" style="max-width: 200px;">
-                                                    <?= htmlspecialchars($visit['diagnosis_description'] ?? 'N/A') ?>
+                                                    <?php
+                                                    if (!empty($visit['diagnosis']) && is_array($visit['diagnosis'])) {
+                                                        $descriptions = array_column($visit['diagnosis'], 'description');
+                                                        echo htmlspecialchars(implode(', ', $descriptions));
+                                                    } else {
+                                                        echo 'N/A';
+                                                    }
+                                                    ?>
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="/patients/detail/<?= $visit['id'] ?>" 
+                                                <a href="/patients/detail/<?= $visit['id'] ?>?return_url=<?= urlencode($_SERVER['REQUEST_URI']) ?>" 
                                                    class="btn btn-sm btn-outline-primary rounded-pill">
                                                     <i class="fas fa-eye me-1"></i>Chi tiết
                                                 </a>
