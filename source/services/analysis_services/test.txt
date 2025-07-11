@@ -107,6 +107,7 @@ UpdatePrescriptionStatus
 }
 GetPatientStatistics
 GetPrescriptionStatistics
+GetPatientStatistics
 {
     "startDate": "2025-06-25",
     "endDate": "2025-07-31",

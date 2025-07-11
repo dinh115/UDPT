@@ -1,4 +1,10 @@
 $(document).ready(function() {
+    // The AJAX URL has been updated to explicitly include 'index.php?url='
+    // and uses the phpBaseUrl defined in the PHP view.
+    // This ensures the URL format is compatible with App.php's parsing logic
+    // without requiring web server URL rewriting.
+    const ajaxUrl = `${phpBaseUrl}/index.php?url=reminder/api`;
+
     // Load appointments on page load
     loadAppointments();
 
@@ -7,26 +13,27 @@ $(document).ready(function() {
      */
     function loadAppointments() {
         $('#loading').show();
-        $('#appointmentsTableBody').empty(); // Clear existing table data
-        $('#noAppointments').hide(); // Hide no appointments message initially
+        $('#appointmentsTableBody').empty();
+        $('#noAppointments').hide();
 
         $.ajax({
-            url: '../../controllers/NotificationController.php',
+            url: ajaxUrl,
             method: 'GET',
             data: {
                 action: 'getUpcomingAppointments'
             },
             dataType: 'json',
             success: function(response) {
-                if (response.success && response.data.length > 0) {
+                if (response.success && response.data && response.data.length > 0) {
                     populateAppointmentsTable(response.data);
                 } else {
                     $('#noAppointments').show();
                 }
             },
             error: function(xhr, status, error) {
-                console.error('AJAX Error:', error);
-                toastr.error('Không thể tải dữ liệu lịch hẹn.');
+                console.error('AJAX Error:', status, error);
+                console.error('Response Text:', xhr.responseText);
+                toastr.error('Không thể tải dữ liệu lịch hẹn. Vui lòng kiểm tra console.');
                 $('#noAppointments').show();
             },
             complete: function() {
@@ -87,11 +94,11 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: '../../controllers/NotificationController.php',
+            url: ajaxUrl,
             method: 'POST',
             data: {
                 action: 'sendReminder',
-                ...appointmentData // Spread operator to include all data
+                ...appointmentData
             },
             dataType: 'json',
             success: function(response) {
@@ -102,8 +109,9 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr, status, error) {
-                console.error('AJAX Error:', error);
-                toastr.error('Không thể gửi email nhắc nhở.');
+                console.error('AJAX Error:', status, error);
+                console.error('Response Text:', xhr.responseText);
+                toastr.error('Không thể gửi email nhắc nhở. Vui lòng kiểm tra console.');
             },
             complete: function() {
                 button.prop('disabled', false).html('<i class="fas fa-envelope"></i> Email');

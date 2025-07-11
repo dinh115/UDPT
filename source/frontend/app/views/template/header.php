@@ -17,4 +17,8 @@
     $baseUrl = $protocol . "://" . $_SERVER['HTTP_HOST'];
     ?>
     <link rel="stylesheet" href="<?= $baseUrl ?>/css/main.css">
+    <!-- Define phpBaseUrl globally for JavaScript. This ensures it's available before any other scripts. -->
+    <script>
+        const phpBaseUrl = '<?= $baseUrl ?>';
+    </script>
 </head>
