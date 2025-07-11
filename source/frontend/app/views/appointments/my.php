@@ -620,7 +620,38 @@ require_once(__DIR__ . '/../template/header.php');
 
                 if (response.ok && result.success) {
                     // APICUADAICHENVAODAYNHOXOACOMMENTSAUKHITHEM
+                    // Call the new notification API
+                    try {
+                        const notificationResponse = await fetch(`<?php echo getenv('API_AJAX_URL') ?>/api/notification/AcceptAppointment`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer <?php echo $_SESSION['user_session']['token']; ?>'
+                            },
+                            body: JSON.stringify({ appointmentId: appointmentId })
+                        });
+                        const notificationResult = await notificationResponse.json();
+                        console.log('Notification API response:', notificationResult);
+                    } catch (notificationError) {
+                        console.error('Error calling Notification API:', notificationError);
+                    }
 
+                    // Call the new analysis API
+                    try {
+                        const analysisResponse = await fetch(`<?php echo getenv('API_AJAX_URL') ?>/api/analysis/AcceptAppointment`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer <?php echo $_SESSION['user_session']['token']; ?>'
+                            },
+                            body: JSON.stringify({ appointmentId: appointmentId })
+                        });
+                        const analysisResult = await analysisResponse.json();
+                        console.log('Analysis API response:', analysisResult);
+                    } catch (analysisError) {
+                        console.error('Error calling Analysis API:', analysisError);
+                    }
+                    // End of new API calls
                     alert('Cuộc hẹn đã được chấp nhận thành công!');
                     loadAppointments(currentPage);
                 } else {

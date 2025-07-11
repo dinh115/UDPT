@@ -33,5 +33,20 @@ return [
         'prescription_update' => '/api/prescription/UpdatePrescription',
         'prescription_delete' => '/api/prescription/DeletePrescription',
         'prescription_restore' => '/api/prescription/RestorePrescription',
+
+        'notification_get_upcoming_appointment' => '/api/notification/GetUpcomingConfirmedAppointments',
+        'notification_send_reminder' => '/api/notification/SendReminder',
+        'notification_send_prescription_ready' => '/api/notification/SendPrescriptionReady',
+        'notification_accept_appointment' => '/api/notification/AcceptAppointment',
+        'notification_book_appointment' => '/api/notification/BookAppointment',
+        'notification_add_user' => '/api/notification/AddUser',
+
+        'analysis_accept_appointment' => '/api/analysis/AcceptAppointment',
+        'analysis_book_appointment' => '/api/analysis/BookAppointment',
+        'analysis_book_prescription' => '/api/analysis/BookPrescription',
+        'analysis_update_prescription_status' => '/api/analysis/UpdatePrescriptionStatus',
+        'analysis_mark_prescription_paid' => '/api/analysis/MarkPrescriptionPaid',
+        'analysis_get_prescription_statistics' => '/api/analysis/GetPrescriptionStatistics',
+        'analysis_get_patient_statistics' => '/api/analysis/GetPatientStatistics',
     ]
 ];
