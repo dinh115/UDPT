@@ -278,8 +278,6 @@ require_once(__DIR__ . '/../template/header.php');
                 let actionButtons = '';
 
                 let notesHTML;
-                const appointmentDateTime = new Date(appointment.appointmentDate);
-                const nowPlus1Hour = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000);
 
                 const isEditable = userSession.role === 'patient' && appointment.status === 'pending';
 
@@ -311,8 +309,9 @@ require_once(__DIR__ . '/../template/header.php');
                     else if (appointment.status === 'confirmed'){
                         const appointmentDateTime = new Date(appointment.appointmentDate);
                         const nowPlus1Hour = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000);
-
-                        if (appointmentDateTime <= nowPlus1Hour) {
+                        const nowMinus1Hour = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
+                        console.log(appointmentDateTime);
+                        if ((appointmentDateTime <= nowPlus1Hour) && (appointmentDateTime >= nowMinus1Hour)) {
                             actionButtons = `
                                 <a href="/patients/createPatientVisit?patientId=${appointment.patientId}&doctorId=${appointment.doctorId}" class="btn btn-sm btn-success mt-1">
                                     <i class="fas fa-file-medical"></i> Tạo phiếu khám

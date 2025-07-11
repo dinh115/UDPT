@@ -146,7 +146,7 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
                             </div>
                         <?php else: ?>
                             <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i> Chưa có thông tin chỉ số sinh tồn.
+                                <i class="fas fa-info-circle"></i> Chưa có thông tin chỉ số cơ thể.
                             </div>
                         <?php endif; ?>
                     </div>

@@ -21,11 +21,11 @@
                           <i class="fas fa-home me-1"></i> Trang chủ
                       </a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                       <a class="nav-link <?= isActive('/users') ?>" href="/users">
                           <i class="fas fa-users me-1"></i>Bệnh nhân
                       </a>
-                  </li>
+                  </li> -->
                   <li class="nav-item">
                       <a class="nav-link <?= isActive('/doctors') ?>" href="/doctors">
                           <i class="fas fa-user-md me-1"></i>Bác sĩ

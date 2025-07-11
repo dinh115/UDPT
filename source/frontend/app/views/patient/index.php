@@ -157,11 +157,6 @@ $dateOfBirth = isset($userInfo['dateOfBirth']) ?
                                 <small class="text-muted">5 lần khám gần nhất</small>
                             </div>
                         </div>
-                        <?php if (!empty($visitHistory) && count($visitHistory) > 5): ?>
-                            <a href="/patient/history" class="btn btn-outline-primary">
-                                <i class="fas fa-list me-2"></i>Xem tất cả
-                            </a>
-                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="card-body pt-3">
