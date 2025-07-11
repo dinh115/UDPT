@@ -7,7 +7,7 @@ import logger from './config/logger';
 import { connectDatabase } from './config/database';
 
 // Import gRPC handlers
-import { UserServiceHandlers } from './handlers/doctorHandler';
+import { DoctorServiceHandlers } from './handlers/doctorHandler';
 import { InternalServiceHandlers } from './handlers/internalHandler';
 import { HealthServiceHandlers, withTimestampConversion } from './handlers';
 
@@ -33,7 +33,7 @@ function createGrpcServer(): grpc.Server {
     const server = new grpc.Server();
 
     // Initialize handlers
-    const doctorHandlers = new UserServiceHandlers();
+    const doctorHandlers = new DoctorServiceHandlers();
     const internalHandlers = new InternalServiceHandlers();
     const healthHandlers = new HealthServiceHandlers();
 
