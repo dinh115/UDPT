@@ -29,25 +29,32 @@ class Doctors extends Controller
         $doctorModel = $this->model('Doctor');
         $result = $doctorModel->getDoctorById($id);
 
-
-
-        //var_dump($result);
         if ($result['success']) {
+            $isProfileOwner = false;
+
+            if (
+                isset($_SESSION['user_session']) &&
+                is_array($_SESSION['user_session']) &&
+                isset($_SESSION['user_session']['role'], $_SESSION['user_session']['user'])
+            ) {
+                $isProfileOwner = $_SESSION['user_session']['role'] === 'doctor' &&
+                    $_SESSION['user_session']['user']['id'] === $result['data']['doctor']['userId'];
+            }
+
             $data = [
                 'title' => 'Chi tiết Bác sĩ',
                 'doctor' => $result['data']['doctor'],
-                'isProfileOwner' => $_SESSION['user_session']['role'] === 'doctor' && $_SESSION['user_session']['user']['id'] === $result['data']['doctor']['userId']
+                'isProfileOwner' => $isProfileOwner
             ];
+
             $this->view('doctors/show', $data);
         } else {
             $this->renderError(
                 'Không tìm thấy Bác sĩ',
                 $result['error']
             );
-            return;
         }
     }
-
     public function update($id = null)
     {
         if (!$id) {
