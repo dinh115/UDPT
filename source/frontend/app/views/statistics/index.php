@@ -4,12 +4,12 @@
     <?php require_once(__DIR__ . '/../template/navbar.php'); ?>
     
     <div class="container mt-4">
-        <h1 class="mb-4">Thống kê</h1>
+        <h1 class="mb-4 text-dark">Thống kê</h1>
         
         <!-- Filter Section -->
         <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Bộ lọc</h5>
+            <div class="card-header py-3">
+                <h5 class="mb-0 text-dark">Bộ lọc</h5>
             </div>
             <div class="card-body">
                 <form id="filterForm">
@@ -46,8 +46,8 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Thống kê số lượng bệnh nhân</h5>
+                    <div class="card-header py-3">
+                        <h5 class="mb-0 text-dark">Thống kê số lượng bệnh nhân</h5>
                     </div>
                     <div class="card-body">
                         <canvas id="patientChart" width="400" height="200"></canvas>
@@ -56,8 +56,8 @@
             </div>
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Thống kê số lượng đơn thuốc</h5>
+                    <div class="card-header py-3">
+                        <h5 class="mb-0 text-dark">Thống kê số lượng đơn thuốc</h5>
                     </div>
                     <div class="card-body">
                         <canvas id="prescriptionChart" width="400" height="200"></canvas>
