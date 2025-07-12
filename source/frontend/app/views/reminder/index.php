@@ -14,7 +14,7 @@
         </div>
 
         <div class="card mb-4">
-            <div class="card-header py-3">
+            <div class="card-header">
                 <h5 class="mb-0 text-dark">Các lịch hẹn sắp tới</h5>
             </div>
             <div class="card-body">
@@ -33,8 +33,7 @@
                             </tr>
                         </thead>
                         <tbody id="appointmentsTableBody">
-                            <!-- Data will be loaded here by JavaScript -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
                 <div id="noAppointments" class="text-center mt-3" style="display: none;">
@@ -47,19 +46,32 @@
     <?php require_once(__DIR__ . '/../template/footer.php'); ?>
     <?php require_once(__DIR__ . '/../template/scripts.php'); ?>
 
-    <!--
-        The reminder.js content is now embedded directly here to bypass
-        issues with the server incorrectly serving the external JS file.
-        The phpBaseUrl is assumed to be defined in header.php.
-    -->
     <script>
         $(document).ready(function() {
-            // The AJAX URL explicitly includes 'index.php?url='
-            // and uses the phpBaseUrl defined in the header.
-            // This ensures the URL format is compatible with App.php's parsing logic.
-            const ajaxUrl = `${phpBaseUrl}/index.php?url=reminder/api`;
-            console.log('Frontend: AJAX URL set to:', ajaxUrl);
+            // Helper function to add debug info (Removed - kept for reference if needed)
+            // function addDebugInfo(message) {
+            //     const timestamp = new Date().toLocaleTimeString();
+            //     $('#debugInfo').append(`<div>[${timestamp}] ${message}</div>`);
+            // }
 
+            // Check if phpBaseUrl is defined
+            if (typeof phpBaseUrl === 'undefined') {
+                // Fallback - try to determine base URL from current location
+                const currentUrl = window.location.href;
+                const pathArray = currentUrl.split('/');
+                const protocol = pathArray[0];
+                const host = pathArray[2];
+                phpBaseUrl = protocol + '//' + host;
+            }
+
+            // Construct AJAX URL more carefully
+            let ajaxUrl;
+            if (phpBaseUrl.endsWith('/')) {
+                ajaxUrl = phpBaseUrl + 'index.php?url=reminder/api';
+            } else {
+                ajaxUrl = phpBaseUrl + '/index.php?url=reminder/api';
+            }
+            
             // Load appointments on page load
             loadAppointments();
 
@@ -78,19 +90,55 @@
                         action: 'getUpcomingAppointments'
                     },
                     dataType: 'json',
+                    timeout: 15000,
                     success: function(response) {
-                        console.log('Frontend: AJAX Success Response:', response);
-                        if (response.success && response.data && response.data.length > 0) {
-                            populateAppointmentsTable(response.data);
+                        let appointmentsArray = null;
+                        
+                        // Check various possible data structures
+                        if (response && response.success) {
+                            // Structure 1: response.data.appointments (your current API structure)
+                            if (response.data && response.data.appointments && Array.isArray(response.data.appointments)) {
+                                appointmentsArray = response.data.appointments;
+                            }
+                            // Structure 2: response.data is direct array
+                            else if (response.data && Array.isArray(response.data)) {
+                                appointmentsArray = response.data;
+                            }
+                            // Structure 3: response is direct array
+                            else if (Array.isArray(response)) {
+                                appointmentsArray = response;
+                            }
+                        }
+                        
+                        // Check if we found valid appointments
+                        if (appointmentsArray && appointmentsArray.length > 0) {
+                            populateAppointmentsTable(appointmentsArray);
                         } else {
-                            console.log('Frontend: No appointments or success is false. Showing "no appointments" message.');
+                            // Additional debugging for troubleshooting (Removed - kept for reference if needed)
+                            // if (response && !response.success) {
+                            //     // Error handling can go here, e.g., display a user-friendly message
+                            // }
+                            
                             $('#noAppointments').show();
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.error('Frontend: AJAX Error:', status, error);
-                        console.error('Frontend: Response Text:', xhr.responseText); // Log raw response text
-                        toastr.error('Không thể tải dữ liệu lịch hẹn. Vui lòng kiểm tra console.');
+                        let errorMessage = 'Không thể tải dữ liệu lịch hẹn.';
+                        if (xhr.status === 0) {
+                            errorMessage += ' Không thể kết nối đến server.';
+                        } else if (xhr.status === 404) {
+                            errorMessage += ' Không tìm thấy API endpoint.';
+                        } else if (xhr.status === 500) {
+                            errorMessage += ' Lỗi server nội bộ.';
+                        } else {
+                            errorMessage += ' Mã lỗi: ' + xhr.status;
+                        }
+                        
+                        if (typeof toastr !== 'undefined') {
+                            toastr.error(errorMessage);
+                        } else {
+                            alert(errorMessage);
+                        }
                         $('#noAppointments').show();
                     },
                     complete: function() {
@@ -101,30 +149,39 @@
 
             /**
              * Populates the appointments table with data.
-             * @param {Array} appointments - An array of appointment objects.
              */
             function populateAppointmentsTable(appointments) {
                 const tableBody = $('#appointmentsTableBody');
-                tableBody.empty(); // Clear existing rows before populating
+                tableBody.empty();
+
                 appointments.forEach(function(appointment) {
+                    // Safe value extraction with fallbacks
+                    const patientName = appointment.patientName || appointment.patient_name || 'N/A';
+                    const patientEmail = appointment.patientEmail || appointment.patient_email || 'N/A';
+                    const date = appointment.date || appointment.appointment_date || 'N/A';
+                    const startTime = appointment.startTime || appointment.start_time || 'N/A';
+                    const endTime = appointment.endTime || appointment.end_time || 'N/A';
+                    const doctorName = appointment.doctorName || appointment.doctor_name || 'N/A';
+                    const consultationFee = appointment.consultationFee || appointment.consultation_fee || 0;
+                    
                     const row = `
                         <tr>
-                            <td>${appointment.patientName}</td>
-                            <td>${appointment.patientEmail}</td>
-                            <td>${appointment.date}</td>
-                            <td>${appointment.startTime}</td>
-                            <td>${appointment.endTime}</td>
-                            <td>${appointment.doctorName}</td>
-                            <td>${appointment.consultationFee.toLocaleString('vi-VN')} VND</td>
+                            <td>${escapeHtml(patientName)}</td>
+                            <td>${escapeHtml(patientEmail)}</td>
+                            <td>${escapeHtml(date)}</td>
+                            <td>${escapeHtml(startTime)}</td>
+                            <td>${escapeHtml(endTime)}</td>
+                            <td>${escapeHtml(doctorName)}</td>
+                            <td>${Number(consultationFee).toLocaleString('vi-VN')} VND</td>
                             <td>
                                 <button class="btn btn-sm btn-info send-email-btn"
-                                        data-patient-name="${appointment.patientName}"
-                                        data-patient-email="${appointment.patientEmail}"
-                                        data-date="${appointment.date}"
-                                        data-start-time="${appointment.startTime}"
-                                        data-end-time="${appointment.endTime}"
-                                        data-doctor-name="${appointment.doctorName}"
-                                        data-consultation-fee="${appointment.consultationFee}">
+                                        data-patient-name="${escapeHtml(patientName)}"
+                                        data-patient-email="${escapeHtml(patientEmail)}"
+                                        data-date="${escapeHtml(date)}"
+                                        data-start-time="${escapeHtml(startTime)}"
+                                        data-end-time="${escapeHtml(endTime)}"
+                                        data-doctor-name="${escapeHtml(doctorName)}"
+                                        data-consultation-fee="${consultationFee}">
                                     <i class="fas fa-envelope"></i> Email
                                 </button>
                             </td>
@@ -132,7 +189,18 @@
                     `;
                     tableBody.append(row);
                 });
-                console.log('Frontend: Appointments table populated with', appointments.length, 'records.');
+            }
+
+            /**
+             * Escape HTML to prevent XSS
+             */
+            function escapeHtml(text) {
+                if (typeof text !== 'string') {
+                    return text;
+                }
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
             }
 
             /**
@@ -140,6 +208,7 @@
              */
             $(document).on('click', '.send-email-btn', function() {
                 const button = $(this);
+                
                 button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang gửi...');
 
                 const appointmentData = {
@@ -151,8 +220,7 @@
                     doctorName: button.data('doctor-name'),
                     consultationFee: button.data('consultation-fee')
                 };
-                console.log('Frontend: Sending reminder for:', appointmentData);
-
+                
                 $.ajax({
                     url: ajaxUrl,
                     method: 'POST',
@@ -161,18 +229,31 @@
                         ...appointmentData
                     },
                     dataType: 'json',
+                    timeout: 30000,
                     success: function(response) {
-                        console.log('Frontend: Send Reminder Success Response:', response);
-                        if (response.success) {
-                            toastr.success(response.message || 'Email nhắc nhở đã được gửi.');
+                        if (response && response.success) {
+                            const message = response.message || 'Email nhắc nhở đã được gửi thành công.';
+                            if (typeof toastr !== 'undefined') {
+                                toastr.success(message);
+                            } else {
+                                alert(message);
+                            }
                         } else {
-                            toastr.error(response.error || 'Có lỗi xảy ra khi gửi email nhắc nhở.');
+                            const errorMsg = (response && response.error) || 'Có lỗi xảy ra khi gửi email nhắc nhở.';
+                            if (typeof toastr !== 'undefined') {
+                                toastr.error(errorMsg);
+                            } else {
+                                alert(errorMsg);
+                            }
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.error('Frontend: Send Reminder AJAX Error:', status, error);
-                        console.error('Frontend: Send Reminder Response Text:', xhr.responseText);
-                        toastr.error('Không thể gửi email nhắc nhở. Vui lòng kiểm tra console.');
+                        const errorMsg = 'Không thể gửi email nhắc nhở. Vui lòng thử lại.';
+                        if (typeof toastr !== 'undefined') {
+                            toastr.error(errorMsg);
+                        } else {
+                            alert(errorMsg);
+                        }
                     },
                     complete: function() {
                         button.prop('disabled', false).html('<i class="fas fa-envelope"></i> Email');
